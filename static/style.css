@@ -1,0 +1,175 @@
+@import "sabotage.css";
+
+html, body {
+	margin: 0px;
+	padding: 0px;
+	background-color: #000000;
+	color: #ffffff;
+}
+
+.container {
+	width: 1024px;
+}
+
+p.tiny {
+	margin: 1px;
+	padding-left: 4px;
+}
+
+p.navlink {
+	font-weight: bold;
+	color: orange;
+	margin-top: 1px;
+	margin-bottom: 1px;
+	margin-left: 2px;
+}
+
+p.navlink a:link, a:visited{
+	color: orange;
+}
+
+p.navlink a:hover, a:active{
+	color: yellow;
+}
+
+a.forum_link:link , a.forum_link:visited {
+	color: orange;
+}
+
+a.forum_link:hover, a.forum_link:active {
+	color: yellow;
+}
+
+span.timestamp {
+	color: #90EE90 	;
+}
+
+span.author {
+	font-weight: bold;
+}
+
+#content {
+	position: relative;
+	width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#banner {
+	padding: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 920px;
+	padding-top: 6px;
+	padding-bottom: 15px;
+}
+
+.header {
+	background-color: #004499;
+	font-family: Verdana, Geneva;
+	font-size: 11px;
+	font-weight: bold;
+	padding-bottom: 2px;
+	padding-left: 10px;
+}
+
+a.navlink {
+	margin: 0px;
+}
+
+.navbox {
+	background-color: #222222;
+	border: 1px solid #004499;
+}
+
+#site_contents {
+	position: relative;
+	float: left;
+	padding: 0px;
+	margin: 0px;
+	width: 105px;
+}
+
+#recent_posts {
+	position: relative;
+	float: left;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#text_area {
+	position: relative;
+}
+
+#calendar {
+	position: relative;
+	float: left;
+	min-height: 2em;
+	width: 136px;
+}
+
+#articles {
+	padding-top: 12px;
+	clear: both;
+}
+
+.article_headline {
+	color: orange;
+	font-size: 12pt;
+	font-weight: bold;
+}
+
+.article {
+	clear: both;
+	padding-top: 10px;
+}
+
+.article img {
+	float: left;
+	padding-right: 4px
+}
+
+.article_text {
+	
+}
+
+.article_text a:link, .article_text a:visited {
+	color: orange;
+}
+
+.article_text a:hover, .article_text a:active {
+	color: yellow;
+}
+
+.submitter {
+	color: #90EE90 	;
+}
+
+.older_news {
+	position: relative;
+	border: 1px solid #004499;
+	background-color: #222222;
+	height: 20px;
+	width: 80px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.vert_center{
+	vertical-align: middle;
+	padding: 2px;
+}
+
+.older_news a:link {
+	color: orange;
+}
+
+.counter {
+	position: relative;
+	border: 1px solid #004499;
+	background-color: #222222;
+	height: 30px;
+	width: 10%;
+	margin: 0px auto;
+	margin-bottom: 10px;
+}
