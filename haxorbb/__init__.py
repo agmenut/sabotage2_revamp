@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
 import os
 
 
@@ -40,5 +41,6 @@ class ReverseProxied(object):
 app = Flask(__name__)
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 app.secret_key = os.urandom(64)
+db = SQLAlchemy(app)
 
 from haxorbb.front_page import views
