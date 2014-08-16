@@ -39,6 +39,7 @@ class ReverseProxied(object):
 
 
 app = Flask(__name__)
+app.config.from_object('config.BaseConfiguration')
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 app.secret_key = os.urandom(64)
 db = SQLAlchemy(app)
