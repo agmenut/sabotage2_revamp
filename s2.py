@@ -2,8 +2,9 @@ from flask import Flask, render_template, redirect, request, send_from_directory
 from werkzeug.contrib.fixers import ProxyFix
 from datetime import date, timedelta
 
+
 class ReverseProxied(object):
-    '''Wrap the application in this middleware and configure the 
+    """Wrap the application in this middleware and configure the
     front-end server to add these headers, to let you quietly bind 
     this to a URL other than / and to an HTTP scheme that is 
     different than what is used locally.
@@ -18,7 +19,7 @@ class ReverseProxied(object):
         }
 
     :param app: the WSGI application
-    '''
+    """
     def __init__(self, app):
         self.app = app
 
@@ -39,25 +40,28 @@ class ReverseProxied(object):
 app = Flask(__name__)
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 
+
 @app.route('/')
 def start():
-	return render_template("index.html")
+    return render_template("index.html")
 
 @app.route('/s2/oldnews/', defaults={'page': 'oldnews'})
 @app.route('/s2/page=<page>/')
 def other_page(page):
-	if (page == "oldnews"):
-		return redirect('http://www.sabotage2.com/index.php?page=oldnews', 301)
-	else:
-		return 'Page does not exist', 404
+    if page == "oldnews":
+        return redirect('http://www.sabotage2.com/index.php?page=oldnews', 301)
+    else:
+        return 'Page does not exist', 404
+
 
 @app.route('/s2/robots.txt')
 def robots():
-	return send_from_directory(app.static_folder, request.path[1:])
-	
+    return send_from_directory(app.static_folder, request.path[1:])
+
+
 @app.errorhandler(404)
 def page_not_found(e):
-	return '404 Is full of goats', 404
+    return '404 Is full of goats', 404
 
 if __name__ == '__main__':
-	app.run()
+    app.run()
