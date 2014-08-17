@@ -7,7 +7,16 @@ class Articles(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author = db.Column(db.String(255))
     title = db.Column(db.String(255))
-    image = db.Column(db.String(50))
+    has_image = db.Column(db.Boolean)
+    fk_image = db.Collumn(db.Intger, db.ForeignKey(ArticleImage.id))
     content = db.Column(db.Text)
-    date = db.Column(db.DateTime)
+    datestamp = db.Column(db.DateTime)
+
+
+class ArticleImage(db.Model):
+    __tablename = 'article_images'
+    id = db.Column(db.Integer, primary_key=True)
+    location = db.Column(db.String(255))
+    title = db.Column(db.String(255))
+    link = db.Column(db.String(2048))
 
