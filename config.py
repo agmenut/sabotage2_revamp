@@ -14,8 +14,7 @@ DB_HOST = db_conf['haxorbb']['host']
 
 class BaseConfiguration(object):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@{}/postgres'.format(DB_USER, DB_PASS, DB_HOST)
-    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@{}/haxorbb'.format(DB_USER, DB_PASS, DB_HOST)
 
 
 class TestConfiguration(BaseConfiguration):
