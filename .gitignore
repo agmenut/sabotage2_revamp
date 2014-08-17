@@ -54,3 +54,4 @@ docs/_build/
 
 # Configuration details
 local.conf
+*.xml
