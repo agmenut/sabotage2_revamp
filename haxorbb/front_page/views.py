@@ -1,12 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from haxorbb import app
+from haxorbb.models import Articles
 from flask import render_template, redirect, send_from_directory, request
 
 
 @app.route('/')
-def start():
-    return render_template("index.html")
+def home_page():
+    articles = []
+    results = Articles.query.all()
+    for row in results:
+        out = {k.name: getattr(row, k.name) for k in row.__table__.columns}
+        if out['has_image']:
+            image_data = row.image[0]
+            image = {k.name: getattr(image_data, k.name) for k in image_data.__table__.columns}
+            image['image_title'] = image.pop('title')
+        else:
+            image = None
+        out.update(image)
+        articles.append(out)
+    return render_template("index.html", articles=articles)
 
 
 @app.route('/oldnews/', defaults={'page': 'oldnews'})
@@ -24,5 +37,5 @@ def robots():
 
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(e):
     return '404 Is full of goats', 404

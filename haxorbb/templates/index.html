@@ -1,22 +1,22 @@
 <!DOCTYPE html>
+<head>
 <title>S A B O T A G E 2 . C O M</title>
 <link rel="shortcut icon" href="{{ url_for('static', filename='s2.ico') }}" type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='iphone.css') }}" media="only screen and (max-device-width: 480px)">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='ipad.css') }}" media="only screen and (device-width: 768px) and (orientation: landscape)">
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}" media="only screen and (min-device-width: 1024px)">
 <meta name="viewport" content="width=808" />
-
 </head>
-</body>
+<body>
 {% block body %}
 
-<div id="container">
+{#<div id="container">#}
 	<div id="banner">
 		<img src="{{ url_for('static', filename='img/cover_60.jpg') }}" height="180" width="920" alt="Banner">
 	</div>
 	
 	
-<div id="content">
+<div id="content">#}
 		<div id="site_contents" class="navbox">
 			<div class="header">Site Contents</div>		
 			<p class="navlink"><a href="index.php?page=news">News</a></p>
@@ -44,174 +44,186 @@
 		<div class="header">Upcoming Events</div>
 		</div>
 
-		<div id="articles">
-			<div class="article">
-				<div class="article_headline">2011 Auto Show Pictures</div>
-				<span class="timestamp">2012-01-21 23:37</span> (submitted by <span class="submitter">lucas</span>)
-				<div class="article_image">
-					<a href="/pictures/webgal.cgi?dir=2011-11-26_sf_autoshow"><img src="{{ url_for('static', filename='pictures/tn/tn_7b1534ca437b87d6db36a45e0aa6f5d2.jpg') }}" alt="auto show"></a>
-				</div>
-				<div class="article_text"><a href="/pictures/webgal.cgi?dir=2011-11-26_sf_autoshow">163 pictures so far. Perhaps more to come...</a></div>
-			</div>	
+		    {% for article in articles %}
+                <article>
+                    <div class="headline">{{ article.title }}</div>
+                    <time datetime="{{ article.datestamp }}" pubdate="pubdate">{{ article.datestamp }}</time>
+                    (submitted by <span class="submitter">{{ article.author }}</span>)
+                    {% if article.has_image %}
+                        <aside><img src="{{ url_for('static', filename='pictures/tn/'+article.location) }}"></aside>
+                    {% endif %}
+                    {{ article.content | safe }}
+                </article>
+            {% endfor %}
+        <!-- close articles div -->
+{#			<div class="article">#}
+{#				<div class="article_headline">2011 Auto Show Pictures</div>#}
+{#				<span class="timestamp">2012-01-21 23:37</span> (submitted by <span class="submitter">lucas</span>)#}
+{#				<div class="article_image">#}
+{#					<a href="/pictures/webgal.cgi?dir=2011-11-26_sf_autoshow"><img src="{{ url_for('static', filename='pictures/tn/tn_7b1534ca437b87d6db36a45e0aa6f5d2.jpg') }}" alt="auto show"></a>#}
+{#				</div>#}
+{#				<div class="article_text"><a href="/pictures/webgal.cgi?dir=2011-11-26_sf_autoshow">163 pictures so far. Perhaps more to come...</a></div>#}
+{#			</div>	#}
+{##}
+{#			<div class="article">#}
+{#				<div class="article_headline">New Hosting</div>#}
+{#				<span class="timestamp">2010-04-07 18:06</span> (submitted by <span class="submitter">lucas</span>)#}
+{#				<div class="article_text">Sabotage2.com is back up and is now on a brand new VPS! Mrfalcon is being phased out due to its age, and will soon meet its demise.#}
+{#				</div>#}
+{#			</div>#}
+{#			#}
+{#	#}
+{#			<div class="article">#}
+{#				<div class="article_headline">2008 Auto Show Pictures</div>#}
+{#				<span class="timestamp">2008-12-06 22:44</span> (submitted by <span class="submitter">lucas</span>)#}
+{#				<div class="article_image">#}
+{#					<a href="/pictures/webgal.cgi?dir=2008-11-29_sf_autoshow" ><img src="{{ url_for('static', filename='pictures/tn/tn_ccae45d2bb66bd77ce5bae83892b829e.jpg') }}" alt=""></a>#}
+{#				</div>#}
+{#				<div class="article_text"><a href="/pictures/webgal.cgi?dir=2008-11-29_sf_autoshow">238 pictures!</a></div>#}
+{#			</div>#}
+{##}
+{##}
+{#			#}
+{#			<div class="article">#}
+{#				<div class="article_headline">2007 Auto Show Pictures</div>#}
+{#				<span class="timestamp">2007-12-26 20:46</span> (submitted by <span class="submitter">lucas</span>)#}
+{#				<div class="article_image"><a href="/pictures/webgal.cgi?dir=2007-11-24_sf_autoshow" ><img src="{{url_for('static', filename='pictures/tn/tn_fe1df9efd4b46c3729c04a7b1dfa8fcd.jpg') }}" alt=""></a></div>#}
+{#				<div class="article_text"><a href="/pictures/webgal.cgi?dir=2007-11-24_sf_autoshow">196 pictures</a> made the cut this year</div>#}
+{#			</div>#}
+{##}
+{##}
+{#			<div class="article">#}
+{#				<div class="article_headline">MrFalcon Disk Woes</div>#}
+{#				<span class="timestamp">2007-12-02 10:32:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#				<div class="article_text">Maybe you noticed that sabotage2.com was down for pretty much all of yesterday. As it turns out, the hard drive containing the web site and all other relevent data besides the OS has failed. I drove up to Davis last night and purchased a new drive along the way. I was able to restore all the data without a hitch.</div>#}
+{#			</div>#}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">Colm's &amp; Heather's BBQ Pictures</div>#}
+{#			<span class="timestamp">2007-09-02 00:33:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2007-08-12_Sac_BBQ" ><img src="http://www.sabotage2.com/pictures/.tn/tn_0a08bb7fd1c68226c11768356cc4dff7.jpg" alt=""></a></div>#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2007-08-12_Sac_BBQ">LINK.</a> Disturbing Colm's neighbors for fun and profit.</div>#}
+{#		</div>#}
+{##}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">Skydiving</div>#}
+{#			<span class="timestamp">2007-06-10 00:00:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2007-06-09_Acampo_Skydive" ><img src="http://www.sabotage2.com/pictures/.tn/tn_d4774d59009e189d3fff252a833b352a.jpg" alt=""></a></div>#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2007-06-09_Acampo_Skydive">Plunging into my 29th.</a></div>#}
+{#		</div>#}
+{##}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">2006 Auto Show Pictures</div>#}
+{#			<span class="timestamp">2006-12-09 23:38:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2006-11-25_sf_autoshow" ><img src="http://www.sabotage2.com/pictures/.tn/tn_fe2829800190b71d7fa0a0ca44785247.jpg" alt=""></a></div>#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2006-11-25_sf_autoshow">312 pictures.</a> I'm all out of slightly entertaining front page comments.</div>#}
+{#		</div>#}
+{##}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">Lucas' Bachelor Party Pictures</div>#}
+{#			<span class="timestamp">2006-07-04 16:00:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2006-04-08_santacruz_bachelorparty" ><img src="pictures/tn/tn_2d67b960665b507ec622bfbeea935360.jpg" alt=""></a></div>#}
+{#			<div class="article_text">I guess some of you didn't realize that the bachelor party pictures had been posted. I added a link to the pictures section, but never updated the front page.#}
+{#			Well, here you are: <a href="/pictures/webgal.cgi?dir=2006-04-08_santacruz_bachelorparty">180 pictures of miniature golf and facial contortion.</a></div>#}
+{#		</div>#}
+{##}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">New Year's and Video Commentary Pictures</div>#}
+{#			<span class="timestamp">2006-02-11 22:13:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-12-31_paradise_newyear" ><img src="http://www.sabotage2.com/pictures/.tn/tn_7226e539de4dbdf19d3bf983a7fd2199.jpg" alt=""></a></div>#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-12-31_paradise_newyear">Nerf guns are fun.</a></div>#}
+{#		</div>#}
+{#		<div class="article">#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2006-01-02_paradise_commentary" ><img src="http://www.sabotage2.com/pictures/.tn/tn_a266e0db95981c94034ae0e3bac54818.jpg" alt=""></a></div>#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2006-01-02_paradise_commentary">It is finally over with.</a></div>#}
+{#		</div>#}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">Baby Shower and Auto Show Pictures</div>#}
+{#			<span class="timestamp">2005-11-30 18:13:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-11-19_chico_shower"><img src="pictures/tn/tn_4ded62c2b75bf63eeec7c828c7c013fe.jpg" alt=""></a></div>#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-11-19_chico_shower">55 Pictures</a> from the spawning party.#}
+{#			<a href="/pictures/webgal.cgi?dir=2005-11-26_sf_autoshow" ><img src="pictures/tn/tn_6d19cbffae73bf3ccb3b63be69c89b5d.jpg" alt=""></a>#}
+{#			<a href="/pictures/webgal.cgi?dir=2005-11-26_sf_autoshow">121 Pictures</a> of cars and drinks.</div>#}
+{#		</div>#}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">LAN Party Pictures</div>#}
+{#			<span class="timestamp">2005-08-27 14:46:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-08-19_davis_lan" ><img src="pictures/tn/tn_da5b20c814ffbb6a046209e030901f4b.jpg" alt=""></a></div>#}
+{#			<div class="article_text">Another exciting round of poorly exposed pictures containing computers and people sitting in front of them. <a href="/pictures/webgal.cgi?dir=2005-08-19_davis_lan">60 pictures.</a></div>#}
+{#		</div>#}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">NIN Concert and Lewis Black Pictures</div>#}
+{#			<span class="timestamp">2005-07-06 21:18:00</span> (submitted by <span class="submitter">lucas</span>)#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-04-23_davissf_ninlewisblack" ><img src=	"pictures/tn/tn_afa5830de86b9feae6003299e656f503.jpg" alt=""></a></div>#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-04-23_davissf_ninlewisblack">20 pictures</a>. Finally! The first "half" is in SF for Lewis Black, the latter "half" in Davis for NIN.</div>#}
+{#		</div>#}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">July 4th/Star Wars Weekend Pictures</div>#}
+{#			<span class="timestamp">2005-07-06 19:57:00</span> (submitted by <span class="submitter"> lucas</span>)#}
+{#			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-07-04_santabarbara_starwars" ><img src="pictures/tn/tn_fcc1e45cef647b0926a4de1987f7a3f7.jpg" alt=""></a></div>#}
+{#			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-07-04_santabarbara_starwars">100 pictures</a>. I have commented some	of them. We hope to have pictures from the NIN concert and Lewis Black posted soon.</div>#}
+{#		</div>#}
+{##}
+{#		<div class="article">#}
+{#			<div class="article_headline">10,000 posts</div>#}
+{#			<span class="timestamp">2005-05-03 10:24:38</span> (submitted by <span class="submitter"> lucas</span>)#}
+{#			<div class="article_text">10,000 posts in the forum in nearly 5 years. Here are some stats for ya:#}
+{#			<table id="statistics">#}
+{#				<tr><td colspan=2>General Statistics</td></tr>#}
+{#				<tr><td>Date of First Post</td><td>Mon May 22 18:41:52 2000</td></tr>#}
+{#				<tr><td>Total Posts</td><td> 10003 (5.54/day)</td></tr>#}
+{#				<tr><td>Posts in the last month</td><td> 106 (3.53/day)</td></tr>#}
+{#				<tr><td>Posts in the last week</td><td> 35(5.00/day)</td></tr>#}
+{#				<tr><td>Posts in the last 24 hours</td><td> 2 (0.08/hour)</td></tr>#}
+{#				<tr><td>Average Post Length</td><td> 382 bytes</td></tr>#}
+{#				<tr><td>Total Threads</td><td> 1479</td></tr>#}
+{#				<tr><td>Average Posts per Thread</td><td> 6.76</td></tr>#}
+{#				<tr><td>Total Users</td><td> 35</td></tr>#}
+{#				<tr><td>Average Posts per User</td><td> 285.80</td></tr>#}
+{#				<tr><td>Active Users</td><td>(posts within last 30 days) 12</td></tr>#}
+{#			</table>#}
+{#			</div>#}
+{#		</div>#}
+{##}
+{#			<div class="article">#}
+{#				<div class="article_headline">Winter LAN Pictures</div>#}
+{#				<span class="timestamp">2005-01-18 18:24</span> (submitted by <span class="submitter"> lucas</span>)#}
+{#				<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-01-01_mtnview_lan" ><img src="pictures/tn/tn_a663b1b562c4fe778350d14c31d0312f.jpg" alt=""></a></div>#}
+{#				<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-01-01_mtnview_lan">40 pictures</a> from this year's not-so-cold LAN.</div>#}
+{#			</div>#}
+{##}
+{#			<div class="article">#}
+{#				<div class="article_headline">Picture Galleries Enhancements</div>#}
+{#				<span class="timestamp">2004-12-11 13:03M</span> (submitted by <span class="submitter"> lucas</span>)#}
+{#				<div class="article_text">2 things:#}
+{#					<ul>#}
+{#						<li> Automatically generated thumbnails now have a tag at the bottom with the resolution and filesize. They do truncate part of the image unfortunately, I haven't found a way around this yet. I plan to fix it eventually.#}
+{#						<li> If you are logged in to the forums, you can now comment on individual images. You can't delete comments for now, that is a feature I plan to add eventually.#}
+{#					</ul>#}
+{#					Here are a couple images I have commented on just to demonstrate:#}
+{##}
+{#					<a href="http://www.sabotage2.com/pictures/webgal.cgi?dir=2004-11-27_sf_autoshow&amp;file=0310_PB270071.JPG">PB270071.JPG</a>#}
+{#					<a href="http://www.sabotage2.com/pictures/webgal.cgi?dir=&amp;file=IMG_0701.JPG">IMG_0701.JPG</a>#}
+{#					<br>Enjoy.#}
+{#				</div>#}
+{#			</div>#}
 
-			<div class="article">
-				<div class="article_headline">New Hosting</div>
-				<span class="timestamp">2010-04-07 18:06</span> (submitted by <span class="submitter">lucas</span>)
-				<div class="article_text">Sabotage2.com is back up and is now on a brand new VPS! Mrfalcon is being phased out due to its age, and will soon meet its demise.
-				</div>
-			</div>
-			
-	
-			<div class="article">
-				<div class="article_headline">2008 Auto Show Pictures</div>
-				<span class="timestamp">2008-12-06 22:44</span> (submitted by <span class="submitter">lucas</span>)
-				<div class="article_image">
-					<a href="/pictures/webgal.cgi?dir=2008-11-29_sf_autoshow" ><img src="{{ url_for('static', filename='pictures/tn/tn_ccae45d2bb66bd77ce5bae83892b829e.jpg') }}" alt=""></a>
-				</div>
-				<div class="article_text"><a href="/pictures/webgal.cgi?dir=2008-11-29_sf_autoshow">238 pictures!</a></div>
-			</div>
 
+{#        <footer><span class="vert_center"><a href="page=oldnews">older news...</a></span></footer>#}
 
-			
-			<div class="article">
-				<div class="article_headline">2007 Auto Show Pictures</div>
-				<span class="timestamp">2007-12-26 20:46</span> (submitted by <span class="submitter">lucas</span>)
-				<div class="article_image"><a href="/pictures/webgal.cgi?dir=2007-11-24_sf_autoshow" ><img src="{{url_for('static', filename='pictures/tn/tn_fe1df9efd4b46c3729c04a7b1dfa8fcd.jpg') }}" alt=""></a></div>
-				<div class="article_text"><a href="/pictures/webgal.cgi?dir=2007-11-24_sf_autoshow">196 pictures</a> made the cut this year</div>
-			</div>
+{#        <footer><a href="page=oldnews">older news...</a></footer>#}
+        <footer>Other crap</footer>
 
-
-			<div class="article">
-				<div class="article_headline">MrFalcon Disk Woes</div>
-				<span class="timestamp">2007-12-02 10:32:00</span> (submitted by <span class="submitter">lucas</span>)
-				<div class="article_text">Maybe you noticed that sabotage2.com was down for pretty much all of yesterday. As it turns out, the hard drive containing the web site and all other relevent data besides the OS has failed. I drove up to Davis last night and purchased a new drive along the way. I was able to restore all the data without a hitch.</div>
-			</div>
-
-		<div class="article">
-			<div class="article_headline">Colm's &amp; Heather's BBQ Pictures</div>
-			<span class="timestamp">2007-09-02 00:33:00</span> (submitted by <span class="submitter">lucas</span>)
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2007-08-12_Sac_BBQ" ><img src="http://www.sabotage2.com/pictures/.tn/tn_0a08bb7fd1c68226c11768356cc4dff7.jpg" alt=""></a></div>
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2007-08-12_Sac_BBQ">LINK.</a> Disturbing Colm's neighbors for fun and profit.</div>
-		</div>
-
-
-		<div class="article">
-			<div class="article_headline">Skydiving</div>
-			<span class="timestamp">2007-06-10 00:00:00</span> (submitted by <span class="submitter">lucas</span>)
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2007-06-09_Acampo_Skydive" ><img src="http://www.sabotage2.com/pictures/.tn/tn_d4774d59009e189d3fff252a833b352a.jpg" alt=""></a></div>
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2007-06-09_Acampo_Skydive">Plunging into my 29th.</a></div>
-		</div>
-
-
-		<div class="article">
-			<div class="article_headline">2006 Auto Show Pictures</div>
-			<span class="timestamp">2006-12-09 23:38:00</span> (submitted by <span class="submitter">lucas</span>)
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2006-11-25_sf_autoshow" ><img src="http://www.sabotage2.com/pictures/.tn/tn_fe2829800190b71d7fa0a0ca44785247.jpg" alt=""></a></div>
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2006-11-25_sf_autoshow">312 pictures.</a> I'm all out of slightly entertaining front page comments.</div>
-		</div>
-
-
-		<div class="article">
-			<div class="article_headline">Lucas' Bachelor Party Pictures</div>
-			<span class="timestamp">2006-07-04 16:00:00</span> (submitted by <span class="submitter">lucas</span>)
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2006-04-08_santacruz_bachelorparty" ><img src="pictures/tn/tn_2d67b960665b507ec622bfbeea935360.jpg" alt=""></a></div>
-			<div class="article_text">I guess some of you didn't realize that the bachelor party pictures had been posted. I added a link to the pictures section, but never updated the front page.
-			Well, here you are: <a href="/pictures/webgal.cgi?dir=2006-04-08_santacruz_bachelorparty">180 pictures of miniature golf and facial contortion.</a></div>
-		</div>
-
-
-		<div class="article">
-			<div class="article_headline">New Year's and Video Commentary Pictures</div>
-			<span class="timestamp">2006-02-11 22:13:00</span> (submitted by <span class="submitter">lucas</span>)
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-12-31_paradise_newyear" ><img src="http://www.sabotage2.com/pictures/.tn/tn_7226e539de4dbdf19d3bf983a7fd2199.jpg" alt=""></a></div>
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-12-31_paradise_newyear">Nerf guns are fun.</a></div>
-		</div>
-		<div class="article">
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2006-01-02_paradise_commentary" ><img src="http://www.sabotage2.com/pictures/.tn/tn_a266e0db95981c94034ae0e3bac54818.jpg" alt=""></a></div>
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2006-01-02_paradise_commentary">It is finally over with.</a></div>
-		</div>
-
-		<div class="article">
-			<div class="article_headline">Baby Shower and Auto Show Pictures</div>
-			<span class="timestamp">2005-11-30 18:13:00</span> (submitted by <span class="submitter">lucas</span>)
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-11-19_chico_shower"><img src="pictures/tn/tn_4ded62c2b75bf63eeec7c828c7c013fe.jpg" alt=""></a></div>
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-11-19_chico_shower">55 Pictures</a> from the spawning party.
-			<a href="/pictures/webgal.cgi?dir=2005-11-26_sf_autoshow" ><img src="pictures/tn/tn_6d19cbffae73bf3ccb3b63be69c89b5d.jpg" alt=""></a>
-			<a href="/pictures/webgal.cgi?dir=2005-11-26_sf_autoshow">121 Pictures</a> of cars and drinks.</div>
-		</div>
-
-		<div class="article">
-			<div class="article_headline">LAN Party Pictures</div>
-			<span class="timestamp">2005-08-27 14:46:00</span> (submitted by <span class="submitter">lucas</span>)
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-08-19_davis_lan" ><img src="pictures/tn/tn_da5b20c814ffbb6a046209e030901f4b.jpg" alt=""></a></div>
-			<div class="article_text">Another exciting round of poorly exposed pictures containing computers and people sitting in front of them. <a href="/pictures/webgal.cgi?dir=2005-08-19_davis_lan">60 pictures.</a></div>
-		</div>
-
-		<div class="article">
-			<div class="article_headline">NIN Concert and Lewis Black Pictures</div>
-			<span class="timestamp">2005-07-06 21:18:00</span> (submitted by <span class="submitter">lucas</span>)
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-04-23_davissf_ninlewisblack" ><img src=	"pictures/tn/tn_afa5830de86b9feae6003299e656f503.jpg" alt=""></a></div>
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-04-23_davissf_ninlewisblack">20 pictures</a>. Finally! The first "half" is in SF for Lewis Black, the latter "half" in Davis for NIN.</div>
-		</div>
-
-		<div class="article">
-			<div class="article_headline">July 4th/Star Wars Weekend Pictures</div>
-			<span class="timestamp">2005-07-06 19:57:00</span> (submitted by <span class="submitter"> lucas</span>)
-			<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-07-04_santabarbara_starwars" ><img src="pictures/tn/tn_fcc1e45cef647b0926a4de1987f7a3f7.jpg" alt=""></a></div>
-			<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-07-04_santabarbara_starwars">100 pictures</a>. I have commented some	of them. We hope to have pictures from the NIN concert and Lewis Black posted soon.</div>
-		</div>
-
-		<div class="article">
-			<div class="article_headline">10,000 posts</div>
-			<span class="timestamp">2005-05-03 10:24:38</span> (submitted by <span class="submitter"> lucas</span>)
-			<div class="article_text">10,000 posts in the forum in nearly 5 years. Here are some stats for ya:
-			<table id="statistics">
-				<tr><td colspan=2>General Statistics</td></tr>
-				<tr><td>Date of First Post</td><td>Mon May 22 18:41:52 2000</td></tr>
-				<tr><td>Total Posts</td><td> 10003 (5.54/day)</td></tr>
-				<tr><td>Posts in the last month</td><td> 106 (3.53/day)</td></tr>
-				<tr><td>Posts in the last week</td><td> 35(5.00/day)</td></tr>
-				<tr><td>Posts in the last 24 hours</td><td> 2 (0.08/hour)</td></tr>
-				<tr><td>Average Post Length</td><td> 382 bytes</td></tr>
-				<tr><td>Total Threads</td><td> 1479</td></tr>
-				<tr><td>Average Posts per Thread</td><td> 6.76</td></tr>
-				<tr><td>Total Users</td><td> 35</td></tr>
-				<tr><td>Average Posts per User</td><td> 285.80</td></tr>
-				<tr><td>Active Users</td><td>(posts within last 30 days) 12</td></tr>
-			</table>
-			</div>
-		</div>
-
-			<div class="article">
-				<div class="article_headline">Winter LAN Pictures</div>
-				<span class="timestamp">2005-01-18 18:24</span> (submitted by <span class="submitter"> lucas</span>)
-				<div class="article_image"><a href="/pictures/webgal.cgi?dir=2005-01-01_mtnview_lan" ><img src="pictures/tn/tn_a663b1b562c4fe778350d14c31d0312f.jpg" alt=""></a></div>
-				<div class="article_text"><a href="/pictures/webgal.cgi?dir=2005-01-01_mtnview_lan">40 pictures</a> from this year's not-so-cold LAN.</div>
-			</div>
-
-			<div class="article">
-				<div class="article_headline">Picture Galleries Enhancements</div>
-				<span class="timestamp">2004-12-11 13:03M</span> (submitted by <span class="submitter"> lucas</span>)
-				<div class="article_text">2 things:
-					<ul>
-						<li> Automatically generated thumbnails now have a tag at the bottom with the resolution and filesize. They do truncate part of the image unfortunately, I haven't found a way around this yet. I plan to fix it eventually.
-						<li> If you are logged in to the forums, you can now comment on individual images. You can't delete comments for now, that is a feature I plan to add eventually.
-					</ul>
-					Here are a couple images I have commented on just to demonstrate:
-
-					<a href="http://www.sabotage2.com/pictures/webgal.cgi?dir=2004-11-27_sf_autoshow&amp;file=0310_PB270071.JPG">PB270071.JPG</a>
-					<a href="http://www.sabotage2.com/pictures/webgal.cgi?dir=&amp;file=IMG_0701.JPG">IMG_0701.JPG</a>
-					<br>Enjoy.
-				</div>
-			</div>
-		</div> <!-- close articles div -->
-
-
-			
-			<div class="older_news"><span class="vert_center"><a href="page=oldnews">older news...</a></span></div>
-		
 		</div> <!-- close Content div -->
-	</div> <!-- close Container div -->
+{#	</div> <!-- close Container div -->#}
 {% endblock %}
 </body>
 </html>
