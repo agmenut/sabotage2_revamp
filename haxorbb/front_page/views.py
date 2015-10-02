@@ -8,18 +8,17 @@ from flask import render_template, redirect, send_from_directory, request
 @app.route('/')
 def home_page():
     articles = []
-    results = Articles.query.all()
+    results = Articles.query.order_by(Articles.datestamp.desc()).all()
     for row in results:
-        out = {k.name: getattr(row, k.name) for k in row.__table__.columns}
-        if out['has_image']:
-            image_data = row.image[0]
-            image = {k.name: getattr(image_data, k.name) for k in image_data.__table__.columns}
-            image['image_title'] = image.pop('title')
-        else:
-            image = None
-        out.update(image)
-        articles.append(out)
+        articles.append(row)
     return render_template("index.html", articles=articles)
+
+
+@app.route('/<article>')
+def get_article(article):
+    qry = Articles.query.filter_by(slug=article)
+    item = qry.one()
+    return render_template("article.html", article=item)
 
 
 @app.route('/oldnews/', defaults={'page': 'oldnews'})
@@ -28,7 +27,7 @@ def other_page(page):
     if page == "oldnews":
         return redirect('http://www.sabotage2.com/index.php?page=oldnews', 301)
     else:
-        return 'Page does not exist', 404
+        return render_template("error.html")
 
 
 @app.route('/robots.txt')
@@ -38,4 +37,4 @@ def robots():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return '404 Is full of goats', 404
+    return render_template("error.html", error=e)
