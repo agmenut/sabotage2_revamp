@@ -1,17 +1,18 @@
-create table if not exists haxorbb.article_images (
+create table if not exists portal.article_images (
   id serial primary key,
   location varchar(255),
   title varchar(255),
   link varchar (2048)
 );
 
-create table if not exists haxorbb.articles (
+create table if not exists portal.articles (
   id serial primary key,
   author varchar(255),
   title  varchar(255),
   has_image boolean,
-  fk_image int references article_images(id),
+  fk_image int references portal.article_images(id),
   content  text,
-  datestamp timestamp
+  datestamp timestamp,
+  slug varchar(30)
  );
 
