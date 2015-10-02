@@ -12,8 +12,16 @@ class Articles(db.Model):
     fk_image = db.Column(db.Integer)
     content = db.Column(db.Text)
     datestamp = db.Column(db.DateTime)
-
+    slug = db.Column(db.String(30))
     image = db.relationship('ArticleImages', backref='articles', lazy='joined')
+
+    def post(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
 
 class ArticleImages(db.Model):
