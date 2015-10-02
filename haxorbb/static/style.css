@@ -74,7 +74,7 @@ span.author {
 }
 
 a.navlink {
-	margin: 0px;
+	margin: 0;
 }
 
 .navbox {
@@ -141,20 +141,20 @@ article a:hover, article a:active {
 	color: yellow;
 }
 
+article footer {
+    clear: both
+}
+
 .submitter {
 	color: #90EE90 	;
 }
 
-/*footer {*/
-	/*position: relative;*/
-	/*border: 1px solid #004499;*/
-	/*background-color: #222222;*/
-	/*height: 20px;*/
-	/*width: 80px;*/
-	/*margin-top: 20px;*/
-	/*margin-bottom: 20px;*/
-    /*clear: both;*/
-/*}*/
+.footer {
+	margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 900px
+}
 
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/
@@ -165,12 +165,12 @@ article a:hover, article a:active {
 	/*color: orange;*/
 /*}*/
 
-.counter {
-	position: relative;
-	border: 1px solid #004499;
-	background-color: #222222;
-	height: 30px;
-	width: 10%;
-	margin: 0px auto;
-	margin-bottom: 10px;
-}
+/*.counter {*/
+	/*position: relative;*/
+	/*border: 1px solid #004499;*/
+	/*background-color: #222222;*/
+	/*height: 30px;*/
+	/*width: 10%;*/
+	/*margin: 0 auto;*/
+	/*margin-bottom: 10px;*/
+/*}*/
