@@ -14,7 +14,7 @@ def home_page():
     return render_template("index.html", articles=articles)
 
 
-@app.route('/<article>')
+@app.route('/article/<article>')
 def get_article(article):
     qry = Articles.query.filter_by(slug=article)
     item = qry.one()
