@@ -1,55 +1,55 @@
 a:link { 
-	font-family: Verdana,Geneva; 
+	font-family: 'Verdana', 'Geneva', sans-serif; 
 	text-decoration: none }
 
 a:visited { 
-	font-family: Verdana,Geneva;
+	font-family: 'Verdana', 'Geneva', sans-serif;
 	text-decoration: none
 }
 
 a:hover { 
-	font-family: Verdana,Geneva; 
+	font-family: 'Verdana', 'Geneva', sans-serif; 
 	color: #FFFF44; 
 	text-decoration: none 
 }
 
 a:active { 
-	font-family: Verdana,Geneva; 
+	font-family: 'Verdana', 'Geneva', sans-serif; 
 	text-decoration: none
 }
 
 body { 
-	font-family: Verdana,Geneva;
+	font-family: 'Verdana', 'Geneva', sans-serif;
 	font-size: 11px;
 }
 
 input { 
-	font-family: Verdana,Geneva;
+	font-family: 'Verdana', 'Geneva', sans-serif;
 	font-size: 11px; 
 }
 
 select { 
-	font-family: Verdana,Geneva; 
+	font-family: 'Verdana', 'Geneva', sans-serif; 
 	font-size: 11px;
 }
 
 textarea { 
-	font-family: Verdana,Geneva; 
+	font-family: 'Verdana', 'Geneva', sans-serif; 
 	font-size: 11px;
 }
 
 ul { 
-	font-family: Verdana,Geneva; 
+	font-family: 'Verdana', 'Geneva', sans-serif; 
 	font-size: 11px;
 }
 
 ol { 
-	font-family: Verdana,Geneva; 
+	font-family: 'Verdana', 'Geneva', sans-serif; 
 	font-size: 11px;
 }
 
 li { 
-	font-family: Verdana,Geneva; 
+	font-family: 'Verdana', 'Geneva', sans-serif; 
 	font-size: 11px; 
 }
 

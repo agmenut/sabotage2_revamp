@@ -20,12 +20,9 @@
 
             <article>
                 <div class="headline">{{ article.title }}</div>
-        <time datetime="{{ article.datestamp }}" pubdate="pubdate">{{ article.datestamp }}</time>
+                <time datetime="{{ article.datestamp }}" pubdate="pubdate">{{ article.datestamp }}</time>
                 (submitted by <span class="submitter">{{ article.author }}</span>)
                     {{ article.content | safe }}
-                <footer>
-                    Permalink: <a href="{{  article.slug }}">{{ article.slug }}</a>
-                </footer>
             </article>
 
 </div> <!-- close Content div -->

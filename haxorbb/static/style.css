@@ -1,8 +1,8 @@
 @import "sabotage.css";
 
 html, body {
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	background-color: #000000;
 	color: #ffffff;
 }
@@ -56,17 +56,15 @@ span.author {
 }
 
 #banner {
-	padding: 0px;
 	margin-left: auto;
 	margin-right: auto;
 	width: 920px;
-	padding-top: 6px;
-	padding-bottom: 15px;
+	padding: 6px 0 15px;
 }
 
 .header {
 	background-color: #004499;
-	font-family: Verdana, Geneva;
+	font-family: 'Verdana', 'Geneva', sans-serif;
 	font-size: 11px;
 	font-weight: bold;
 	padding-bottom: 2px;
@@ -85,8 +83,8 @@ a.navlink {
 #site_contents {
 	position: relative;
 	float: left;
-	padding: 0px;
-	margin: 0px;
+	padding: 0;
+	margin: 0;
 	width: 105px;
 }
 
