@@ -111,10 +111,11 @@ a.navlink {
 	clear: both;
 }
 
-article .headline {
+article h3 {
 	color: orange;
 	font-size: 12pt;
 	font-weight: bold;
+	margin-bottom: 0;
 }
 
 article {
