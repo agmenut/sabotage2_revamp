@@ -13,7 +13,6 @@ class Articles(db.Model):
     content = db.Column(db.Text)
     datestamp = db.Column(db.DateTime)
     slug = db.Column(db.String(30))
-    image = db.relationship('ArticleImages', backref='articles', lazy='joined')
 
     def post(self):
         try:
@@ -22,13 +21,3 @@ class Articles(db.Model):
         except Exception as e:
             db.session.rollback()
             raise e
-
-
-class ArticleImages(db.Model):
-    __tablename = 'article_images'
-    __table_args__ = {"schema": "portal"}
-    id = db.Column(db.Integer, db.ForeignKey('portal.articles.fk_image'), primary_key=True)
-    location = db.Column(db.String(255))
-    title = db.Column(db.String(255))
-    link = db.Column(db.String(2048))
-
