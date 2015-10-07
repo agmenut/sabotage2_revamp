@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask.ext.sqlalchemy import SQLAlchemy
 import os
 
@@ -43,5 +43,11 @@ app.config.from_object('config.BaseConfiguration')
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 app.secret_key = os.urandom(64)
 db = SQLAlchemy(app)
+
+
+@app.route('/media/<path:filename>')
+def media(filename):
+    print app.config['MEDIA_ROOT']
+    return send_from_directory(app.config['MEDIA_ROOT'], filename)
 
 from haxorbb.front_page import views
