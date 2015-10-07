@@ -10,7 +10,7 @@ with open(os.path.join(_cwd, 'local.conf')) as config_file:
 DB_USER = db_conf['haxorbb']['user']
 DB_PASS = db_conf['haxorbb']['pass']
 DB_HOST = db_conf['haxorbb']['host']
-MEDIA = ""
+MEDIA = "<PATH TO MEDIA DIR>"
 
 
 class BaseConfiguration(object):
