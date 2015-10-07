@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template
 from . import auth
+#from ..models import User
 
 
 @auth.route('/login', methods=['GET', 'POST'])

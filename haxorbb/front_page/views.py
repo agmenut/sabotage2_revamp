@@ -1,28 +1,28 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
-from haxorbb import app
-from haxorbb.models import Articles
-from flask import render_template, redirect, send_from_directory, request
+from . import front_page
+from ..models import Articles
+from flask import render_template, redirect, send_from_directory, request, current_app
 from flask.ext.login import login_required, current_user
 
-@app.route('/')
+
+@front_page.route('/')
 def home_page():
     articles = []
     results = Articles.query.order_by(Articles.datestamp.desc()).all()
     for row in results:
         articles.append(row)
-    return render_template("index.html", articles=articles)
+    return render_template("front_page/index.html", articles=articles)
 
 
-@app.route('/article/<article>')
+@front_page.route('/article/<article>')
 def get_article(article):
     qry = Articles.query.filter_by(slug=article)
     item = qry.one()
-    return render_template("article.html", article=item)
+    return render_template("front_page/article.html", article=item)
 
 
-@app.route('/oldnews/', defaults={'page': 'oldnews'})
-@app.route('/page=<page>/')
+@front_page.route('/oldnews/', defaults={'page': 'oldnews'})
+@front_page.route('/page=<page>/')
 def other_page(page):
     if page == "oldnews":
         return redirect('http://www.sabotage2.com/index.php?page=oldnews', 301)
@@ -30,11 +30,11 @@ def other_page(page):
         return render_template("error.html")
 
 
-@app.route('/robots.txt')
+@front_page.route('/robots.txt')
 def robots():
-    return send_from_directory(app.static_folder, request.path[1:])
+    return send_from_directory(current_app.static_folder, request.path[1:])
 
 
-@app.errorhandler(404)
+@front_page.errorhandler(404)
 def page_not_found(e):
     return render_template("error.html", error=e), 404
