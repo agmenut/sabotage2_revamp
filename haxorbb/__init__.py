@@ -2,8 +2,6 @@
 from flask import Flask, send_from_directory
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
-# from .auth import auth as authentication
-# from .front_page import front_page
 from config import config
 import os
 
@@ -54,14 +52,10 @@ def initialize_app(config_name):
     app.wsgi_app = ReverseProxied(app.wsgi_app)
     app.secret_key = os.urandom(64)
 
-    # Register blueprints
-    # app.register_blueprint(authentication)
-    # app.register_blueprint(front_page)
-
     login_manager.init_app(app)
-    # print os.environ.__dict__
     db.init_app(app)
 
+    # Register blueprints
     from .auth import auth as authentication
     app.register_blueprint(authentication)
 
