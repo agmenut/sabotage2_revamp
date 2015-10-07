@@ -47,7 +47,6 @@ db = SQLAlchemy(app)
 
 @app.route('/media/<path:filename>')
 def media(filename):
-    print app.config['MEDIA_ROOT']
     return send_from_directory(app.config['MEDIA_ROOT'], filename)
 
 from haxorbb.front_page import views
