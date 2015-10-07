@@ -43,7 +43,7 @@
                     </header>
                     {{ article.content | safe }}
                     <footer>
-                        Permalink: <a href="{{  url_for('get_article', article=article.slug) }}">{{ article.slug }}</a>
+                        Permalink: <a href="{{ url_for('get_article', article=article.slug) }}">{{ article.slug }}</a>
                     </footer>
                 </article>
 
