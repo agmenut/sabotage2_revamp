@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask.ext.login import UserMixin
 
 
 class Articles(db.Model):
@@ -21,3 +23,21 @@ class Articles(db.Model):
         except Exception as e:
             db.session.rollback()
             raise e
+
+
+class User(UserMixin, db.Model):
+    __tablename__ = 'userinfo'
+    __table_args__ = {'schema': 'users'}
+    id = db.Column(db.Integer, primary_key=True)
+    password_hash = db.Column(db.String(128))
+
+    @property
+    def password(self):
+        raise AttributeError("Password is not a readable attribute")
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password, method='pbkdf2', salt_length=12)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)

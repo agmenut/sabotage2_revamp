@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from haxorbb import app
 from haxorbb.models import Articles
 from flask import render_template, redirect, send_from_directory, request
-
+from flask.ext.login import login_required, current_user
 
 @app.route('/')
 def home_page():

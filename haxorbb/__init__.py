@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, send_from_directory
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.login import LoginManager
+from .auth import auth as authentication
 import os
 
 
@@ -43,6 +45,13 @@ app.config.from_object('config.BaseConfiguration')
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 app.secret_key = os.urandom(64)
 db = SQLAlchemy(app)
+
+app.register_blueprint(authentication)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'auth.login'
 
 
 @app.route('/media/<path:filename>')

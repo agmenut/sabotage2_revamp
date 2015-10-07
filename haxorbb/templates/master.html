@@ -10,6 +10,11 @@
     <meta name="viewport" content="width=808" />
 </head>
 <body>
+{% if current_user.is_authenticated %}
+    Logged in as {{ current_user.username }}
+{% else %}
+    You appear to be some random jerk.
+{%  endif %}
 {% block content %}
 {% endblock %}
 </body>
