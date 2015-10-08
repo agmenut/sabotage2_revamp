@@ -30,11 +30,4 @@ def other_page(page):
         return render_template("error.html")
 
 
-@front_page.route('/robots.txt')
-def robots():
-    return send_from_directory(current_app.static_folder, request.path[1:])
 
-
-@front_page.errorhandler(404)
-def page_not_found(e):
-    return render_template("error.html", error=e), 404

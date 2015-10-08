@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from config import config
@@ -48,18 +48,33 @@ db = SQLAlchemy()
 def initialize_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
-    # config[config_name].initapp(app)
+    config[config_name].initapp(app)
     app.wsgi_app = ReverseProxied(app.wsgi_app)
     app.secret_key = os.urandom(64)
 
     login_manager.init_app(app)
     db.init_app(app)
 
+    # print app.config
+    app.media = app.config['MEDIA_ROOT']
+    # print app.media
     # Register blueprints
     from .auth import auth as authentication
     app.register_blueprint(authentication)
 
     from .front_page import front_page
     app.register_blueprint(front_page)
+
+    @app.route('/robots.txt')
+    def robots():
+        return send_from_directory(app.static_folder, request.path[1:])
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template("error.html", error=e), 404
+
+    @app.route('/media/<path:filename>')
+    def media(filename):
+        return send_from_directory(app.config['MEDIA_ROOT'], filename)
 
     return app
