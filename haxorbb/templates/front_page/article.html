@@ -10,7 +10,7 @@
 <div id="content">
 		<div id="site_contents" class="navbox">
 			<div class="header">Site Contents</div>		
-			<p class="navlink"><a href="{{  url_for('home_page') }}">News</a></p>
+			<p class="navlink"><a href="{{  url_for('front_page.home_page') }}">News</a></p>
 			<p class="navlink"><a href="index.php?page=script">Script</a></p>
 			<p class="navlink"><a href="index.php?page=pictures">Pictures</a></p>
 			<p class="navlink"><a href="index.php?page=videos">Videos</a></p>
@@ -25,7 +25,7 @@
             </header>
             {{ article.content | safe }}
             <footer>
-                Permalink: <a href="{{  url_for('get_article', article=article.slug) }}">{{ article.slug }}</a>
+                Permalink: <a href="{{  url_for('front_page.get_article', article=article.slug) }}">{{ article.slug }}</a>
             </footer>
         </article>
 

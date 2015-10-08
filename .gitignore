@@ -53,7 +53,5 @@ coverage.xml
 docs/_build/
 
 # Configuration details
-local.conf
-*.xml
-*.env
+.env
 .idea/
