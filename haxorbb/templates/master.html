@@ -10,11 +10,13 @@
     <meta name="viewport" content="width=808" />
 </head>
 <body>
+{% block id %}
 {% if current_user.is_authenticated %}
     Logged in as {{ current_user.username }}
 {% else %}
-    You appear to be some random jerk.
+    You appear to be some random jerk. <a href="{{ url_for('auth.login') }}">Login</a>
 {%  endif %}
+{% endblock id %}
 {% block content %}
 {% endblock %}
 </body>
