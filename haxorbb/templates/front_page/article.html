@@ -21,7 +21,7 @@
         <article>
             <header><h3>{{ article.title }}</h3>
                 <time itemprop="datePublished" datetime="{{ article.datetime }}">{{ article.datestamp }}</time>
-                <div>Submitted by <span class="submitter">{{ article.author }}</span></div>
+                <div>Submitted by <span class="submitter">{{ article.author.fullname }}</span></div>
             </header>
             {{ article.content | safe }}
             <footer>

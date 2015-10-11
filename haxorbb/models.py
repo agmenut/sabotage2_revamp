@@ -8,10 +8,8 @@ class Articles(db.Model):
     __tablename__ = 'articles'
     __table_args__ = {"schema": "portal"}
     id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.String(255))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.userinfo.userid'))
     title = db.Column(db.String(255))
-    has_image = db.Column(db.Boolean)
-    fk_image = db.Column(db.Integer)
     content = db.Column(db.Text)
     datestamp = db.Column(db.DateTime)
     slug = db.Column(db.String(30))
@@ -28,8 +26,20 @@ class Articles(db.Model):
 class User(UserMixin, db.Model):
     __tablename__ = 'userinfo'
     __table_args__ = {'schema': 'users'}
-    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, primary_key=True)
     password_hash = db.Column(db.String(128))
+    username = db.Column(db.String(32))
+    fullname = db.Column(db.String(64))
+    email = db.Column(db.String(254))
+    registration_date = db.Column(db.DateTime)
+    location = db.Column(db.String(64))
+    avatar_url = db.Column(db.String(250))
+    picture_url = db.Column(db.String(250))
+    quota = db.Column(db.Integer)
+    disk_used = db.Column(db.Integer)
+    active = db.Column(db.Boolean)
+    last_seen = db.Column(db.DateTime)
+    articles = db.relationship('Articles', backref='author', lazy='dynamic')
 
     @property
     def password(self):
