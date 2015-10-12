@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-from flask import Flask
+from flask import Flask, send_from_directory, request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.login import LoginManager
+from flask.ext.mail import Mail
+from config import config
 import os
 
 
@@ -37,11 +40,44 @@ class ReverseProxied(object):
             environ['wsgi.url_scheme'] = scheme
         return self.app(environ, start_response)
 
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'auth.login'
+db = SQLAlchemy()
+mail = Mail()
 
-app = Flask(__name__)
-app.config.from_object('config.BaseConfiguration')
-app.wsgi_app = ReverseProxied(app.wsgi_app)
-app.secret_key = os.urandom(64)
-db = SQLAlchemy(app)
+def initialize_app(config_name):
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
+    config[config_name].initapp(app)
+    app.wsgi_app = ReverseProxied(app.wsgi_app)
+    app.secret_key = os.urandom(64)
 
-from haxorbb.front_page import views
+    login_manager.init_app(app)
+    db.init_app(app)
+    mail.init_app(app)
+
+    # Init the Media directory
+    app.media = app.config['MEDIA_ROOT']
+
+
+    # Register blueprints
+    from .auth import auth as authentication
+    app.register_blueprint(authentication)
+
+    from .front_page import front_page
+    app.register_blueprint(front_page)
+
+    @app.route('/robots.txt')
+    def robots():
+        return send_from_directory(app.static_folder, request.path[1:])
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template("error.html", error=e), 404
+
+    @app.route('/media/<path:filename>')
+    def media(filename):
+        return send_from_directory(app.config['MEDIA_ROOT'], filename)
+
+    return app

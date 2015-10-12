@@ -4,12 +4,28 @@
     <meta charset="UTF-8">
     <title>Sabotage two</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='s2.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='normalize.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='iphone.css') }}" media="only screen and (max-device-width: 480px)">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='ipad.css') }}" media="only screen and (device-width: 768px) and (orientation: landscape)">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}" media="only screen and (min-device-width: 1024px)">
     <meta name="viewport" content="width=808" />
 </head>
 <body>
+{% block id %}
+{% if current_user.is_authenticated %}
+    Logged in as {{ current_user.username }} | <a href="{{ url_for('auth.logout') }}">Logout</a>
+{% else %}
+    You appear to be some random jerk. <a href="{{ url_for('auth.login') }}">Login</a> or
+    <a href="{{ url_for('auth.register') }}">Register</a>
+{%  endif %}
+{% endblock id %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {%  for message in messages %}
+            <div class="flash">{{ message | safe }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 {% block content %}
 {% endblock %}
 </body>

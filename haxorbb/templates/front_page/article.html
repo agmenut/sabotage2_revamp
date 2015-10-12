@@ -1,0 +1,36 @@
+{% extends 'master.html' %}
+{% block content %}
+
+<div id="container">
+	<div id="banner">
+		<img src="{{ url_for('media', filename='img/cover_60.jpg') }}" height="180" width="920" alt="Banner">
+	</div>
+	
+	
+<div id="content">
+		<div id="site_contents" class="navbox">
+			<div class="header">Site Contents</div>		
+			<p class="navlink"><a href="{{  url_for('front_page.home_page') }}">News</a></p>
+			<p class="navlink"><a href="index.php?page=script">Script</a></p>
+			<p class="navlink"><a href="index.php?page=pictures">Pictures</a></p>
+			<p class="navlink"><a href="index.php?page=videos">Videos</a></p>
+			<p class="navlink"><a href="http://www.sabotage2.com/haxorbb/lmsbb.fcgi">Forum</a></p>
+		</div>
+		</div>
+
+        <article>
+            <header><h3>{{ article.title }}</h3>
+                <time itemprop="datePublished" datetime="{{ article.datetime }}">{{ article.datestamp }}</time>
+                <div>Submitted by <span class="submitter">{{ article.author.fullname }}</span></div>
+            </header>
+            {{ article.content | safe }}
+            <footer>
+                Permalink: <a href="{{  url_for('front_page.get_article', article=article.slug) }}">{{ article.slug }}</a>
+            </footer>
+        </article>
+
+</div> <!-- close Content div -->
+
+{% endblock %}
+
+

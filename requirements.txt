@@ -4,3 +4,6 @@ wsgiref>=0.1.2
 Flask-SQLAlchemy
 Flask-WTF
 psycopg2
+Flask-Login
+Flask-Script
+Flask-Mail

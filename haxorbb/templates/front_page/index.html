@@ -3,14 +3,14 @@
 
 <div id="container">
 	<div id="banner">
-		<img src="{{ url_for('static', filename='img/cover_60.jpg') }}" height="180" width="920" alt="Banner">
+		<img src="{{ url_for('media', filename='img/cover_60.jpg') }}" height="180" width="920" alt="Banner">
 	</div>
 	
 	
 <div id="content">
 		<div id="site_contents" class="navbox">
 			<div class="header">Site Contents</div>		
-			<p class="navlink"><a href="{{ url_for('home_page') }}">News</a></p>
+			<p class="navlink"><a href="{{ url_for('front_page.home_page') }}">News</a></p>
 			<p class="navlink"><a href="index.php?page=script">Script</a></p>
 			<p class="navlink"><a href="index.php?page=pictures">Pictures</a></p>
 			<p class="navlink"><a href="index.php?page=videos">Videos</a></p>
@@ -34,18 +34,23 @@
 		<div id="calendar" class="navbox">
 		<div class="header">Upcoming Events</div>
 		</div>
-
 		    {% for article in articles %}
-                <article>
-                    <div class="headline">{{ article.title }}</div>
-                    <time datetime="{{ article.datestamp }}" pubdate="pubdate">{{ article.datestamp }}</time>
-                    (submitted by <span class="submitter">{{ article.author }}</span>)
-                    {{ article.content | safe }}
-                    <footer>
-                        Permalink: <a href="{{  url_for('get_article', article=article.slug) }}">{{ article.slug }}</a>
-                    </footer>
-                </article>
-
+                {% if current_user.is_authenticated %}
+                    <article>
+                        <header><h3>{{ article.title }}</h3>
+                        <time itemprop="datePublished" datetime="{{ article.datetime }}">{{ article.datestamp }}</time>
+                        <div>Submitted by <span class="submitter">{{ article.author.fullname }}</span></div>
+                        </header>
+                        {{ article.content | safe }}
+                        <footer>
+                            Permalink: <a href="{{ url_for('front_page.get_article', article=article.slug) }}">{{ article.slug }}</a>
+                        </footer>
+                    </article>
+                {% else %}
+                    <article>
+                        <img src="{{ url_for('media', filename='img/nsa_smiley.jpg')}}">
+                    </article>
+                {% endif %}
             {% endfor %}
         </div><!-- close articles div -->
 
