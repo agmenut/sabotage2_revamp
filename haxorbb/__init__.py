@@ -46,6 +46,7 @@ login_manager.login_view = 'auth.login'
 db = SQLAlchemy()
 mail = Mail()
 
+
 def initialize_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
@@ -59,7 +60,6 @@ def initialize_app(config_name):
 
     # Init the Media directory
     app.media = app.config['MEDIA_ROOT']
-
 
     # Register blueprints
     from .auth import auth as authentication
