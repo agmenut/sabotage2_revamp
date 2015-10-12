@@ -1,2 +1,13 @@
 {% extends 'master.html' %}
-Things
+{% block content %}
+<div>
+<h3>Hi {{ current_user.username }},</h3>
+<p>
+	Your account has not been confirmed.
+	You should have an email with a confirmation sent the email address you provided when you registered.
+
+<p>
+	Click the link to have the confirmation email resent:
+	<a href="{{ url_for('auth.resend_confirmation') }}">Request new confirmation</a>
+</div>
+{% endblock content %}

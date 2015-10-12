@@ -40,7 +40,7 @@ def register():
         print "Trying commit of new user"
         try:
             db.session.commit()
-            token = user.generated_confirmation_token()
+            token = user.generate_confirmation_token()
             send_mail(user.email, 'Confirm your account',
                       'auth/email/confirm', user=user, token=token)
             flash('A confirmation email has been sent.')
@@ -63,6 +63,17 @@ def confirm(token):
         flash("Confirmation link invalid.")
     return redirect(url_for('front_page.home_page'))
 
+@auth.route('confirm')
+@login_required
+def resend_confirmation():
+    token = current_user.generate_confirmation_token()
+    send_mail(current_user.email, 'Confirm your account',
+            'auth/email/confirm', user=current_user, token=token)
+    flash('A new confirmation email has been sent to {}.'.format({{current_user.email }}))
+    return redirect(url_for('front_page.home_page'))
+    
+
+
 @auth.before_app_request
 def before_request():
     if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.':
@@ -73,6 +84,8 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('front_page.home_page'))
     return render_template('auth/unconfirmed.html')
+
+
 
 @auth.route('/logout')
 @login_required

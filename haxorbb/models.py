@@ -63,7 +63,7 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def generated_confirmation_token(self, expiration=3600):
+    def generate_confirmation_token(self, expiration=3600):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm': self.id})
 
@@ -79,7 +79,8 @@ class User(UserMixin, db.Model):
         self.active = True
         self.registration_date = datetime.now()
         #db.session.query(User).filter_b
-        User.query.filter_by(id=self.id).update(self)
+        #User.query.filter_by(id=self.id).update(self)
+        #self.session.add()
         try:
             db.session.commit()
             return True
