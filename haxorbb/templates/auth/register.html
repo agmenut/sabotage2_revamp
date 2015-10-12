@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'master.html' %}
+{% block id %}{% endblock %} {# Suppress id line on login page#}
+{% block content %}
+    <form method="POST" class="registration_form" action="{{ url_for('auth.register') }}">
+        <fieldset id="registration_fields">
+        <legend>Registration form.</legend>
+            <div>
+            {{ form.username.label }}
+                {{ form.username }}
+            </div>
+            <div>
+                {{ form.email.label }}
+            {{ form.email }}</div>
+            <div>{{ form.password.label }}
+            {{ form.password }}</div>
+            <div>{{ form.verify_password.label }}
+            {{ form.verify_password }}</div>
+            {{ form.submit }}
+        {{ form.csrf_token }}
+        </fieldset>
+    </form>
+{% endblock content %}
