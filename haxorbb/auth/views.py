@@ -5,8 +5,10 @@ from .forms import Registration, Login
 from .. import db
 from ..email import send_mail
 from ..models import User
-from flask.ext.login import login_user, logout_user, login_required, current_user
+from flask.ext.login import (login_user, logout_user, login_required, fresh_login_required,
+                             current_user)
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import SQLAlchemyError
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -44,7 +46,7 @@ def register():
             send_mail(user.email, 'Confirm your account',
                       'auth/email/confirm', user=user, token=token)
             flash('A confirmation email has been sent.')
-        except Exception as e:
+        except SQLAlchemyError as e:
             db.session.rollback()
             flash('An error occurred')
             print form.errors
@@ -63,21 +65,28 @@ def confirm(token):
         flash("Confirmation link invalid.")
     return redirect(url_for('front_page.home_page'))
 
-@auth.route('confirm')
+
+@auth.route('/confirm')
 @login_required
 def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_mail(current_user.email, 'Confirm your account',
-            'auth/email/confirm', user=current_user, token=token)
-    flash('A new confirmation email has been sent to {}.'.format({{current_user.email }}))
+              'auth/email/confirm', user=current_user, token=token)
+    flash('A new confirmation email has been sent to {}.'.format({{current_user.email}}))
     return redirect(url_for('front_page.home_page'))
-    
+
+
+@auth.route('/change_password')
+@fresh_login_required
+def change_password():
+    return "CHANGE PASSWORD FORM GOES HERE"
 
 
 @auth.before_app_request
 def before_request():
     if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.':
         return redirect(url_for('auth.unconfirmed'))
+
 
 @auth.route('/unconfirmed')
 def unconfirmed():
@@ -86,11 +95,8 @@ def unconfirmed():
     return render_template('auth/unconfirmed.html')
 
 
-
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('front_page.home_page'))
-
-
