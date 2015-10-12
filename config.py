@@ -18,7 +18,20 @@ class DevelopmentConfig(BaseConfiguration):
 
     @classmethod
     def initapp(cls, app):
-            BaseConfiguration.initapp(app)
+        BaseConfiguration.initapp(app)
+
+class ProductionConfig(BaseConfiguration):
+    DEBUG = False
+    TESTING = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    
+    MAIL_REPLY = os.environ.get('MAIL_REPLY')
+    MAIL_PREFIX = os.environ.get('MAIL_PREFIX')
+
+    @classmethod
+    def initapp(cls, app):
+        BaseConfiguration.initapp(app)
 
 
 class TestConfiguration(BaseConfiguration):
@@ -28,4 +41,5 @@ class TestConfiguration(BaseConfiguration):
 
 config = {
     'development': DevelopmentConfig,
+    'production': ProductionConfig,
           }
