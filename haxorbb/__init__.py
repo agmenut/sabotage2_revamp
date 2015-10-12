@@ -2,6 +2,7 @@
 from flask import Flask, send_from_directory, request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
+from flask.ext.mail import Mail
 from config import config
 import os
 
@@ -43,7 +44,7 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 db = SQLAlchemy()
-
+mail = Mail()
 
 def initialize_app(config_name):
     app = Flask(__name__)
@@ -54,10 +55,12 @@ def initialize_app(config_name):
 
     login_manager.init_app(app)
     db.init_app(app)
+    mail.init_app(app)
 
-    # print app.config
+    # Init the Media directory
     app.media = app.config['MEDIA_ROOT']
-    # print app.media
+
+
     # Register blueprints
     from .auth import auth as authentication
     app.register_blueprint(authentication)
