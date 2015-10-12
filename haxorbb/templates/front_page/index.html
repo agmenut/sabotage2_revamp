@@ -34,19 +34,23 @@
 		<div id="calendar" class="navbox">
 		<div class="header">Upcoming Events</div>
 		</div>
-
 		    {% for article in articles %}
-                <article>
-                    <header><h3>{{ article.title }}</h3>
-                    <time itemprop="datePublished" datetime="{{ article.datetime }}">{{ article.datestamp }}</time>
-                    <div>Submitted by <span class="submitter">{{ article.author.fullname }}</span></div>
-                    </header>
-                    {{ article.content | safe }}
-                    <footer>
-                        Permalink: <a href="{{ url_for('front_page.get_article', article=article.slug) }}">{{ article.slug }}</a>
-                    </footer>
-                </article>
-
+                {% if current_user.is_authenticated %}
+                    <article>
+                        <header><h3>{{ article.title }}</h3>
+                        <time itemprop="datePublished" datetime="{{ article.datetime }}">{{ article.datestamp }}</time>
+                        <div>Submitted by <span class="submitter">{{ article.author.fullname }}</span></div>
+                        </header>
+                        {{ article.content | safe }}
+                        <footer>
+                            Permalink: <a href="{{ url_for('front_page.get_article', article=article.slug) }}">{{ article.slug }}</a>
+                        </footer>
+                    </article>
+                {% else %}
+                    <article>
+                        <img src="{{ url_for('media', filename='img/nsa_smiley.jpg')}}">
+                    </article>
+                {% endif %}
             {% endfor %}
         </div><!-- close articles div -->
 
