@@ -78,5 +78,12 @@ class User(UserMixin, db.Model):
         self.confirmed = True
         self.active = True
         self.registration_date = datetime.now()
-        db.session.add(self)
-        return True
+        #db.session.query(User).filter_b
+        User.query.filter_by(id=self.id).update(self)
+        try:
+            db.session.commit()
+            return True
+        except Exception as e:
+            db.session.rollback()
+            print e
+            return False

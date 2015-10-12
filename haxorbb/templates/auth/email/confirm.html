@@ -1,0 +1,5 @@
+<p>Hi {{ user.username }},
+
+<p>To confirm your haxorbb account, please click here:
+
+<p>{{ url_for('auth.confirm', token=token, _external=True) }}

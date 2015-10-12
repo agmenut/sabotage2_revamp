@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from . import auth
 from .forms import Registration, Login
 from .. import db
@@ -19,6 +19,7 @@ def login():
             flash("Authentication failed")
             return redirect(url_for('auth.login'))
         if user and user.verify_password(form.password.data):
+            print "OK to login"
             login_user(user)
             return redirect(url_for('front_page.home_page'))
 
@@ -30,19 +31,23 @@ def login():
 def register():
     form = Registration()
     if form.validate_on_submit():
+        print "Good"
         user = User()
         user.email = form.email.data
         user.username = form.username.data
         user.password = form.password.data
         db.session.add(user)
+        print "Trying commit of new user"
         try:
             db.session.commit()
             token = user.generated_confirmation_token()
             send_mail(user.email, 'Confirm your account',
-                      'auth.email/confirm', user=user, token=token)
+                      'auth/email/confirm', user=user, token=token)
             flash('A confirmation email has been sent.')
         except Exception as e:
             db.session.rollback()
+            flash('An error occurred')
+            print form.errors
         return redirect(url_for('front_page.home_page'))
     return render_template('auth/register.html', form=form)
 
@@ -53,12 +58,21 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for('front_page.home_page'))
     if current_user.confirm(token):
-        flash("Your account has been .")
+        flash("Your account has been confirmed.")
     else:
         flash("Confirmation link invalid.")
     return redirect(url_for('front_page.home_page'))
 
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.':
+        return redirect(url_for('auth.unconfirmed'))
 
+@auth.route('/unconfirmed')
+def unconfirmed():
+    if current_user.is_anonymous or current_user.confirmed:
+        return redirect(url_for('front_page.home_page'))
+    return render_template('auth/unconfirmed.html')
 
 @auth.route('/logout')
 @login_required
