@@ -43,6 +43,10 @@ class ReverseProxied(object):
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+login_manager.refresh_view = 'auth.login'
+login_manager.need_refresh_message = u"Please reauthenticate to protect your account."
+login_manager.needs_refresh_message_category = 'info'
+
 db = SQLAlchemy()
 mail = Mail()
 

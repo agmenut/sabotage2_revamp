@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, url_for, flash, request
 from . import auth
-from .forms import Registration, Login
+from .forms import Registration, Login, ChangePassword
 from .. import db
 from ..email import send_mail
 from ..models import User
@@ -79,7 +79,11 @@ def resend_confirmation():
 @auth.route('/change_password')
 @fresh_login_required
 def change_password():
-    return "CHANGE PASSWORD FORM GOES HERE"
+    form = ChangePassword()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.current.data):
+            current_user.password = form.new.data
+    return render_template('auth/change_password.html', form=form)
 
 
 @auth.before_app_request
