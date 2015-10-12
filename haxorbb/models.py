@@ -78,9 +78,6 @@ class User(UserMixin, db.Model):
         self.confirmed = True
         self.active = True
         self.registration_date = datetime.now()
-        #db.session.query(User).filter_b
-        #User.query.filter_by(id=self.id).update(self)
-        #self.session.add()
         try:
             db.session.commit()
             return True
