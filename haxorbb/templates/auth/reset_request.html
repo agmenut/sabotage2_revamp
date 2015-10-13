@@ -1,0 +1,14 @@
+{% extends 'master.html' %}
+{% block id %}{% endblock %} {# Suppress id line on this page#}
+{% block content %}
+    <form method="POST" class="registration_form" action="{{ url_for('auth.recover_account') }}">
+        <fieldset>
+        <legend>Recover Password</legend>
+            <div>{{ form.email.label }}
+            {{ form.email }}</div>
+            {{ form.submit }}
+        {{ form.csrf_token }}
+        </fieldset>
+    </form>
+{{ form.__class__.__name__ }}
+{% endblock content %}

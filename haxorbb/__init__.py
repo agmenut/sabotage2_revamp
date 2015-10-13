@@ -57,9 +57,8 @@ def initialize_app(config_name):
     config[config_name].initapp(app)
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
-    app.secret_key = os.urandom(64)
-
-    print app.config.__dict__
+    # app.secret_key = os.urandom(64)
+    app.secret_key = ';kjahsdkljfhaklsjdhfklhalkjsdhfklajshdf'
     login_manager.init_app(app)
     db.init_app(app)
     mail.init_app(app)

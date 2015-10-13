@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, url_for, flash, request
 from . import auth
-from .forms import Registration, Login, ChangePassword
+from .forms import Registration, Login, ChangePassword, ResetPassword, ResetPasswordRequest
 from .. import db
 from ..email import send_mail
 from ..models import User
@@ -95,6 +95,41 @@ def change_password():
 def before_request():
     if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.':
         return redirect(url_for('auth.unconfirmed'))
+
+
+@auth.route('/recover', methods=['GET', 'POST'])
+def recover_account():
+    if not current_user.is_anonymous:
+        return redirect(url_for('front_page.home_page'))
+    form = ResetPasswordRequest()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            token = user.generate_reset_token()
+            send_mail(user.email, 'Reset your password',
+                      'auth/email/reset_password',
+                      user=user, token=token, next=request.args.get('next'))
+            flash('An email with password reset instructions has been sent to the email address you entered')
+            return redirect(url_for('front_page.home_page'))
+    return render_template('auth/reset_request.html', form=form)
+
+
+@auth.route('/recover/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if not current_user.is_anonymous:
+        return redirect(url_for('front_page.home_page'))
+    form = ResetPassword()
+    if form.validate_on_submit():
+        print "Validated"
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is None:
+            return redirect(url_for('front_page.home_page'))
+        if user.reset_password(token, form.password.data):
+            flash('Password Reset')
+            return redirect(url_for('auth.login'))
+        else:
+            return redirect(url_for('front_page.home_page'))
+    return render_template('auth/reset_password.html', form=form, token=token)
 
 
 @auth.route('/unconfirmed')

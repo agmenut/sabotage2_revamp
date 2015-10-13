@@ -25,7 +25,6 @@ class DevelopmentConfig(BaseConfiguration):
     @classmethod
     def initapp(cls, app):
         BaseConfiguration.initapp(app)
-        print app.config
 
 
 class ProductionConfig(BaseConfiguration):
