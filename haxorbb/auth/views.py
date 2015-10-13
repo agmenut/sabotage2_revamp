@@ -20,12 +20,11 @@ def login():
         except NoResultFound:
             flash("Authentication failed")
             return redirect(url_for('auth.login'))
-        if user and user.verify_password(form.password.data):
+        if user is not None and user.verify_password(form.password.data):
             print "OK to login"
             login_user(user)
-            return redirect(url_for('front_page.home_page'))
-
-        # if User.verify_password()
+            return redirect(request.args.get('next') or url_for('front_page.home_page'))
+        flash('Authentication failed')
     return render_template('auth/login.html', form=form)
 
 
@@ -76,13 +75,19 @@ def resend_confirmation():
     return redirect(url_for('front_page.home_page'))
 
 
-@auth.route('/change_password')
+@auth.route('/change_password', methods=['GET', 'POST'])
 @fresh_login_required
 def change_password():
     form = ChangePassword()
     if form.validate_on_submit():
         if current_user.verify_password(form.current.data):
+            flash("Password has been updated")
             current_user.password = form.new.data
+            db.session.add(current_user)
+            db.session.commit()
+            send_mail(current_user.email, 'Your password has changed',
+                      'auth/email/password_change', user=current_user)
+            return redirect(url_for('front_page.home_page'))
     return render_template('auth/change_password.html', form=form)
 
 
