@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask.ext.wtf import Form
 from flask import Markup
-from wtforms import (Field, StringField, PasswordField, BooleanField, SubmitField)
+from wtforms import (Field, StringField, PasswordField, BooleanField, HiddenField, SubmitField)
 from wtforms.validators import Length, Email, EqualTo, DataRequired
 from wtforms.fields.html5 import EmailField
 from wtforms.widgets.core import html_params
@@ -41,9 +41,6 @@ class Button(Field):
 
 
 class Registration(Form):
-    # def generate_csrf_token(self, csrf_context):
-    #     pass
-
     email = EmailField('Email', validators=[DataRequired(), Length(3, 64), Email()])
     username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('verify_password')])
@@ -63,3 +60,26 @@ class Login(Form):
     username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = Button('Submit')
+
+
+class ChangePassword(Form):
+    current = PasswordField('Current Password', validators=[DataRequired(), Length(1, 64)])
+    new = PasswordField('New Password', validators=[DataRequired(), Length(1, 64), EqualTo('confirm_new')])
+    confirm_new = PasswordField('Confirm Password', validators=[DataRequired(), Length(1, 64), EqualTo('new')])
+    submit = Button('Change password')
+
+
+class ResetPasswordRequest(Form):
+    email = StringField('Email Address', validators=[DataRequired(), Email(), Length(3, 64)])
+    submit = Button('Request Password Reset')
+
+
+class ResetPassword(Form):
+    email = StringField('Email Address', validators=[DataRequired(), Email(), Length(3, 64)])
+    password = PasswordField('Password', validators=[DataRequired(), EqualTo('verify_password')])
+    verify_password = PasswordField('Verify Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first() is None:
+            raise ValidationError('Email address not found')

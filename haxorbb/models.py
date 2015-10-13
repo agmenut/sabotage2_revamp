@@ -6,6 +6,7 @@ from flask.ext.login import UserMixin
 from flask import current_app
 from datetime import datetime
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -67,11 +68,15 @@ class User(UserMixin, db.Model):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm': self.id})
 
+    def generate_reset_token(self, expiration=3600):
+        s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id})
+
     def confirm(self, token):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
-        except:
+        except NameError:
             return False
         if data.get('confirm') != self.id:
             return False
@@ -85,3 +90,15 @@ class User(UserMixin, db.Model):
             db.session.rollback()
             print e
             return False
+
+    def reset_password(self, token, new_password):
+        s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except NameError:
+            return False
+        if data.get('reset') != self.id:
+            return False
+        self.password = new_password
+        db.session.commit()
+        return True

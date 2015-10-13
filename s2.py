@@ -11,7 +11,7 @@ if os.path.exists('.env'):
             if len(var) == 2:
                 os.environ[var[0]] = var[1]
 
-from haxorbb import initialize_app, db
+from haxorbb import initialize_app
 from flask.ext.script import Manager
 
 app = initialize_app(os.getenv('FLASK_CONFIG'))

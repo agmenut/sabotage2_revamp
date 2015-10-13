@@ -43,23 +43,28 @@ class ReverseProxied(object):
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+login_manager.refresh_view = 'auth.login'
+login_manager.need_refresh_message = u"Please reauthenticate to protect your account."
+login_manager.needs_refresh_message_category = 'info'
+
 db = SQLAlchemy()
 mail = Mail()
+
 
 def initialize_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].initapp(app)
-    app.wsgi_app = ReverseProxied(app.wsgi_app)
-    app.secret_key = os.urandom(64)
 
+    app.wsgi_app = ReverseProxied(app.wsgi_app)
+    # app.secret_key = os.urandom(64)
+    app.secret_key = ';kjahsdkljfhaklsjdhfklhalkjsdhfklajshdf'
     login_manager.init_app(app)
     db.init_app(app)
     mail.init_app(app)
 
     # Init the Media directory
     app.media = app.config['MEDIA_ROOT']
-
 
     # Register blueprints
     from .auth import auth as authentication
