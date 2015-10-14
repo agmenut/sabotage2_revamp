@@ -1,6 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 if os.path.exists('.env'):
@@ -11,11 +11,22 @@ if os.path.exists('.env'):
             if len(var) == 2:
                 os.environ[var[0]] = var[1]
 
-from haxorbb import initialize_app
-from flask.ext.script import Manager
+from haxorbb import initialize_app, db
+from flask.ext.script import Manager, Shell
+from flask.ext.migrate import Migrate, MigrateCommand
+from haxorbb.models import User, Role
 
 app = initialize_app(os.getenv('FLASK_CONFIG'))
 manager = Manager(app)
+migrate = Migrate(app, db)
+manager.add_command('db', MigrateCommand)
+
+
+def make_shell_context():
+    return {'app': app, 'db': db, 'User': User, 'Role': Role}
+
+
+manager.add_command('shell', Shell(make_context=make_shell_context))
 
 if __name__ == '__main__':
     manager.run()

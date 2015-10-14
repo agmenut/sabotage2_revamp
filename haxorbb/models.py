@@ -14,9 +14,8 @@ def load_user(user_id):
 
 class Articles(db.Model):
     __tablename__ = 'articles'
-    __table_args__ = {"schema": "portal"}
     id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.userinfo.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String(255))
     content = db.Column(db.Text)
     datestamp = db.Column(db.DateTime)
@@ -32,21 +31,23 @@ class Articles(db.Model):
 
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'userinfo'
-    __table_args__ = {'schema': 'users'}
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    password_hash = db.Column(db.String(128))
-    username = db.Column(db.String(32))
+    password_hash = db.Column(db.String(160), nullable=False)
+    username = db.Column(db.String(32), nullable=False)
     fullname = db.Column(db.String(64))
-    email = db.Column(db.String(254))
+    email = db.Column(db.String(254), nullable=False)
     registration_date = db.Column(db.DateTime)
     location = db.Column(db.String(64))
     avatar_url = db.Column(db.String(250))
     picture_url = db.Column(db.String(250))
     quota = db.Column(db.Integer)
     disk_used = db.Column(db.Integer)
-    active = db.Column(db.Boolean)
+    active = db.Column(db.Boolean, nullable=False, default=False)
     last_seen = db.Column(db.DateTime)
+    timezone = db.Column(db.String(20), default='US/Pacific')
+    posts = db.Column(db.Integer)
+    threads = db.Column(db.Integer)
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
 
@@ -82,7 +83,7 @@ class User(UserMixin, db.Model):
             return False
         self.confirmed = True
         self.active = True
-        self.registration_date = datetime.now()
+        self.registration_date = datetime.utcnow()
         try:
             db.session.commit()
             return True
@@ -102,3 +103,15 @@ class User(UserMixin, db.Model):
         self.password = new_password
         db.session.commit()
         return True
+
+    def seen(self):
+        self.location = datetime.utcnow()
+
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+
+    def __repr__(self):
+        return "<Role {!r}>".format(self.name)

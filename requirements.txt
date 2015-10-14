@@ -7,3 +7,4 @@ psycopg2
 Flask-Login
 Flask-Script
 Flask-Mail
+Flask-Migrate
