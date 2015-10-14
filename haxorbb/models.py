@@ -14,9 +14,8 @@ def load_user(user_id):
 
 class Articles(db.Model):
     __tablename__ = 'articles'
-    __table_args__ = {"schema": "portal"}
     id = db.Column(db.Integer, primary_key=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.userinfo.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String(255))
     content = db.Column(db.Text)
     datestamp = db.Column(db.DateTime)
@@ -32,10 +31,9 @@ class Articles(db.Model):
 
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'userinfo'
-    __table_args__ = {'schema': 'users'}
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(160), nullable=False)
     username = db.Column(db.String(32), nullable=False)
     fullname = db.Column(db.String(64))
     email = db.Column(db.String(254), nullable=False)
@@ -48,6 +46,8 @@ class User(UserMixin, db.Model):
     active = db.Column(db.Boolean, nullable=False, default=False)
     last_seen = db.Column(db.DateTime)
     timezone = db.Column(db.String(20), default='US/Pacific')
+    posts = db.Column(db.Integer)
+    threads = db.Column(db.Integer)
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
 
@@ -110,7 +110,6 @@ class User(UserMixin, db.Model):
 
 class Role(db.Model):
     __tablename__ = 'roles'
-    __table_args__ = {'schema': 'users'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
 
