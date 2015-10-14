@@ -35,18 +35,19 @@ class User(UserMixin, db.Model):
     __tablename__ = 'userinfo'
     __table_args__ = {'schema': 'users'}
     id = db.Column(db.Integer, primary_key=True)
-    password_hash = db.Column(db.String(128))
-    username = db.Column(db.String(32))
+    password_hash = db.Column(db.String(128), nullable=False)
+    username = db.Column(db.String(32), nullable=False)
     fullname = db.Column(db.String(64))
-    email = db.Column(db.String(254))
+    email = db.Column(db.String(254), nullable=False)
     registration_date = db.Column(db.DateTime)
     location = db.Column(db.String(64))
     avatar_url = db.Column(db.String(250))
     picture_url = db.Column(db.String(250))
     quota = db.Column(db.Integer)
     disk_used = db.Column(db.Integer)
-    active = db.Column(db.Boolean)
+    active = db.Column(db.Boolean, nullable=False, default=False)
     last_seen = db.Column(db.DateTime)
+    timezone = db.Column(db.String(20), default='US/Pacific')
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
 
@@ -82,7 +83,7 @@ class User(UserMixin, db.Model):
             return False
         self.confirmed = True
         self.active = True
-        self.registration_date = datetime.now()
+        self.registration_date = datetime.utcnow()
         try:
             db.session.commit()
             return True
@@ -102,3 +103,16 @@ class User(UserMixin, db.Model):
         self.password = new_password
         db.session.commit()
         return True
+
+    def seen(self):
+        self.location = datetime.utcnow()
+
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    __table_args__ = {'schema': 'users'}
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+
+    def __repr__(self):
+        return "<Role {!r}>".format(self.name)
