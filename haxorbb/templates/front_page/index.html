@@ -38,8 +38,8 @@
                 {% if current_user.is_authenticated %}
                     <article>
                         <header><h3>{{ article.title }}</h3>
-                        <time itemprop="datePublished" datetime="{{ article.datetime }}">{{ article.datestamp }}</time>
-                        <div>Submitted by <span class="submitter">{{ article.author.fullname }}</span></div>
+                            <span><time itemprop="datePublished" datetime="{{ article.datestamp }}">{{ article.datestamp | datetime}}</time>
+                                Submitted by <span class="submitter">{{ article.author.fullname }}</span></span>
                         </header>
                         {{ article.content | safe }}
                         <footer>
