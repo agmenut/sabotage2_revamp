@@ -59,6 +59,7 @@ class Registration(Form):
 class Login(Form):
     username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember me')
     submit = Button('Submit')
 
 

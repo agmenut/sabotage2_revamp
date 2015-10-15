@@ -22,7 +22,7 @@ def login():
             return redirect(url_for('auth.login'))
         if user is not None and user.verify_password(form.password.data):
             print "OK to login"
-            login_user(user)
+            login_user(user, form.remember.data)
             return redirect(request.args.get('next') or url_for('front_page.home_page'))
         flash('Authentication failed')
     return render_template('auth/login.html', form=form)

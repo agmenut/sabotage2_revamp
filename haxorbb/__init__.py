@@ -4,7 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 from config import config
-import os
+from os import urandom
 
 
 class ReverseProxied(object):
@@ -44,7 +44,7 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 login_manager.refresh_view = 'auth.login'
-login_manager.need_refresh_message = u"Please reauthenticate to protect your account."
+login_manager.need_refresh_message = u"Please re-authenticate to protect your account."
 login_manager.needs_refresh_message_category = 'info'
 
 db = SQLAlchemy()
@@ -57,8 +57,7 @@ def initialize_app(config_name):
     config[config_name].initapp(app)
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
-    # app.secret_key = os.urandom(64)
-    app.secret_key = ';kjahsdkljfhaklsjdhfklhalkjsdhfklajshdf'
+    app.secret_key = urandom(64)
     login_manager.init_app(app)
     db.init_app(app)
     mail.init_app(app)
@@ -84,5 +83,9 @@ def initialize_app(config_name):
     @app.route('/media/<path:filename>')
     def media(filename):
         return send_from_directory(app.config['MEDIA_ROOT'], filename)
+
+    def format_datetime(value):
+        return value.strftime("%Y-%m-%d %H:%M:%S")
+    app.jinja_env.filters['datetime'] = format_datetime
 
     return app
