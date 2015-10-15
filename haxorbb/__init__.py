@@ -4,7 +4,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 from config import config
-from os import urandom
 
 
 class ReverseProxied(object):
@@ -57,7 +56,6 @@ def initialize_app(config_name):
     config[config_name].initapp(app)
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
-    app.secret_key = urandom(64)
     login_manager.init_app(app)
     db.init_app(app)
     mail.init_app(app)

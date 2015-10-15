@@ -5,6 +5,7 @@ import ast
 
 class BaseConfiguration(object):
     DEBUG = False
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     MEDIA_ROOT = os.environ.get('MEDIA')
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_REPLY = os.environ.get('MAIL_REPLY')
@@ -35,7 +36,6 @@ class ProductionConfig(BaseConfiguration):
     @classmethod
     def initapp(cls, app):
         BaseConfiguration.initapp(app)
-
 
 
 class TestConfiguration(BaseConfiguration):
