@@ -32,7 +32,7 @@ def view(username):
 @profile.route('/view/<username>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_profile(username):
-    if current_user.username != username or not current_user.is_administrator:
+    if current_user.username != username and not current_user.is_administrator:
         return redirect(url_for('front_page.home_page'))
     form = Profile()
     user = User.query.filter_by(username=username).first()
