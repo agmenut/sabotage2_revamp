@@ -40,14 +40,16 @@ class User(UserMixin, db.Model):
     registration_date = db.Column(db.DateTime)
     location = db.Column(db.String(64))
     avatar_url = db.Column(db.String(250))
+    avatar_text = db.Column(db.String(250))
     picture_url = db.Column(db.String(250))
     quota = db.Column(db.Integer)
     disk_used = db.Column(db.Integer)
     active = db.Column(db.Boolean, nullable=False, default=False)
     last_seen = db.Column(db.DateTime)
     timezone = db.Column(db.String(20), default='US/Pacific')
-    posts = db.Column(db.Integer)
-    threads = db.Column(db.Integer)
+    posts = db.Column(db.Integer, default=0)
+    threads = db.Column(db.Integer, default=0)
+    threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
 
@@ -105,7 +107,7 @@ class User(UserMixin, db.Model):
         return True
 
     def seen(self):
-        self.location = datetime.utcnow()
+        self.last_seen = datetime.utcnow()
 
 
 class Role(db.Model):
