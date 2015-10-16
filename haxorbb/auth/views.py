@@ -94,6 +94,7 @@ def change_password():
 @auth.before_app_request
 def before_request():
     if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.':
+        current_user.seen()
         return redirect(url_for('auth.unconfirmed'))
 
 
