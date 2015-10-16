@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint
-
-media = Blueprint('media', __name__, url_prefix='/media')
-
+profile = Blueprint('profile', __name__, url_prefix='/profile')
 from . import views
-
-
-
