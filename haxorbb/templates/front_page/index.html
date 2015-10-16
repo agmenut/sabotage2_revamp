@@ -8,11 +8,9 @@
 <div id="content">
     {% include 'front_page/navigation.html' %}
     {% for article in articles %}
-        {% if current_user.is_authenticated %}
-        <article>
+         <article>
             {% include 'front_page/article.html' %}
         </article>
-        {% endif %}
     {% endfor %}
 </div><!-- close content div -->
 

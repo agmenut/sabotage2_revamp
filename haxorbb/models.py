@@ -20,6 +20,11 @@ class Articles(db.Model):
     content = db.Column(db.Text)
     datestamp = db.Column(db.DateTime)
     slug = db.Column(db.String(30))
+    visibility = db.Column(db.Boolean, default=True)
+
+    @property
+    def is_public(self):
+        return self.visibility
 
     def post(self):
         try:
