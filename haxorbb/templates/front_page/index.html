@@ -5,60 +5,21 @@
 	<div id="banner">
 		<img src="{{ url_for('media', filename='img/cover_60.jpg') }}" height="180" width="920" alt="Banner">
 	</div>
-	
-	
 <div id="content">
-		<div id="site_contents" class="navbox">
-			<div class="header">Site Contents</div>		
-			<p class="navlink"><a href="{{ url_for('front_page.home_page') }}">News</a></p>
-			<p class="navlink"><a href="index.php?page=script">Script</a></p>
-			<p class="navlink"><a href="index.php?page=pictures">Pictures</a></p>
-			<p class="navlink"><a href="index.php?page=videos">Videos</a></p>
-			<p class="navlink"><a href="http://www.sabotage2.com/haxorbb/lmsbb.fcgi">Forum</a></p>
-		</div>
-		<div id="recent_posts" class="navbox">
-		<div class="header">Recent Forum Posts</div>
-			<div class="text_area">
-			<p class="tiny"><span class="timestamp">03-16 14:44</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16589#16589">Argh, work</a> by <span class="author">cadmium</span>: ...</p>
-			<p class="tiny"><span class="timestamp">03-16 14:29</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16588#16588">Argh, work</a> by <span class="author">lucas</span>: ...<br></p>
-			<p class="tiny"><span class="timestamp">03-16 14:02</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16587#16587">Condo for sale, banks ...</a> by <span class="author">lucas</span>: Yeah, PERS was the biggest benef...<br></p>
-			<p class="tiny"><span class="timestamp">03-16 13:19</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16586#16586">Argh, work</a> by <span class="author">cadmium</span>: ...<br></p>
-			<p class="tiny"><span class="timestamp">03-16 13:14</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16585#16585">Condo for sale, banks ...</a> by <span class="author">cadmium</span>: Wow, your benefits were pretty...<br></p>
-			<p class="tiny"><span class="timestamp">03-16 13:03</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16584#16584">Condo for sale, banks ...</a> by <span class="author">lucas</span>: The math is looking good. There ...<br></p>
-			<p class="tiny"><span class="timestamp">03-16 07:42</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16583#16583">"Ah, fresh meat!" Diab...</a> by <span class="author">cadmium</span>: I think Diablos' have all had ...<br></p>
-			<p class="tiny"><span class="timestamp">03-16 07:27</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16582#16582">Condo for sale, banks ...</a> by <span class="author">campank</span>: At 2012-03-15 17:40, lucas sai...<br></p>
-			<p class="tiny"><span class="timestamp">03-16 07:06</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16581#16581">"Ah, fresh meat!" Diab...</a> by <span class="author">campank</span>: Argh, not thrilled about L4D s...<br></p>
-			<p class="tiny"><span class="timestamp">03-15 21:53</span> in <a class="forum_link" href="/haxorbb/lmsbb.fcgi?action=showthread&amp;mid=16580#16580">Condo for sale, banks ...</a> by <span class="author">lucas</span>: Only Nate has to deal with that ...<br></p>
-			</div>
-		</div>
-		<div id="calendar" class="navbox">
-		<div class="header">Upcoming Events</div>
-		</div>
-		    {% for article in articles %}
-                {% if current_user.is_authenticated %}
-                    <article>
-                        <header><h3>{{ article.title }}</h3>
-                            <span><time itemprop="datePublished" datetime="{{ article.datestamp }}">{{ article.datestamp | datetime}}</time>
-                                Submitted by <span class="submitter">{{ article.author.fullname }}</span></span>
-                        </header>
-                        {{ article.content | safe }}
-                        <footer>
-                            Permalink: <a href="{{ url_for('front_page.get_article', article=article.slug) }}">{{ article.slug }}</a>
-                        </footer>
-                    </article>
-                {% else %}
-                    <article>
-                        <img src="{{ url_for('media', filename='img/nsa_smiley.jpg')}}">
-                    </article>
-                {% endif %}
-            {% endfor %}
-        </div><!-- close articles div -->
-
+    {% include 'front_page/navigation.html' %}
+    {% for article in articles %}
+        {% if current_user.is_authenticated %}
+        <article>
+            {% include 'front_page/article.html' %}
+        </article>
+        {% endif %}
+    {% endfor %}
+</div><!-- close content div -->
 
 {#        <footer><span class="vert_center"><a href="page=oldnews">older news...</a></span></footer>#}
 {#        <footer><a href="page=oldnews">older news...</a></footer>#}
 
-</div> <!-- close Content div -->
+</div> <!-- close Container div -->
 
 {#        <div class="footer">Other crap</div>#}
 <!-- close Container div -->
