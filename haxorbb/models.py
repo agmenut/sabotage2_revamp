@@ -109,6 +109,10 @@ class User(UserMixin, db.Model):
     def seen(self):
         self.last_seen = datetime.utcnow()
 
+    @property
+    def is_administrator(self):
+        return False
+
 
 class Role(db.Model):
     __tablename__ = 'roles'
