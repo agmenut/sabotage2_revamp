@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask.ext.wtf import Form
 from flask import Markup
-from wtforms import (Field, StringField, PasswordField, BooleanField, HiddenField, SubmitField)
+from wtforms import (Field, StringField, PasswordField, BooleanField, SubmitField)
 from wtforms.validators import Length, Email, EqualTo, DataRequired
 from wtforms.fields.html5 import EmailField
 from wtforms.widgets.core import html_params
