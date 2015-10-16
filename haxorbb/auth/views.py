@@ -71,7 +71,7 @@ def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_mail(current_user.email, 'Confirm your account',
               'auth/email/confirm', user=current_user, token=token)
-    flash('A new confirmation email has been sent to {}.'.format({{current_user.email}}))
+    flash('A new confirmation email has been sent to {}.'.format(current_user.email))
     return redirect(url_for('front_page.home_page'))
 
 
@@ -94,6 +94,7 @@ def change_password():
 @auth.before_app_request
 def before_request():
     if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.':
+        current_user.seen()
         return redirect(url_for('auth.unconfirmed'))
 
 

@@ -1,0 +1,25 @@
+{% extends 'master.html' %}
+{% block content %}
+    <section class="user">
+    <dl>
+        <dt>Real Name</dt><dd>{{ user.fullname }}</dd>
+        <dt>Email</dt><dd>{{ user.email }}</dd>
+        <dt>Location</dt><dd>{{ user.location }}</dd>
+        <dt>Threads Created</dt><dd>{{ user.threads }}</dd>
+        <dt>Threads Posted To</dt><dd>{{ user.posted_to }}</dd>
+        <dt>Post Count</dt><dd>{{ user.posts }}</dd>
+        <dt>Average Posts per Day</dt><dd>{{ user.posts_per_day }}</dd>
+        <dt>Date of Registration</dt><dd>{{ user.registration_date | datetime }}</dd>
+        <dt>Last Visit</dt><dd>{{ user.last_seen | datetime }}</dd>
+        <dt>Picture</dt><dd>{{ user.picture_url }}</dd>
+        <dt>Avatar</dt><dd>{{ user.avatar_url }}</dd>
+        {% if user.avatar_url %}
+        <img src="{{ user.avatar_url }}">
+        {% endif %}
+        <dt>Avatar Text</dt><dd>{{ user.avatar_text | safe}}</dd>
+    </dl>
+    </section>
+    {% if user.username == current_user.username %}
+        <a href="{{ url_for('profile.edit_profile', username=user.username) }}">Edit profile</a>
+    {% endif %}
+{% endblock %}

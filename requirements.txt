@@ -1,6 +1,4 @@
 Flask>=0.10.1
-meld3>=1.0.0
-wsgiref>=0.1.2
 Flask-SQLAlchemy
 Flask-WTF
 psycopg2

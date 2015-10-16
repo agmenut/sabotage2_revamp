@@ -13,7 +13,8 @@
 <body>
 {% block id %}
 {% if current_user.is_authenticated %}
-    Logged in as {{ current_user.username }} | <a href="{{ url_for('auth.logout') }}">Logout</a>
+    Logged in as {{ current_user.username }} | <a href="{{ url_for('auth.logout') }}">Logout</a> | 
+    <a href="{{ url_for('profile.view', username=current_user.username) }}">User Settings</a>
 {% else %}
     You appear to be some random jerk. <a href="{{ url_for('auth.login') }}">Login</a> or
     <a href="{{ url_for('auth.register') }}">Register</a>

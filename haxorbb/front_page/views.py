@@ -2,7 +2,13 @@
 from . import front_page
 from ..models import Articles
 from flask import render_template, redirect, send_from_directory, request, current_app
-from flask.ext.login import login_required, current_user
+from flask.ext.login import current_user
+
+
+@front_page.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.seen()
 
 
 @front_page.route('/')

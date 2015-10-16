@@ -4,7 +4,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 from config import config
-from os import urandom
 
 
 class ReverseProxied(object):
@@ -57,7 +56,6 @@ def initialize_app(config_name):
     config[config_name].initapp(app)
 
     app.wsgi_app = ReverseProxied(app.wsgi_app)
-    app.secret_key = urandom(64)
     login_manager.init_app(app)
     db.init_app(app)
     mail.init_app(app)
@@ -72,6 +70,9 @@ def initialize_app(config_name):
     from .front_page import front_page
     app.register_blueprint(front_page)
 
+    from .profile import profile
+    app.register_blueprint(profile)
+
     @app.route('/robots.txt')
     def robots():
         return send_from_directory(app.static_folder, request.path[1:])
@@ -85,7 +86,10 @@ def initialize_app(config_name):
         return send_from_directory(app.config['MEDIA_ROOT'], filename)
 
     def format_datetime(value):
-        return value.strftime("%Y-%m-%d %H:%M:%S")
+        if value:
+            return value.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            return "None"
     app.jinja_env.filters['datetime'] = format_datetime
 
     return app
