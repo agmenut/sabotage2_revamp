@@ -11,20 +11,14 @@ def before_request():
         current_user.seen()
 
 
-@front_page.route('/')
-def home_page():
-    articles = []
-    results = Articles.query.order_by(Articles.datestamp.desc()).all()
-    for row in results:
-        articles.append(row)
-    return render_template("front_page/index.html", articles=articles)
-
-
+@front_page.route('/', defaults={'article': None})
 @front_page.route('/article/<article>')
-def get_article(article):
-    qry = Articles.query.filter_by(slug=article)
-    item = qry.one()
-    return render_template("front_page/article.html", article=item)
+def home_page(article):
+    if article:
+        articles = [Articles.query.filter_by(slug=article).first()]
+    else:
+        articles = [article for article in Articles.query.order_by(Articles.datestamp.desc()).all()]
+    return render_template("front_page/index.html", articles=articles)
 
 
 @front_page.route('/oldnews/', defaults={'page': 'oldnews'})
