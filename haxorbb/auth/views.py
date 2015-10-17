@@ -167,12 +167,11 @@ def qrcode():
     if user is None:
         abort(404)
 
-    print user.otp.__dict__
-    if getattr(user.otp, 'secret', None) is None:
+    if getattr(user.otp, 'secret') is None:
         otp = OTP()
         otp.add_opt_secret(current_user)
 
-    url = pyqrcode.create(otp.get_totp_uri(current_user.username))
+    url = pyqrcode.create(user.otp.get_totp_uri(current_user.username))
     stream = BytesIO()
     url.svg(stream, scale=3)
     return stream.getvalue().encode('utf-8'), 200, {
