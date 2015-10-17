@@ -3,7 +3,7 @@ import os
 import base64
 import onetimepass
 from . import db, login_manager
-from sqlalchemy import Sequence
+from sqlalchemy import Integer
 from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer
@@ -63,7 +63,7 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     tfa = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
-    otp = db.relationship('OTP', backref='otp', lazy='dynamic')
+    otp = db.relationship('OTP', uselist=False, backref='otp')
 
     def __repr__(self):
         return '<User {!r}>'.format(self.username)
@@ -128,10 +128,10 @@ class User(UserMixin, db.Model):
 
 class OTP(db.Model):
     __tablename__ = 'otp'
-    id = db.Column(db.Integer, Sequence('otp_id_seq'), autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fk_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
-    secret = db.Column(db.String(16), primary_key=True)
-    backup_code = db.Column(ARRAY(db.String(16)))
+    secret = db.Column(db.String(16))
+    backup_code = db.Column(ARRAY(Integer))
 
     def add_opt_secret(self, user):
         if self.secret is None:
