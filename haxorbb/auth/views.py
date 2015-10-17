@@ -4,7 +4,7 @@ from . import auth
 from .forms import Registration, Login, ChangePassword, ResetPassword, ResetPasswordRequest
 from .. import db
 from ..email import send_mail
-from ..models import User
+from ..models import User, OTP
 from flask.ext.login import (login_user, logout_user, login_required, fresh_login_required,
                              current_user)
 from sqlalchemy.orm.exc import NoResultFound
@@ -167,10 +167,12 @@ def qrcode():
     if user is None:
         abort(404)
 
-    if user.otp_secret is None:
-        user.add_opt_secret()
+    print user.otp.__dict__
+    if getattr(user.otp, 'secret', None) is None:
+        otp = OTP()
+        otp.add_opt_secret(current_user)
 
-    url = pyqrcode.create(user.get_totp_uri())
+    url = pyqrcode.create(otp.get_totp_uri(current_user.username))
     stream = BytesIO()
     url.svg(stream, scale=3)
     return stream.getvalue().encode('utf-8'), 200, {

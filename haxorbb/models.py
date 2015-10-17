@@ -3,6 +3,8 @@ import os
 import base64
 import onetimepass
 from . import db, login_manager
+from sqlalchemy import Sequence
+from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer
 from flask.ext.login import UserMixin
@@ -60,14 +62,8 @@ class User(UserMixin, db.Model):
     threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
     tfa = db.Column(db.Boolean, default=False)
-    otp_secret = db.Column(db.String(16))
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
-
-    def add_opt_secret(self):
-        if self.otp_secret is None:
-            self.otp_secret = base64.b32encode(os.urandom(10)).decode('utf-8')
-            db.session.add(self)
-            db.session.commit()
+    otp = db.relationship('OTP', backref='otp', lazy='dynamic')
 
     def __repr__(self):
         return '<User {!r}>'.format(self.username)
@@ -82,14 +78,6 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-    def get_totp_uri(self):
-        return 'otpauth://totp/haxorbb:{0}?secret={1}&issuer=haxorbb'.format(
-            self.username, self.otp_secret
-        )
-
-    def verify_totp(self, token):
-        return onetimepass.valid_totp(token, self.otp_secret)
 
     def generate_confirmation_token(self, expiration=3600):
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'], expiration)
@@ -136,6 +124,29 @@ class User(UserMixin, db.Model):
     @property
     def is_administrator(self):
         return False
+
+
+class OTP(db.Model):
+    __tablename__ = 'otp'
+    id = db.Column(db.Integer, Sequence('otp_id_seq'), autoincrement=True)
+    fk_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    secret = db.Column(db.String(16), primary_key=True)
+    backup_code = db.Column(ARRAY(db.String(16)))
+
+    def add_opt_secret(self, user):
+        if self.secret is None:
+            self.secret = base64.b32encode(os.urandom(10)).decode('utf-8')
+            self.fk_userid = user.id
+            db.session.add(self)
+            db.session.commit()
+
+    def get_totp_uri(self, username):
+        return 'otpauth://totp/haxorbb:{0}?secret={1}&issuer=haxorbb'.format(
+            username, self.secret
+        )
+
+    def verify_totp(self, token):
+        return onetimepass.valid_totp(token, self.otp_secret)
 
 
 class Role(db.Model):
