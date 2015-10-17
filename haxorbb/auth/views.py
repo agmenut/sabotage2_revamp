@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, abort
 from . import auth
 from .forms import Registration, Login, ChangePassword, ResetPassword, ResetPasswordRequest
 from .. import db
@@ -9,6 +9,8 @@ from flask.ext.login import (login_user, logout_user, login_required, fresh_logi
                              current_user)
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import SQLAlchemyError
+from io import BytesIO
+import pyqrcode
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -145,3 +147,34 @@ def unconfirmed():
 def logout():
     logout_user()
     return redirect(url_for('front_page.home_page'))
+
+
+@auth.route('/enable_2fa')
+@login_required
+def enable_2fa():
+    return render_template('auth/two_factor_enable.html'), 200, {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'}
+
+
+@auth.route('/qrcode')
+@login_required
+def qrcode():
+    if current_user is None:
+        abort(404)
+    user = User.query.filter_by(username=current_user.username).first()
+    if user is None:
+        abort(404)
+
+    if user.otp_secret is None:
+        user.add_opt_secret()
+
+    url = pyqrcode.create(user.get_totp_uri())
+    stream = BytesIO()
+    url.svg(stream, scale=3)
+    return stream.getvalue().encode('utf-8'), 200, {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'}

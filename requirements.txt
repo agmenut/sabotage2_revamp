@@ -6,3 +6,5 @@ Flask-Login
 Flask-Script
 Flask-Mail
 Flask-Migrate
+onetimepass
+pyqrcode
