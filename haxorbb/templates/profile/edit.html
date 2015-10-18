@@ -13,5 +13,9 @@
             {{ form.csrf_token }}
         </fieldset>
     </form>
+
+    <a href="{{ url_for('auth.change_password') }}"><button>Change Password</button></a>
+    <a href="{{ url_for('auth.enable_2fa') }}"><button>Enable 2FA</button></a>
+
     </section>
 {% endblock %}

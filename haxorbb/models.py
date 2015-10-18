@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+import os
+import base64
+import onetimepass
 from . import db, login_manager
+from sqlalchemy import Integer
+from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import TimedJSONWebSignatureSerializer
+from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
 from flask.ext.login import UserMixin
 from flask import current_app
 from datetime import datetime
@@ -57,6 +62,7 @@ class User(UserMixin, db.Model):
     threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
+    otp = db.relationship('OTP', uselist=False, backref='otp')
 
     def __repr__(self):
         return '<User {!r}>'.format(self.username)
@@ -113,10 +119,51 @@ class User(UserMixin, db.Model):
 
     def seen(self):
         self.last_seen = datetime.utcnow()
+        db.session.commit()
+
+    def enable_tfa(self):
+        self.tfa = True
+        db.session.commit()
 
     @property
     def is_administrator(self):
         return False
+
+
+class OTP(db.Model):
+    __tablename__ = 'otp'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    fk_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    secret = db.Column(db.String(16))
+    backup_code = db.Column(ARRAY(Integer))
+
+    def add_opt_secret(self, user):
+        if self.secret is None:
+            self.secret = base64.b32encode(os.urandom(10)).decode('utf-8')
+            self.fk_userid = user.id
+            db.session.add(self)
+            db.session.commit()
+
+    def get_totp_uri(self, username):
+        return 'otpauth://totp/haxorbb:{}?secret={}&issuer=haxorbb'.format(
+            username, self.secret
+        )
+
+    def verify_totp(self, token):
+        return onetimepass.valid_totp(token, self.secret)
+
+    def generate_machine_token(self):
+        s = Signer(self.secret)
+        s = s.sign('haxxorbb')
+        return s
+
+    def validate_machine_token(self, token):
+        s = Signer(self.secret)
+        try:
+            s.unsign(token)
+            return True
+        except BadSignature:
+            return False
 
 
 class Role(db.Model):

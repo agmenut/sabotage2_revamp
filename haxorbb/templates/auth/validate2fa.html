@@ -1,0 +1,16 @@
+{% extends 'master.html' %}
+{% block id %}{% endblock %} {# Suppress id line on login page#}
+{% block content %}
+    <form method="POST" class="registration_form" action="{{ url_for('auth.validate') }}">
+        <fieldset id="registration_fields">
+        <legend>Authentication</legend>
+            <div>
+            {{ form.token.label }}
+                {{ form.token }}
+            </div>
+            <div>{{ form.remember.label }}{{ form.remember }}</div>
+            {{ form.submit }}
+        {{ form.csrf_token }}
+        </fieldset>
+    </form>
+{% endblock content %}

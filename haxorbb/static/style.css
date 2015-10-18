@@ -128,9 +128,8 @@ article img {
 	padding-right: 4px
 }
 
-article.text {
-	
-}
+article.text {}
+
 
 article a:link, article a:visited {
 	color: orange;
@@ -176,6 +175,11 @@ form label {
 	min-width: 150px !important;
 	float: left;
 }
+
+img.qrcode {
+    background: #ffffff;
+}
+
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/
 	/*padding: 2px;*/

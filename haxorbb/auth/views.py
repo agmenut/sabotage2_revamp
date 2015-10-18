@@ -1,19 +1,24 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, abort, make_response
 from . import auth
-from .forms import Registration, Login, ChangePassword, ResetPassword, ResetPasswordRequest
+from .forms import (Registration, Login, ChangePassword, ResetPassword,
+                    ResetPasswordRequest, TFAToken)
 from .. import db
 from ..email import send_mail
-from ..models import User
+from ..models import User, OTP
 from flask.ext.login import (login_user, logout_user, login_required, fresh_login_required,
                              current_user)
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import SQLAlchemyError
+from io import BytesIO
+from datetime import timedelta
+import pyqrcode
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = Login()
+    cookie = False
     if form.validate_on_submit():
         try:
             user = User.query.filter_by(username=form.username.data).one()
@@ -23,8 +28,14 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             print "OK to login"
             login_user(user, form.remember.data)
+            jar = request.cookies.get('2FA')
+            if jar and current_user.otp.validate_machine_token(jar):
+                cookie = True
+            if user.otp.secret and not cookie:
+                return redirect(url_for('auth.validate'))
             return redirect(request.args.get('next') or url_for('front_page.home_page'))
         flash('Authentication failed')
+        return redirect(url_for('auth.login'))
     return render_template('auth/login.html', form=form)
 
 
@@ -145,3 +156,62 @@ def unconfirmed():
 def logout():
     logout_user()
     return redirect(url_for('front_page.home_page'))
+
+
+@auth.route('/enable_2fa')
+@login_required
+def enable_2fa():
+    return render_template('auth/two_factor_enable.html'), 200, {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'}
+
+
+@auth.route('/qrcode')
+@login_required
+def qrcode():
+    if current_user is None:
+        abort(404)
+    user = User.query.filter_by(username=current_user.username).first()
+    if user is None:
+        abort(404)
+
+    if getattr(user.otp, 'secret') is None:
+        otp = OTP()
+        otp.add_opt_secret(current_user)
+
+    url = pyqrcode.create(user.otp.get_totp_uri(current_user.username))
+    stream = BytesIO()
+    url.svg(stream, scale=3)
+    return stream.getvalue().encode('utf-8'), 200, {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'}
+
+
+@auth.route('/validate', methods=['GET', 'POST'])
+def validate():
+    if current_user.is_authenticated:
+        print "OK"
+    if current_user is None:
+        abort(404)
+    user = User.query.filter_by(username=current_user.username).first()
+    if user is None:
+        abort(404)
+
+    ten_years = timedelta(days=3650)
+
+    form = TFAToken()
+    if form.validate_on_submit():
+        if user.otp.verify_totp(form.token.data):
+            resp = make_response(redirect(url_for('front_page.home_page')))
+            if form.remember.data:
+                resp.set_cookie('2FA', current_user.otp.generate_machine_token(),
+                                max_age=ten_years.total_seconds(),
+                                expires=ten_years.total_seconds()
+                                )
+            return resp
+        else:
+            flash("Invalid token")
+    return render_template('auth/validate2fa.html', form=form)

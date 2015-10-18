@@ -79,8 +79,14 @@ class ResetPassword(Form):
     email = StringField('Email Address', validators=[DataRequired(), Email(), Length(3, 64)])
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('verify_password')])
     verify_password = PasswordField('Verify Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Reset Password')
+    submit = Button('Reset Password')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first() is None:
             raise ValidationError('Email address not found')
+
+
+class TFAToken(Form):
+    token = StringField('Token', validators=[DataRequired(), Length(6, 6)])
+    remember = BooleanField('Remember this computer', default=False)
+    submit = Button('Validate Token')
