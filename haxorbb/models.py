@@ -121,10 +121,6 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.commit()
 
-    def enable_tfa(self):
-        self.tfa = True
-        db.session.commit()
-
     @property
     def is_administrator(self):
         return False

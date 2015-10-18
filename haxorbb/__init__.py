@@ -73,6 +73,9 @@ def initialize_app(config_name):
     from .profile import profile
     app.register_blueprint(profile)
 
+    from .utilities import filters
+    app.register_blueprint(filters.filters)
+
     @app.route('/robots.txt')
     def robots():
         return send_from_directory(app.static_folder, request.path[1:])
@@ -84,12 +87,5 @@ def initialize_app(config_name):
     @app.route('/media/<path:filename>')
     def media(filename):
         return send_from_directory(app.config['MEDIA_ROOT'], filename)
-
-    def format_datetime(value):
-        if value:
-            return value.strftime("%Y-%m-%d %H:%M:%S")
-        else:
-            return "None"
-    app.jinja_env.filters['datetime'] = format_datetime
 
     return app
