@@ -61,7 +61,6 @@ class User(UserMixin, db.Model):
     threads = db.Column(db.Integer, default=0)
     threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
-    tfa = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
     otp = db.relationship('OTP', uselist=False, backref='otp')
 
