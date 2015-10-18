@@ -6,7 +6,7 @@ from . import db, login_manager
 from sqlalchemy import Integer
 from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import TimedJSONWebSignatureSerializer
+from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
 from flask.ext.login import UserMixin
 from flask import current_app
 from datetime import datetime
@@ -120,6 +120,11 @@ class User(UserMixin, db.Model):
 
     def seen(self):
         self.last_seen = datetime.utcnow()
+        db.session.commit()
+
+    def enable_tfa(self):
+        self.tfa = True
+        db.session.commit()
 
     @property
     def is_administrator(self):
@@ -141,12 +146,25 @@ class OTP(db.Model):
             db.session.commit()
 
     def get_totp_uri(self, username):
-        return 'otpauth://totp/haxorbb:{0}?secret={1}&issuer=haxorbb'.format(
+        return 'otpauth://totp/haxorbb:{}?secret={}&issuer=haxorbb'.format(
             username, self.secret
         )
 
     def verify_totp(self, token):
-        return onetimepass.valid_totp(token, self.otp_secret)
+        return onetimepass.valid_totp(token, self.secret)
+
+    def generate_machine_token(self):
+        s = Signer(self.secret)
+        s = s.sign('haxxorbb')
+        return s
+
+    def validate_machine_token(self, token):
+        s = Signer(self.secret)
+        try:
+            s.unsign(token)
+            return True
+        except BadSignature:
+            return False
 
 
 class Role(db.Model):
