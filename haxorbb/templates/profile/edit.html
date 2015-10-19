@@ -1,6 +1,6 @@
 {% extends 'master.html' %}
 {% block content %}
-    <section class="user">
+    <section class="control_panel">
     <form method=POST action="{{ url_for('profile.edit_profile', username=current_user.username) }}" >
         <fieldset>
             <legend>User Profile for {{ current_user.username }}</legend>
@@ -14,8 +14,11 @@
         </fieldset>
     </form>
 
-    <a href="{{ url_for('auth.change_password') }}"><button>Change Password</button></a>
-    <a href="{{ url_for('auth.enable_2fa') }}"><button>Enable 2FA</button></a>
-
+    <p><a href="{{ url_for('auth.change_password') }}"><button>Change Password</button></a>
+    {% if tfa  %}
+	    <p>Two factor authentication enabled</p>
+    {% else %}
+        <p><a href="{{ url_for('auth.enable_2fa') }}"><button>Enable 2FA</button></a></p>
+	{% endif %}
     </section>
 {% endblock %}

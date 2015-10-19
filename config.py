@@ -12,6 +12,7 @@ class BaseConfiguration(object):
     MAIL_PREFIX = os.environ.get('MAIL_PREFIX')
     MAIL_USE_TLS = ast.literal_eval(os.environ.get('MAIL_USE_TLS'))
     MAIL_USE_SSL = ast.literal_eval(os.environ.get('MAIL_USE_SSL'))
+    TIME_ZONE = os.environ.get('TIME_ZONE')
 
     @staticmethod
     def initapp(app):

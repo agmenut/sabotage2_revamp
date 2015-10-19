@@ -8,3 +8,4 @@ Flask-Mail
 Flask-Migrate
 onetimepass
 pyqrcode
+pytz

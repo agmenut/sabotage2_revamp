@@ -160,6 +160,30 @@ legend {
 	font-weight: bold;
 }
 
+section.control_panel{
+    margin-left: auto;
+    margin-right: auto;
+    width: 85%;
+}
+
+section.control_panel dl:after {
+
+    display: table;
+    width: 600px;
+}
+
+section.control_panel dt {
+    width: 200px;
+    font-size: 16px;
+    float: left;
+    clear: left;
+}
+
+section.control_panel dd {
+    margin-left: 300px;
+    font-size: 16px;
+}
+
 form {
 	position: relative;
 	width: 360px;
@@ -178,6 +202,32 @@ form label {
 
 img.qrcode {
     background: #ffffff;
+}
+
+section.idbar {
+    background: #1f1f1f;
+    height: 145px;
+}
+
+section.idbar img {
+    position: relative;
+    float: left;
+    height: 125px;
+    width: 125px;
+    top: 10px;
+    left: 10px;
+    border: 2px inset;
+}
+
+h1.idbar, h2.idbar{
+    margin: 0;
+    padding-top: 10px;
+    padding-left: 145px;
+}
+
+p.idbar {
+    margin: 0;
+    padding-left: 145px;
 }
 
 /*footer.vert_center{*/
