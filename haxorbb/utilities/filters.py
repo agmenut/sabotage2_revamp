@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint
+from flask import Blueprint, current_app
 from flask_login import current_user
 import pytz
 
@@ -7,7 +7,10 @@ filters = Blueprint('filters', __name__)
 
 
 def datetime_filter(value):
-    usertz = pytz.timezone(current_user.timezone)
+    if current_user.is_anonymous:
+        usertz = pytz.timezone(current_app.config['TIME_ZONE'])
+    else:
+        usertz = pytz.timezone(current_user.timezone)
     if value:
         utc_value = pytz.utc.localize(value)
         user_value = usertz.normalize(utc_value)
