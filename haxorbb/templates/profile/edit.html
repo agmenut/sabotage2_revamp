@@ -1,11 +1,14 @@
 {% extends 'master.html' %}
+{% block id %}
+{%  include 'profile/idbar.html' %}
+{% endblock %}
 {% block content %}
+
     <section class="control_panel">
     <form method=POST action="{{ url_for('profile.edit_profile', username=current_user.username) }}" >
         <fieldset>
             <legend>User Profile for {{ current_user.username }}</legend>
             <div>{{ form.fullname.label }}{{ form.fullname }}</div>
-            <div>{{ form.email.label }}{{ form.email }}</div>
             <div>{{ form.location.label }}{{ form.location }}</div>
             <div>{{ form.avatar_url.label }}{{ form.avatar_url }}</div>
             <div>{{ form.avatar_text.label }}{{ form.avatar_text }}</div>

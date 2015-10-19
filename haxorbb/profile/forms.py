@@ -42,7 +42,6 @@ class Button(Field):
 
 class Profile(Form):
     fullname = StringField('Name', validators=[Length(0, 64)])
-    email = EmailField('Email Address', validators=[DataRequired(), Email(), Length(3, 254)])
     location = StringField('Location', validators=[Length(0, 64)])
     picture_url = StringField('Picture', validators=[Length(0, 250)])
     avatar_url = StringField('Avatar', validators=[Length(0, 250)])

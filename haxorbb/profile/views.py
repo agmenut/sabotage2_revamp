@@ -47,8 +47,7 @@ def edit_profile(username):
         db.session.add(user)
         db.session.commit()
     form.fullname.data = user.fullname or None
-    form.email.data = user.email
     form.location.data = user.location or None
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
-    return render_template('profile/edit.html', form=form, tfa=tfa_state)
+    return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state)
