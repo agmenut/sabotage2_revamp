@@ -1,26 +1,37 @@
 {% extends 'master.html' %}
+{% block id %}
+	<section class="idbar">
+		<img class="avatar" src="{{ user.avatar_url }}">
+		<h1 class="idbar">{{ user.username }}</h1>
+		{% if current_user.is_authenticated %}
+			<h2 class="idbar">{{ user.fullname }}</h2>
+			<p class="idbar">{{ user.email }}</p>
+		{% endif %}
+	</section>
+{% endblock %}
 {% block content %}
-    <section class="user">
+    <section class="control_panel">
     <dl>
-        <dt>Real Name</dt><dd>{{ user.fullname }}</dd>
-        <dt>Email</dt><dd>{{ user.email }}</dd>
-        <dt>Location</dt><dd>{{ user.location }}</dd>
-        <dt>Time Zone</dt><dd>{{ user.timezone }}</dd>
-        <dt>Threads Created</dt><dd>{{ user.threads }}</dd>
-        <dt>Threads Posted To</dt><dd>{{ user.posted_to }}</dd>
-        <dt>Post Count</dt><dd>{{ user.posts }}</dd>
-        <dt>Average Posts per Day</dt><dd>{{ user.posts_per_day }}</dd>
-        <dt>Date of Registration</dt><dd>{{ user.registration_date | datetime_filter }}</dd>
-        <dt>Last Visit</dt><dd>{{ user.last_seen | datetime_filter }}</dd>
-        <dt>Picture</dt><dd>{{ user.picture_url }}</dd>
-        <dt>Avatar</dt><dd>{{ user.avatar_url }}</dd>
-        {% if user.avatar_url %}
-        <img src="{{ user.avatar_url }}">
-        {% endif %}
-        <dt>Avatar Text</dt><dd>{{ user.avatar_text | safe}}</dd>
+        {% if current_user.is_authenticated %}
+	        <dt>Location: </dt><dd>{{ user.location or "None provided"}}<dd>
+	    {% endif %}
+        <dt>Time Zone:</dt> <dd>{{ user.timezone }}<dd>
+        <dt>Threads Created:</dt> <dd>{{ user.threads }}<dd>
+        <dt>Threads Posted To:</dt> <dd>{{ user.posted_to or "N/A"}}</dd><dd>
+        <dt>Post Count:</dt> <dd>{{ user.posts }}<dd>
+        <dt>Average Posts per Day:</dt> <dd>{{ user.posts_per_day }}<dd>
+        <dt>Date of Registration:</dt> <dd>{{ user.registration_date | datetime_filter }}<dd>
+        <dt>Last Visit:</dd> <dd>{{ user.last_seen | datetime_filter }}<dd>
+{#        Picture{{ user.picture_url }}#}
+        <dt>Title Text:</dt> <dd>{{ user.avatar_text | safe }}</dd>
     </dl>
-    </section>
+
     {% if user.username == current_user.username %}
-        <a href="{{ url_for('profile.edit_profile', username=user.username) }}">Edit profile</a>
+        <p><a href="{{ url_for('profile.edit_profile', username=user.username) }}">Edit profile</a>
     {% endif %}
+
+    {% if not current_user.is_authenticated %}
+	<p><a href="{{ url_for('auth.login') }}">Login</a>
+	{% endif %}
+    </section>
 {% endblock %}
