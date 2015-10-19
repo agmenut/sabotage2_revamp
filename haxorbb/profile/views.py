@@ -15,7 +15,6 @@ def before_request():
 
 
 @profile.route('/view/<username>')
-@login_required
 def view(username):
     user = User.query.filter_by(username=username).first()
     if user:
@@ -36,6 +35,10 @@ def edit_profile(username):
         return redirect(url_for('front_page.home_page'))
     form = Profile()
     user = User.query.filter_by(username=username).first()
+    if user.otp:
+        tfa_state = True
+    else:
+        tfa_state = False
     if form.validate_on_submit():
         user.fullname = form.fullname.data
         user.location = form.location.data
@@ -48,4 +51,4 @@ def edit_profile(username):
     form.location.data = user.location or None
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
-    return render_template('profile/edit.html', form=form)
+    return render_template('profile/edit.html', form=form, tfa=tfa_state)
