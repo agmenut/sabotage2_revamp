@@ -5,6 +5,7 @@
 {% block content %}
 	<section class="control_panel">
 	{% if filedata %}
+		Total quota use: {{  filedata | sum(attribute='size') | filesizeformat }}
 		{% for file in filedata %}
 			<p>Filename {{ file['name'] }}
 			<p><img src="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}">
