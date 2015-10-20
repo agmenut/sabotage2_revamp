@@ -1,0 +1,8 @@
+	<section class="idbar">
+		<img class="avatar" src="{{ user.avatar_url }}">
+		<h1 class="idbar">{{ user.username }}</h1>
+		{% if current_user.is_authenticated %}
+			<h2 class="idbar">{{ user.fullname }}</h2>
+			<p class="idbar">{{ user.email }}</p>
+		{% endif %}
+	</section>
