@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (url_for, request, redirect, render_template)
+from flask import (current_app, url_for, request, redirect, render_template)
 from ..models import User
 from .forms import Profile
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
+import os
 
 
 @profile.before_request
@@ -51,3 +52,26 @@ def edit_profile(username):
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
     return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state)
+
+
+@profile.route('/view/<username>/files', methods=['GET', 'POST'])
+@login_required
+def manage_files(username):
+    filedata = []
+    if current_user.username != username and not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
+    # form = Profile()
+    user = User.query.filter_by(username=username).first()
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
+    if not os.path.isdir(file_path):
+        print "Path does not exist"
+        os.mkdir(file_path)
+    files = os.listdir(file_path)
+    if files:
+        for userfile in files:
+            filedata.append({
+                'name': userfile,
+                'size': os.path.getsize(os.path.join(file_path, userfile)),
+                'URL': url_for('media', filename='users/{}/{}'.format(user.username, userfile))
+                })
+    return render_template('profile/manage_files.html', user=user, filedata=filedata)

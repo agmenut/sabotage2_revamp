@@ -1,0 +1,18 @@
+{% extends 'master.html' %}
+{% block id %}
+{%  include 'profile/idbar.html' %}
+{% endblock %}
+{% block content %}
+	<section class="control_panel">
+	{% if filedata %}
+		{% for file in filedata %}
+			<p>Filename {{ file['name'] }}
+			<p><img src="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}">
+			<p>URL: {{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}
+			<p>Size: {{ file['size'] | filesizeformat }}
+		{% endfor %}
+	{% else %}
+		No files
+	{%  endif %}
+	</section>
+{% endblock content %}
