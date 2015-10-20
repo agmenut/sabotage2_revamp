@@ -8,6 +8,11 @@ from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
 
+try:
+    from os import scandir
+except ImportError:
+    from scandir import scandir
+
 
 @profile.before_request
 def before_request():
@@ -34,8 +39,10 @@ def view(username):
 def edit_profile(username):
     if current_user.username != username and not current_user.is_administrator:
         return redirect(url_for('front_page.home_page'))
-    form = Profile()
     user = User.query.filter_by(username=username).first()
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
+    form = Profile()
+    # Check if the user is using 2FA, and needs to auth.
     if user.otp:
         tfa_state = True
     else:
@@ -51,7 +58,9 @@ def edit_profile(username):
     form.location.data = user.location or None
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
-    return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state)
+    file_list = [f.stat().st_size for f in scandir(file_path)]
+    disk_use = sum(file_list)
+    return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state, disk_use=disk_use)
 
 
 @profile.route('/view/<username>/files', methods=['GET', 'POST'])
@@ -66,12 +75,13 @@ def manage_files(username):
     if not os.path.isdir(file_path):
         print "Path does not exist"
         os.mkdir(file_path)
-    files = os.listdir(file_path)
-    if files:
-        for userfile in files:
+    file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
+    # file+size = sum([f.stat().st_size for f in file_list])
+    if file_list:
+        for userfile in file_list:
             filedata.append({
-                'name': userfile,
-                'size': os.path.getsize(os.path.join(file_path, userfile)),
+                'name': userfile['name'],
+                'size': userfile['size'],
                 'URL': url_for('media', filename='users/{}/{}'.format(user.username, userfile))
                 })
     return render_template('profile/manage_files.html', user=user, filedata=filedata)
