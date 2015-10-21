@@ -18,4 +18,3 @@ def datetime_filter(value):
     else:
         return "None"
 filters.add_app_template_filter(datetime_filter)
-
