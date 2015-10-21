@@ -69,19 +69,24 @@ def manage_files(username):
     filedata = []
     if current_user.username != username and not current_user.is_administrator:
         return redirect(url_for('front_page.home_page'))
-    # form = Profile()
+
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     if not os.path.isdir(file_path):
         print "Path does not exist"
         os.mkdir(file_path)
     file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
-    # file+size = sum([f.stat().st_size for f in file_list])
     if file_list:
         for userfile in file_list:
-            filedata.append({
+            data = {
                 'name': userfile['name'],
                 'size': userfile['size'],
                 'URL': url_for('media', filename='users/{}/{}'.format(user.username, userfile))
-                })
+                }
+            if user.avatar_url and user.avatar_url.endswith(userfile['name']):
+                print "Current avatar"
+                data['avatar'] = True
+            if user.picture_url and user.picture_url.endswith(userfile['name']):
+                data['picture'] = True
+            filedata.append(data)
     return render_template('profile/manage_files.html', user=user, filedata=filedata)

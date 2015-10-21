@@ -7,7 +7,13 @@
 	{% if filedata %}
 		Total quota use: {{  filedata | sum(attribute='size') | filesizeformat }}
 		{% for file in filedata %}
-			<p>Filename {{ file['name'] }}
+			<p>Filename: {{ file['name'] }}
+			{% if file['avatar'] %}
+			Current Avatar
+			{% endif %}
+			{% if file['picture'] %}
+			Current Picture
+			{% endif %}
 			<p><img src="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}">
 			<p>URL: {{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}
 			<p>Size: {{ file['size'] | filesizeformat }}
