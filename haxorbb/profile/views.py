@@ -75,7 +75,7 @@ def manage_files(username):
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     if not os.path.isdir(file_path):
-        os.mkdir(file_path)
+        os.makedirs(file_path)
     file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
     if file_list:
         for userfile in file_list:
