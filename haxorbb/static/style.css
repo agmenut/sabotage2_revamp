@@ -248,6 +248,33 @@ p.idbar {
     padding-left: 145px;
 }
 
+section.file_desc{
+    padding: 2px;
+    min-height: 150px;
+}
+
+section.file_desc:nth-child(2n){
+    background: #1f1f1f;
+}
+
+section.file_desc figure {
+    display: inline-block;
+    clear: left;
+    position: relative;
+    min-height: 150px;
+}
+
+section.file_desc figcaption {
+    display: block
+}
+
+section.file_desc img {
+    position: relative;
+    margin: auto;
+    top: 50%;
+
+}
+
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/
 	/*padding: 2px;*/
