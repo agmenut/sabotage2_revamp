@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (current_app, url_for, request, redirect, render_template)
+from flask import (current_app, url_for, redirect, render_template)
 from ..models import User
 from .forms import Profile
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
+from PIL import Image
+from ..utilities.filters import create_timg
 
 try:
     from os import scandir
@@ -73,7 +75,6 @@ def manage_files(username):
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     if not os.path.isdir(file_path):
-        print "Path does not exist"
         os.mkdir(file_path)
     file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
     if file_list:
@@ -84,9 +85,15 @@ def manage_files(username):
                 'URL': url_for('media', filename='users/{}/{}'.format(user.username, userfile))
                 }
             if user.avatar_url and user.avatar_url.endswith(userfile['name']):
-                print "Current avatar"
                 data['avatar'] = True
             if user.picture_url and user.picture_url.endswith(userfile['name']):
                 data['picture'] = True
+            im = Image.open(os.path.join(file_path, userfile['name']))
+            data['w'] = im.size[0]
+            data['h'] = im.size[1]
+            if data['w'] > 300 and data['h'] > 300:
+                data['resize'] = True
+                if not os.path.isfile(os.path.join(file_path, 'tn/tn_{}'.format(userfile['name']))):
+                    create_timg(os.path.join(file_path, userfile['name']))
             filedata.append(data)
     return render_template('profile/manage_files.html', user=user, filedata=filedata)

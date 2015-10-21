@@ -14,9 +14,14 @@
 			{% if file['picture'] %}
 			Current Picture
 			{% endif %}
-			<p><img src="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}">
+			{% if file['resize'] %}
+				Resized, click for full.
+				<p><a href="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) }}"><img src={{ url_for('media', filename='users/tn/tn_{}'.format(file['name'])) }}></a>
+			{% else %}
+				<p><img src="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) }}">
+			{% endif %}
 			<p>URL: {{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}
-			<p>Size: {{ file['size'] | filesizeformat }}
+			<p>Size: {{ file['size'] | filesizeformat }} Dimensions: {{ file['w'] }} x {{ file['h'] }}
 		{% endfor %}
 	{% else %}
 		No files

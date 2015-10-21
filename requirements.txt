@@ -11,3 +11,4 @@ scandir
 onetimepass
 pyqrcode
 pytz
+pillow
