@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, send_from_directory, request, render_template
+from flask import Flask, send_from_directory, send_file, request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
@@ -87,5 +87,11 @@ def initialize_app(config_name):
     @app.route('/media/<path:filename>')
     def media(filename):
         return send_from_directory(app.config['MEDIA_ROOT'], filename)
+
+    @app.route('/static/<path:filename>.svg')
+    def svg_response(filename):
+        print "Found filename:", filename
+        return send_file('static/' + filename + '.svg',
+                         mimetype='image/svg+xml')
 
     return app
