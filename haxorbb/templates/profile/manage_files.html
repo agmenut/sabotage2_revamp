@@ -18,24 +18,26 @@
         {% endif %}
 		</div>
         <div class="img_data">
-        {% if file['avatar'] %}
-           <p>Current Avatar
-        {% endif %}
-        {% if file['picture'] %}
-           <p>Current Picture
-        {% endif %}
         <p>Filename: {{ file['name'] }}
-        <p>URL: {{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}
-        <p>Size: {{ file['size'] | filesizeformat }} Dimensions: {{ file['w'] }} x {{ file['h'] }}
+	        <p>URL: {{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}
+	        <p>Size: {{ file['size'] | filesizeformat }} Dimensions: {{ file['w'] }} x {{ file['h'] }}
         </div>
         <div class="img_controls">
+	        {% if file['picture'] %}
+		        <p>Current Picture
+	        {% else %}
 	        <p>Set as picture</p>
+            {% endif %}
+	        {% if file['avatar'] %}
+		        <p>Current Avatar
+            {% else %}
 	        <p>Set as avatar</p>
+	        {% endif %}
 	        <p>Download</p>
 	        <p>Rename</p>
 	        <p>Delete</p>
         </div>
-        </div>
+    </div>
     {% endfor %}
 
     {% else %}
