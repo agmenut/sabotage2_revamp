@@ -248,33 +248,43 @@ p.idbar {
     padding-left: 145px;
 }
 
-section.file_desc{
+.file_desc{
     padding: 2px;
-    min-height: 150px;
 }
 
-section.file_desc:nth-child(2n){
+.file_desc:nth-child(2n){
     background: #1f1f1f;
 }
 
-section.file_desc figure {
+.file_desc img {
+    position: relative;
     display: inline-block;
-    clear: left;
-    position: relative;
-    min-height: 150px;
+    padding-right: 5px;
 }
 
-section.file_desc figcaption {
-    display: block
+span.caption {
+    display: block;
 }
 
-section.file_desc img {
-    position: relative;
-    margin: auto;
-    top: 50%;
-
+.file_desc p {
+    margin: 0;
+    padding: 0;
+}
+.file_desc > div {
+    display: inline-block;
+    vertical-align: text-top;
+	width: 360px;
+    min-height: 75px;
 }
 
+div.img_controls{
+	float: right;
+	text-align: end;
+}
+
+div.img_data {
+	left: 10px;
+}
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/
 	/*padding: 2px;*/

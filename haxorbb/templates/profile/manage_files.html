@@ -7,27 +7,35 @@
 	{% if filedata %}
 		<h3>Total disk use: {{  filedata | sum(attribute='size') | filesizeformat }}</h3>
     {% for file in filedata %}
-        <section class="file_desc">
-        {% if file['resize'] %}
-            <figure>
+        <div class="file_desc">
+		<div>
+		{% if file['resize'] %}
             <a href="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) }}"><img src={{ url_for('media', filename='users/tn/tn_{}'.format(file['name'])) }}></a>
-            <figcaption>Resized, click for full.</figcaption>
-            </figure>
+            <span class="caption">Resized, click to see full sized.</span>
         {% else %}
-            <figure>
                 <img src="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) }}">
-            </figure>
+
         {% endif %}
+		</div>
+        <div class="img_data">
         {% if file['avatar'] %}
-            Current Avatar
+           <p>Current Avatar
         {% endif %}
         {% if file['picture'] %}
-            Current Picture
+           <p>Current Picture
         {% endif %}
-        Filename: {{ file['name'] }}
-        URL: {{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}
-        Size: {{ file['size'] | filesizeformat }} Dimensions: {{ file['w'] }} x {{ file['h'] }}
-        </section>
+        <p>Filename: {{ file['name'] }}
+        <p>URL: {{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) | safe}}
+        <p>Size: {{ file['size'] | filesizeformat }} Dimensions: {{ file['w'] }} x {{ file['h'] }}
+        </div>
+        <div class="img_controls">
+	        <p>Set as picture</p>
+	        <p>Set as avatar</p>
+	        <p>Download</p>
+	        <p>Rename</p>
+	        <p>Delete</p>
+        </div>
+        </div>
     {% endfor %}
 
     {% else %}
