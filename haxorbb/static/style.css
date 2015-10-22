@@ -285,6 +285,13 @@ div.img_controls{
 div.img_data {
 	left: 10px;
 }
+
+.download_link > svg {
+	height: 16px;
+	width: 16px;
+	fill: #fff;
+}
+
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/
 	/*padding: 2px;*/
