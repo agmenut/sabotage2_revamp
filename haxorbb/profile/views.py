@@ -3,7 +3,7 @@ from . import profile
 from .. import db
 from flask import (current_app, url_for, redirect, render_template)
 from ..models import User
-from .forms import Profile
+from .forms import Profile, Upload
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
@@ -97,3 +97,15 @@ def manage_files(username):
                     create_timg(os.path.join(file_path, userfile['name']))
             filedata.append(data)
     return render_template('profile/manage_files.html', user=user, filedata=filedata)
+
+
+@profile.route('/view/<username>/files/upload', methods=['GET', 'POST'])
+@login_required
+def user_upload(username):
+    if current_user.username != username and not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
+    user = User.query.filter_by(username=username).first()
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
+    form = Upload()
+    return render_template('profile/upload.html', user=user, form=form)
+

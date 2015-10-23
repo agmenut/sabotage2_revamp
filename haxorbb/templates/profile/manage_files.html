@@ -4,9 +4,14 @@
 {% endblock %}
 {% block content %}
 	<section class="control_panel">
+		<a href="{{ url_for('profile.user_upload', username=current_user.username) }}">
+		<button class="upload">
+			Upload {% include 'icon/cloud-upload.svg' %}
+		</button>
+	</a>
 	{% if filedata %}
 		<h3>Total disk use: {{  filedata | sum(attribute='size') | filesizeformat }}</h3>
-    {% for file in filedata %}
+	{% for file in filedata %}
         <div class="file_desc">
 		<div>
 		{% if file['resize'] %}
@@ -26,17 +31,18 @@
 	        {% if file['picture'] %}
 		        <p>Current Picture
 	        {% else %}
-	        <p>Set as picture</p>
+	        <button class="picture_link">Set as picture{% include 'icon/camera-slr.svg' %}</button>
             {% endif %}
 	        {% if file['avatar'] %}
 		        <p>Current Avatar
             {% else %}
-	        <p>Set as avatar</p>
+	        <button class="avatar_link">Set as avatar{% include 'icon/person.svg' %}</button>
 	        {% endif %}
-            <p class="download_link">Download
+            <button class="download_link">Download
                {%include 'icon/cloud-download.svg' %}
-	        <p>Rename</p>
-	        <p>Delete</p>
+	        </button>
+	        <button class="rename_link">Rename{% include 'icon/document.svg' %}</button>
+	        <button class="delete_link">Delete {% include 'icon/circle-x.svg' %}</button>
         </div>
     </div>
     {% endfor %}
