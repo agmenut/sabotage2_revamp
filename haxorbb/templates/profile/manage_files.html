@@ -36,7 +36,9 @@
 	        {% if file['avatar'] %}
 		        <p>Current Avatar
             {% else %}
-	        <button class="avatar_link">Set as avatar{% include 'icon/person.svg' %}</button>
+            <a href="{{ url_for('profile.set_avatar', username=user.username, filename=file['name']) }}">
+		        <button class="avatar_link">Set as avatar{% include 'icon/person.svg' %}</button>
+	        </a>
 	        {% endif %}
             <button class="download_link">Download
                {%include 'icon/cloud-download.svg' %}

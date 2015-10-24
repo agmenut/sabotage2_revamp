@@ -129,9 +129,19 @@ def rename_file(username, filename):
     form.filename.data = filename
     return render_template('profile/rename.html', form=form)
 
+
 @profile.route('/view/<username>/files/delete/<filename>', methods=['GET'])
 @login_required
 def delete_file(username ,filename):
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username, filename)
     os.remove(file_path)
+    return redirect(url_for('profile.manage_files', username=username))
+
+
+@profile.route('/view/<username>/files/<filename>/set_avatar', methods=['GET'])
+@login_required
+def set_avatar(username, filename):
+    user = User.query.filter_by(username=username).first()
+    new_avatar = url_for('media', filename='users/{}/{}'.format(user.username, filename))
+    user.set_avatar_url(new_avatar)
     return redirect(url_for('profile.manage_files', username=username))

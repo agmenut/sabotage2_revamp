@@ -121,6 +121,10 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.commit()
 
+    def set_avatar_url(self, url):
+        self.avatar_url = url
+        db.session.commit()
+
     @property
     def is_administrator(self):
         return False
