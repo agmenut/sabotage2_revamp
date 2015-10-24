@@ -4,7 +4,7 @@ from .. import db
 from flask import (current_app, url_for, redirect, render_template)
 from werkzeug import secure_filename
 from ..models import User
-from .forms import Profile, Upload
+from .forms import Profile, Upload, Rename
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
@@ -116,3 +116,15 @@ def user_upload(username):
         return redirect(url_for('profile.manage_files', username=username))
     return render_template('profile/upload.html', user=username, form=form)
 
+
+@profile.route('/view/<username>/files/rename/<filename>', methods=['GET', 'POST'])
+@login_required
+def rename_file(username, filename):
+    form = Rename()
+    if form.validate_on_submit():
+        file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
+        os.rename(os.path.join(file_path, filename),
+                  os.path.join(file_path, form.filename.data))
+        return redirect(url_for('profile.manage_files', username=username))
+    form.filename.data = filename
+    return render_template('profile/rename.html', form=form)

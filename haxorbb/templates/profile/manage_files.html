@@ -41,7 +41,11 @@
             <button class="download_link">Download
                {%include 'icon/cloud-download.svg' %}
 	        </button>
-	        <button class="rename_link">Rename{% include 'icon/document.svg' %}</button>
+		    <a href="{{ url_for('profile.rename_file', username=user.username, filename=file['name']) }}">
+	            <button class="rename_link">
+			        Rename{% include 'icon/document.svg' %}
+		        </button>
+		    </a>
 	        <button class="delete_link">Delete {% include 'icon/circle-x.svg' %}</button>
         </div>
     </div>

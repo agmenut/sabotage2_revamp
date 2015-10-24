@@ -52,3 +52,9 @@ class Profile(Form):
 class Upload(Form):
     file = FileField('File')
     submit = Button('Uploads')
+
+
+class Rename(Form):
+    filename = StringField('Filename', validators=[DataRequired(), Length(5, 64)])
+    submit = Button('Uploads')
+
