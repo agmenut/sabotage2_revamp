@@ -6,6 +6,8 @@ Flask-Login
 Flask-Script
 Flask-Mail
 Flask-Migrate
+scandir
 onetimepass
 pyqrcode
 pytz
+pillow

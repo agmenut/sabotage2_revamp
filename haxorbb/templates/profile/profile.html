@@ -27,4 +27,9 @@
 	<p><a href="{{ url_for('auth.login') }}">Login</a>
 	{% endif %}
     </section>
+	<section class="control_panel">
+	{% if user.username == current_user.username %}
+		<a href="{{ url_for('profile.manage_files', username=user.username) }}">File management</a>
+	{% endif %}
+	</section>
 {% endblock %}

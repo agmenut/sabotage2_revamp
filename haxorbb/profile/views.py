@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (url_for, request, redirect, render_template)
+from flask import (current_app, url_for, redirect, render_template)
+from werkzeug import secure_filename
 from ..models import User
-from .forms import Profile
+from .forms import Profile, Upload, Rename
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
+import os
+from PIL import Image
+from ..utilities.filters import create_timg
+
+try:
+    from os import scandir
+except ImportError:
+    from scandir import scandir
 
 
 @profile.before_request
@@ -33,8 +42,10 @@ def view(username):
 def edit_profile(username):
     if current_user.username != username and not current_user.is_administrator:
         return redirect(url_for('front_page.home_page'))
-    form = Profile()
     user = User.query.filter_by(username=username).first()
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
+    form = Profile()
+    # Check if the user is using 2FA, and needs to auth.
     if user.otp:
         tfa_state = True
     else:
@@ -50,4 +61,95 @@ def edit_profile(username):
     form.location.data = user.location or None
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
-    return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state)
+    file_list = [f.stat().st_size for f in scandir(file_path)]
+    disk_use = sum(file_list)
+    return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state, disk_use=disk_use)
+
+
+@profile.route('/view/<username>/files', methods=['GET', 'POST'])
+@login_required
+def manage_files(username):
+    filedata = []
+    if current_user.username != username and not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
+
+    user = User.query.filter_by(username=username).first()
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
+    if not os.path.isdir(file_path):
+        os.makedirs(file_path)
+    file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
+    if file_list:
+        for userfile in file_list:
+            data = {
+                'name': userfile['name'],
+                'size': userfile['size'],
+                'URL': url_for('media', filename='users/{}/{}'.format(user.username, userfile))
+                }
+            if user.avatar_url and user.avatar_url.endswith(userfile['name']):
+                data['avatar'] = True
+            if user.picture_url and user.picture_url.endswith(userfile['name']):
+                data['picture'] = True
+            im = Image.open(os.path.join(file_path, userfile['name']))
+            data['w'] = im.size[0]
+            data['h'] = im.size[1]
+            if data['w'] > 300 and data['h'] > 300:
+                data['resize'] = True
+                if not os.path.isfile(os.path.join(file_path, 'tn/tn_{}'.format(userfile['name']))):
+                    create_timg(os.path.join(file_path, userfile['name']))
+            filedata.append(data)
+    return render_template('profile/manage_files.html', user=user, filedata=filedata)
+
+
+@profile.route('/view/<username>/files/upload', methods=['GET', 'POST'])
+@login_required
+def user_upload(username):
+    if current_user.username != username and not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
+    ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif', 'jpeg']
+    form = Upload()
+    if form.validate_on_submit():
+        file_data = form.file.data
+        filename = secure_filename(file_data.filename)
+        if filename.rsplit('.')[1] in ALLOWED_EXTENSIONS:
+            file_data.save(os.path.join(file_path, filename))
+        return redirect(url_for('profile.manage_files', username=username))
+    return render_template('profile/upload.html', user=username, form=form)
+
+
+@profile.route('/view/<username>/files/rename/<filename>', methods=['GET', 'POST'])
+@login_required
+def rename_file(username, filename):
+    form = Rename()
+    if form.validate_on_submit():
+        file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
+        os.rename(os.path.join(file_path, filename),
+                  os.path.join(file_path, form.filename.data))
+        return redirect(url_for('profile.manage_files', username=username))
+    form.filename.data = filename
+    return render_template('profile/rename.html', form=form)
+
+
+@profile.route('/view/<username>/files/delete/<filename>', methods=['GET'])
+@login_required
+def delete_file(username ,filename):
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username, filename)
+    os.remove(file_path)
+    return redirect(url_for('profile.manage_files', username=username))
+
+
+@profile.route('/view/<username>/files/<filename>/set_avatar', methods=['GET'])
+@login_required
+def set_avatar(username, filename):
+    user = User.query.filter_by(username=username).first()
+    new_avatar = url_for('media', filename='users/{}/{}'.format(user.username, filename))
+    user.set_avatar_url(new_avatar)
+    return redirect(url_for('profile.manage_files', username=username))
+
+@profile.route('/view/<username>/files/<filename>/set_picture', methods=['GET'])
+@login_required
+def set_picture(username, filename):
+    user = User.query.filter_by(username=username).first()
+    new_picture = url_for('media', filename='users/{}/{}'.format(user.username, filename))
+    user.set_picture(new_picture)
+    return redirect(url_for('profile.manage_files', username=username))

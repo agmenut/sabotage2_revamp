@@ -248,6 +248,90 @@ p.idbar {
     padding-left: 145px;
 }
 
+.file_desc{
+    padding: 2px;
+}
+
+.file_desc:nth-child(2n){
+    background: #1f1f1f;
+}
+
+.file_desc img {
+    position: relative;
+    display: inline-block;
+    padding-right: 5px;
+}
+
+span.caption {
+    display: block;
+}
+
+.file_desc p {
+    margin: 0;
+    padding: 0;
+}
+.file_desc > div {
+    display: inline-block;
+    vertical-align: text-top;
+	width: 360px;
+    min-height: 120px;
+}
+
+div.img_controls{
+	float: right;
+	text-align: end;
+}
+
+div.img_data {
+	left: 10px;
+}
+
+button {
+	border-radius: 3px;
+	box-shadow: #222222;
+	clear: both;
+	float: right;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	width: 120px;
+	height: 20px;
+}
+
+button.upload {
+	position: relative;
+	float: none;
+	height: 30px;
+	top: 10px;
+}
+
+button.upload > svg {
+	fill: #575656;
+}
+
+button > svg{
+	width: 16px;
+	height: 16px;
+	float: right;
+}
+
+button.picture_link > svg {
+	fill: #4e8039;
+}
+
+button.avatar_link > svg {
+	fill: #00f;
+}
+
+button.delete_link > svg {
+	fill: #f00;
+}
+button.download_link > svg {
+	fill: #595959;
+}
+
+button.selected {
+
+}
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/
 	/*padding: 2px;*/

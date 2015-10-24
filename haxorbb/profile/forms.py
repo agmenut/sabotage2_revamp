@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask.ext.wtf import Form
 from flask import Markup
-from wtforms import (Field, StringField, PasswordField, BooleanField, SubmitField)
+from wtforms import (Field, StringField, FileField, PasswordField, BooleanField, SubmitField)
 from wtforms.validators import Length, Email, EqualTo, DataRequired
 from wtforms.fields.html5 import EmailField
 from wtforms.widgets.core import html_params
@@ -47,3 +47,14 @@ class Profile(Form):
     avatar_url = StringField('Avatar', validators=[Length(0, 250)])
     avatar_text = StringField('Avatar Text', validators=[Length(0, 250)])
     submit = Button('Submit Changes')
+
+
+class Upload(Form):
+    file = FileField('File')
+    submit = Button('Uploads')
+
+
+class Rename(Form):
+    filename = StringField('Filename', validators=[DataRequired(), Length(5, 64)])
+    submit = Button('Uploads')
+

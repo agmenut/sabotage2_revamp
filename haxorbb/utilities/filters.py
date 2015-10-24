@@ -2,6 +2,10 @@
 from flask import Blueprint, current_app
 from flask_login import current_user
 import pytz
+from PIL import Image
+from StringIO import StringIO
+import os.path
+
 
 filters = Blueprint('filters', __name__)
 
@@ -19,3 +23,21 @@ def datetime_filter(value):
         return "None"
 filters.add_app_template_filter(datetime_filter)
 
+
+def create_timg(img):
+    img = os.path.split(img)[1]
+    path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', current_user.username, img)
+    image_buffer = StringIO()
+    im = Image.open(path)
+    format_ = im.format
+    target_w = 300  # MAGIC NUMBER, WHEE
+    ratio = float(im.size[0]) / float(im.size[1])
+    target_h = int(target_w / ratio)
+    resized = im.resize((target_w, target_h), Image.ANTIALIAS)
+    resized.save(image_buffer, format_)
+    image_buffer.seek(0)
+    target_file = os.path.join(current_app.config['MEDIA_ROOT'], 'users', 'tn', 'tn_{}'.format(img))
+    if not os.path.exists(os.path.join(current_app.config['MEDIA_ROOT'], 'users', 'tn')):
+        os.mkdir(os.path.join(current_app.config['MEDIA_ROOT'], 'users', 'tn'))
+    with open(target_file, 'wb') as imgfile:
+        imgfile.write(image_buffer.read())
