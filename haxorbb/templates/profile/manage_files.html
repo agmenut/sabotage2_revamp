@@ -42,9 +42,11 @@
 		        <button class="avatar_link">Set as avatar{% include 'icon/person.svg' %}</button>
 	        </a>
 	        {% endif %}
-            <button class="download_link">Download
+            <a href="{{ url_for('profile.download_file', username=user.username, filename=file['name']) }}">
+	        <button class="download_link">Download
                {%include 'icon/cloud-download.svg' %}
 	        </button>
+            </a>
 		    <a href="{{ url_for('profile.rename_file', username=user.username, filename=file['name']) }}">
 	            <button class="rename_link">
 			        Rename{% include 'icon/document.svg' %}

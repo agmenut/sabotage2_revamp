@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (current_app, url_for, redirect, render_template)
+from flask import (current_app, url_for, redirect, render_template, Response, send_file)
 from werkzeug import secure_filename
 from ..models import User
 from .forms import Profile, Upload, Rename
@@ -146,6 +146,7 @@ def set_avatar(username, filename):
     user.set_avatar_url(new_avatar)
     return redirect(url_for('profile.manage_files', username=username))
 
+
 @profile.route('/view/<username>/files/<filename>/set_picture', methods=['GET'])
 @login_required
 def set_picture(username, filename):
@@ -153,3 +154,11 @@ def set_picture(username, filename):
     new_picture = url_for('media', filename='users/{}/{}'.format(user.username, filename))
     user.set_picture(new_picture)
     return redirect(url_for('profile.manage_files', username=username))
+
+
+@profile.route('/view/<username>/download/<filename>')
+@login_required
+def download_file(username, filename):
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username, filename)
+    img_type = filename.rsplit('.')[1]
+    return send_file(file_path, mimetype='image/{}'.format(img_type), as_attachment=True)
