@@ -46,7 +46,9 @@
 			        Rename{% include 'icon/document.svg' %}
 		        </button>
 		    </a>
-	        <button class="delete_link">Delete {% include 'icon/circle-x.svg' %}</button>
+	        <a href="{{ url_for('profile.delete_file', username=user.username, filename=file['name']) }}">
+	            <button class="delete_link">Delete {% include 'icon/circle-x.svg' %}</button>
+	        </a>
         </div>
     </div>
     {% endfor %}
