@@ -145,3 +145,11 @@ def set_avatar(username, filename):
     new_avatar = url_for('media', filename='users/{}/{}'.format(user.username, filename))
     user.set_avatar_url(new_avatar)
     return redirect(url_for('profile.manage_files', username=username))
+
+@profile.route('/view/<username>/files/<filename>/set_picture', methods=['GET'])
+@login_required
+def set_picture(username, filename):
+    user = User.query.filter_by(username=username).first()
+    new_picture = url_for('media', filename='users/{}/{}'.format(user.username, filename))
+    user.set_picture(new_picture)
+    return redirect(url_for('profile.manage_files', username=username))

@@ -31,7 +31,9 @@
 	        {% if file['picture'] %}
 		        <p>Current Picture
 	        {% else %}
+	        <a href="{{ url_for('profile.set_picture', username=user.username, filename=file['name']) }}">
 	        <button class="picture_link">Set as picture{% include 'icon/camera-slr.svg' %}</button>
+	        </a>
             {% endif %}
 	        {% if file['avatar'] %}
 		        <p>Current Avatar

@@ -125,6 +125,10 @@ class User(UserMixin, db.Model):
         self.avatar_url = url
         db.session.commit()
 
+    def set_picture(self, url):
+        self.picture_url = url
+        db.session.commit()
+
     @property
     def is_administrator(self):
         return False
