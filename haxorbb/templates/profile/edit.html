@@ -17,7 +17,7 @@
         </fieldset>
     </form>
 
-    <p><a href="{{ url_for('auth.change_password') }}"><button>Change Password</button></a>
+    <a href="{{ url_for('auth.change_password') }}"><button>Change Password</button></a>
     {% if tfa  %}
 	    <p>Two factor authentication enabled</p>
     {% else %}
