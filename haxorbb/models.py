@@ -43,8 +43,9 @@ class Articles(db.Model):
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
+    roles_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(160), nullable=False)
-    username = db.Column(db.String(32), nullable=False)
+    username = db.Column(db.String(32), nullable=False, unique=True, index=True)
     fullname = db.Column(db.String(64))
     email = db.Column(db.String(254), nullable=False)
     registration_date = db.Column(db.DateTime)
@@ -170,10 +171,37 @@ class OTP(db.Model):
             return False
 
 
+class Permissions(object):
+    AUTHOR = 0x02
+    EDITOR = 0x04
+    ADMINISTRATOR = 0xff
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    permissions = db.Column(db.Integer)
+    default = db.Column(db.Boolean, default=False, index=True)
+    users = db.relationship('User', backref='role', lazy='dynamic')
+
+    @staticmethod
+    def insert_roles():
+        roles = {
+            'User': (Permissions.AUTHOR, True),
+            'Editor': (Permissions.EDITOR, False),
+            'Administrator': (Permissions.ADMINISTRATOR, False)
+        }
+        for r in roles:
+            role = Role.query.filter_by(name=r).first()
+            if role is None:
+                role = Role(name=r)
+            role.permissions = role[r][0]
+            role.default = role[r][1]
+            db.session.add(role)
+        db.session.commit()
 
     def __repr__(self):
         return "<Role {!r}>".format(self.name)
+
+
