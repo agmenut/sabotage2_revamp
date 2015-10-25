@@ -218,6 +218,10 @@ form input {
     width: 250px;
 }
 
+form input[type='file'] {
+    height: 2em;
+}
+
 img.qrcode {
     background: #ffffff;
 }
@@ -252,7 +256,7 @@ p.idbar {
     padding: 2px;
 }
 
-.file_desc:nth-child(2n){
+.file_desc:nth-child(odd){
     background: #1f1f1f;
 }
 
@@ -286,7 +290,7 @@ div.img_data {
 	left: 10px;
 }
 
-button {
+button.control {
 	border-radius: 3px;
 	box-shadow: #222222;
 	clear: both;
@@ -329,8 +333,8 @@ button.download_link > svg {
 	fill: #595959;
 }
 
-button.selected {
-
+button.inactive {
+    opacity: 0.75;
 }
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/

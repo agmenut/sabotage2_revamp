@@ -114,7 +114,8 @@ def user_upload(username):
         if filename.rsplit('.')[1] in ALLOWED_EXTENSIONS:
             file_data.save(os.path.join(file_path, filename))
         return redirect(url_for('profile.manage_files', username=username))
-    return render_template('profile/upload.html', user=username, form=form)
+    user = User.query.filter_by(username=username).first()
+    return render_template('profile/upload.html', user=user, username=username, form=form)
 
 
 @profile.route('/view/<username>/files/rename/<filename>', methods=['GET', 'POST'])
