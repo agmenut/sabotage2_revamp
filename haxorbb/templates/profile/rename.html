@@ -1,0 +1,16 @@
+{% extends 'master.html' %}
+{% block id %}
+{% endblock %}
+{% block content %}
+<section class="control_panel">
+    <form method=POST action="{{ url_for('profile.rename_file',
+		    username=current_user.username, filename=form.filename.data) }}">
+        <fieldset>
+            <legend>Enter new filename</legend>
+            <div>{{ form.filename.label }}{{ form.filename }}</div>
+            {{ form.submit }}
+            {{ form.csrf_token }}
+        </fieldset>
+	    </form>
+</section>
+{% endblock %}

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import front_page
 from ..models import Articles
-from flask import render_template, redirect, send_from_directory, request, current_app
+from flask import render_template, redirect
 from flask.ext.login import current_user
 
 

@@ -1,11 +1,14 @@
 {% if article.is_public or current_user.is_authenticated %}
     <header><h3>{{ article.title }}</h3>
         <span><time itemprop="datePublished" datetime="{{ article.datestamp }}">{{ article.datestamp | datetime_filter }}</time>
-        Submitted by <span class="submitter">{{ article.author.fullname }}</span></span>
+        Submitted by <span class="submitter">{{ article.author.username }}</span></span>
     </header>
     {{ article.content | safe }}
     <footer>
         Permalink: <a href="{{  url_for('front_page.home_page', article=article.slug) }}">{{ article.slug }}</a>
+        {% if current_user.username == article.author.username or current_user.allowed(Permissions.EDITOR) %}
+	        <p>Edit this article
+        {% endif %}
     </footer>
 {% else %}
 

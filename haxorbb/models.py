@@ -7,7 +7,7 @@ from sqlalchemy import Integer
 from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
-from flask.ext.login import UserMixin
+from flask.ext.login import UserMixin, AnonymousUserMixin
 from flask import current_app
 from datetime import datetime
 
@@ -43,8 +43,9 @@ class Articles(db.Model):
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
+    roles_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(160), nullable=False)
-    username = db.Column(db.String(32), nullable=False)
+    username = db.Column(db.String(32), nullable=False, unique=True, index=True)
     fullname = db.Column(db.String(64))
     email = db.Column(db.String(254), nullable=False)
     registration_date = db.Column(db.DateTime)
@@ -63,6 +64,11 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
     otp = db.relationship('OTP', uselist=False, backref='otp')
+
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.role is None:
+            self.role = Role.query.filter_by(default=True).first()
 
     def __repr__(self):
         return '<User {!r}>'.format(self.username)
@@ -121,10 +127,29 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.commit()
 
-    @property
+    def set_avatar_url(self, url):
+        self.avatar_url = url
+        db.session.commit()
+
+    def set_picture(self, url):
+        self.picture_url = url
+        db.session.commit()
+
+    def allowed(self, permissions):
+        return self.role is not None and (self.role.permissions & permissions) == permissions
+
+    def is_administrator(self):
+        return self.allowed(Permissions.ADMINISTRATOR)
+
+
+class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
         return False
 
+    def allowed(self, permissions):
+        return False
+
+login_manager.anonymous_user = AnonymousUser
 
 class OTP(db.Model):
     __tablename__ = 'otp'
@@ -162,10 +187,38 @@ class OTP(db.Model):
             return False
 
 
+class Permissions(object):
+    AUTHOR = 0x02
+    EDITOR = 0x04
+    ADMINISTRATOR = 0xff
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    permissions = db.Column(db.Integer)
+    default = db.Column(db.Boolean, default=False, index=True)
+    users = db.relationship('User', backref='role', lazy='dynamic')
+
+    @staticmethod
+    def insert_roles():
+        roles = {
+            'User': (Permissions.AUTHOR, True),
+            'Editor': (Permissions.EDITOR, False),
+            'Administrator': (Permissions.ADMINISTRATOR, False)
+        }
+        for r in roles:
+            role = Role.query.filter_by(name=r).first()
+            print role
+            if role is None:
+                role = Role(name=r)
+            role.permissions = roles[r][0]
+            role.default = roles[r][1]
+            db.session.add(role)
+        db.session.commit()
 
     def __repr__(self):
         return "<Role {!r}>".format(self.name)
+
+

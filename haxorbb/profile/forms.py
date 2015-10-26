@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask.ext.wtf import Form
 from flask import Markup
-from wtforms import (Field, StringField, FileField, PasswordField, BooleanField, SubmitField)
-from wtforms.validators import Length, Email, EqualTo, DataRequired
-from wtforms.fields.html5 import EmailField
+from wtforms import (Field, StringField, FileField, SelectField)
+from wtforms.validators import Length, DataRequired
 from wtforms.widgets.core import html_params
-from wtforms import ValidationError
-from ..models import User
 
 
 class ButtonWidget(object):
@@ -41,14 +38,28 @@ class Button(Field):
 
 
 class Profile(Form):
+    # tz = None
+    #
+    # def __init__(self, timezone):
+    #     super(Profile, self).__init__()
+    #     self.tz = timezone
+    #     print self.tz
+    # tz_data = build_timezone_set()
     fullname = StringField('Name', validators=[Length(0, 64)])
     location = StringField('Location', validators=[Length(0, 64)])
     picture_url = StringField('Picture', validators=[Length(0, 250)])
     avatar_url = StringField('Avatar', validators=[Length(0, 250)])
     avatar_text = StringField('Avatar Text', validators=[Length(0, 250)])
+    time_zone = SelectField('Time Zone', coerce=str)
     submit = Button('Submit Changes')
 
 
 class Upload(Form):
     file = FileField('File')
     submit = Button('Uploads')
+
+
+class Rename(Form):
+    filename = StringField('Filename', validators=[DataRequired(), Length(5, 64)])
+    submit = Button('Uploads')
+
