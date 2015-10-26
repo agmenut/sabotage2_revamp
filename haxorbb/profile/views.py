@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import os
 from PIL import Image
 from ..utilities.filters import create_timg
+import pytz
 
 try:
     from os import scandir
@@ -37,6 +38,10 @@ def view(username):
         return redirect('front_page.home_page')
 
 
+def build_timezone_list():
+    return [(tz, tz) for tz in pytz.common_timezones]
+
+
 @profile.route('/view/<username>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_profile(username):
@@ -45,6 +50,8 @@ def edit_profile(username):
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     form = Profile()
+    form.time_zone.choices = build_timezone_list()
+
     # Check if the user is using 2FA, and needs to auth.
     if user.otp:
         tfa_state = True
@@ -55,12 +62,15 @@ def edit_profile(username):
         user.location = form.location.data
         user.avatar_text = form.avatar_text.data
         user.avatar_url = form.avatar_url.data
+        user.timezone = form.time_zone.data
         db.session.add(user)
         db.session.commit()
+
     form.fullname.data = user.fullname or None
     form.location.data = user.location or None
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
+    form.time_zone.data = user.timezone
     file_list = [f.stat().st_size for f in scandir(file_path)]
     disk_use = sum(file_list)
     return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state, disk_use=disk_use)
@@ -133,7 +143,7 @@ def rename_file(username, filename):
 
 @profile.route('/view/<username>/files/delete/<filename>', methods=['GET'])
 @login_required
-def delete_file(username ,filename):
+def delete_file(username, filename):
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username, filename)
     os.remove(file_path)
     return redirect(url_for('profile.manage_files', username=username))

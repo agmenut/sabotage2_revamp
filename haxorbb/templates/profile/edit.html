@@ -12,12 +12,13 @@
             <div>{{ form.location.label }}{{ form.location }}</div>
             <div>{{ form.avatar_url.label }}{{ form.avatar_url }}</div>
             <div>{{ form.avatar_text.label }}{{ form.avatar_text }}</div>
+	        <div>{{ form.time_zone.label }}{{ form.time_zone }}</div>
             {{ form.submit }}
             {{ form.csrf_token }}
         </fieldset>
     </form>
 
-    <a href="{{ url_for('auth.change_password') }}"><button>Change Password</button></a>
+    <a href="{{ url_for('auth.change_password') }}"><button id="change_password">Change Password</button></a>
     {% if tfa  %}
 	    <p>Two factor authentication enabled</p>
     {% else %}

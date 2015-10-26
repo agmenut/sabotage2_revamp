@@ -218,6 +218,13 @@ form input {
     width: 250px;
 }
 
+select {
+    height: 22px;
+    border-radius: 2px;
+    margin: 2px;
+    width: 256px;
+}
+
 form input[type='file'] {
     height: 2em;
 }
@@ -336,6 +343,11 @@ button.download_link > svg {
 button.inactive {
     opacity: 0.75;
 }
+
+button#change_password {
+    margin-top: 5px;
+}
+
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/
 	/*padding: 2px;*/
