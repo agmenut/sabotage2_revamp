@@ -6,6 +6,9 @@
     {{ article.content | safe }}
     <footer>
         Permalink: <a href="{{  url_for('front_page.home_page', article=article.slug) }}">{{ article.slug }}</a>
+        {% if current_user.username == article.author.username or current_user.allowed(Permissions.EDITOR) %}
+	        <p>Edit this article
+        {% endif %}
     </footer>
 {% else %}
 
