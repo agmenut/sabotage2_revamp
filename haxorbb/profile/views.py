@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (current_app, url_for, redirect, render_template)
+from flask import (current_app, url_for, redirect, render_template, flash, send_file)
 from werkzeug import secure_filename
 from ..models import User
 from .forms import Profile, Upload, Rename
@@ -136,7 +136,6 @@ def user_upload(username):
 @profile.errorhandler(413)
 def request_entity_too_large(error):
     return "File exceeds upload limits", 413
-
 
 
 @profile.route('/view/<username>/files/rename/<filename>', methods=['GET', 'POST'])
