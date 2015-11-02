@@ -38,13 +38,6 @@ class Button(Field):
 
 
 class Profile(Form):
-    # tz = None
-    #
-    # def __init__(self, timezone):
-    #     super(Profile, self).__init__()
-    #     self.tz = timezone
-    #     print self.tz
-    # tz_data = build_timezone_set()
     fullname = StringField('Name', validators=[Length(0, 64)])
     location = StringField('Location', validators=[Length(0, 64)])
     picture_url = StringField('Picture', validators=[Length(0, 250)])
@@ -56,10 +49,10 @@ class Profile(Form):
 
 class Upload(Form):
     file = FileField('File')
-    submit = Button('Uploads')
+    submit = Button('Upload')
 
 
 class Rename(Form):
     filename = StringField('Filename', validators=[DataRequired(), Length(5, 64)])
-    submit = Button('Uploads')
+    submit = Button('Rename')
 
