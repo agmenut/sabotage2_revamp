@@ -229,6 +229,10 @@ form input[type='file'] {
     height: 2em;
 }
 
+form input[type='checkbox'] {
+    width: auto !important;
+}
+
 img.qrcode {
     background: #ffffff;
 }

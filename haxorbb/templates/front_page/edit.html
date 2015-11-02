@@ -1,0 +1,21 @@
+{% extends 'master.html' %}
+{% block id %}
+{% include 'profile/idbar.html' %}
+{% endblock %}
+{% block content %}
+    <section class="control_panel">
+    <form method=POST action="{{ url_for('front_page.edit_article', articleid=g.articleid) }}" >
+        <fieldset>
+            <legend>Edit existing article</legend>
+	        <div>{{ form.title.label }}
+	        {{ form.title }}</div>
+			<div>{{ form.visibility.label }}
+			{{ form.visibility }}</div>
+	        <div>{{ form.body.label }}
+	        {{ form.body }}</div>
+	        {{ form.submit }}
+            {{ form.csrf_token }}
+        </fieldset>
+    </form>
+    </section>
+{% endblock %}
