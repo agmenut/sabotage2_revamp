@@ -10,6 +10,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from flask import current_app
 from datetime import datetime
+from markdown import markdown
+import bleach
 
 
 @login_manager.user_loader
@@ -23,6 +25,7 @@ class Articles(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String(255))
     content = db.Column(db.Text)
+    html_body = db.Column(db.Text)
     datestamp = db.Column(db.DateTime)
     slug = db.Column(db.String(30))
     visibility = db.Column(db.Boolean, default=True)
@@ -38,6 +41,16 @@ class Articles(db.Model):
         except Exception as e:
             db.session.rollback()
             raise e
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initator):
+        allowed_tags = ['a', 'b', 'i', 'code', 'strong', 'pre', 'ul', 'li',
+                        'em', 'ol', 'p', 'img']
+        target.html_body = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html5'),
+            tags=allowed_tags, strip=True))
+
+db.event.listen(Articles.content, 'set', Articles.on_changed_body)
 
 
 class User(UserMixin, db.Model):

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from . import front_page
+from .. import db
 from .forms import Edit, Compose
 from ..models import Articles
 from flask import render_template, redirect, g
 from flask.ext.login import current_user, login_required
-import bleach
+
 
 @front_page.before_app_request
 def before_request():
@@ -28,9 +29,16 @@ def edit_article(articleid):
     article = Articles.query.filter_by(id=articleid).first()
     form = Edit()
     if form.validate_on_submit():
-        print "Update article {}".format(articleid)
-        print form.body.data
-        print bleach.linkify(form.body.data)
+        article.content = form.body.data
+        article.title = form.title.data
+        article.visibility = form.visibility.data
+        db.session.add(article)
+        try:
+            db.session.commit()
+        except Exception as e:
+            print e
+            db.session.rollback()
+
     g.articleid = articleid
     form.title.data = article.title
     form.body.data = article.content

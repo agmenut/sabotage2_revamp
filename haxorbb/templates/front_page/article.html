@@ -3,8 +3,12 @@
         <span><time itemprop="datePublished" datetime="{{ article.datestamp }}">{{ article.datestamp | datetime_filter }}</time>
         Submitted by <span class="submitter">{{ article.author.username }}</span></span>
     </header>
-    {{ article.content | safe }}
-    <footer>
+	{% if article.html_body %}
+		{{ article.html_body | safe }}
+	{% else %}
+        {{ article.content | safe }}
+    {% endif %}
+	<footer>
         Permalink: <a href="{{  url_for('front_page.home_page', article=article.slug) }}">{{ article.slug }}</a>
         {% if current_user.username == article.author.username or current_user.allowed(Permissions.EDITOR) %}
 	        <p><a href="{{ url_for('front_page.edit_article', articleid=article.id) }}">Edit this article</a>

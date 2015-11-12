@@ -151,7 +151,7 @@ article footer {
 	margin-left: auto;
     margin-right: auto;
     position: relative;
-    width: 900px
+    width: 1024px
 }
 
 legend {
@@ -167,8 +167,18 @@ section.control_panel{
     width: 85%;
 }
 
-section.control_panel dl:after {
+section.compose {
+    float: left;
+    width: 512px;
+}
+section.preview {
+    float: left;
+    padding-left: 30px;
+    padding-top: 14px;
+    width: 512px;
+}
 
+section.control_panel dl:after {
     display: table;
     width: 600px;
 }
@@ -187,7 +197,7 @@ section.control_panel dd {
 
 form {
     margin-top: 5px;
-    width: 600px;
+    width: 512px;
 }
 
 form label {
@@ -231,6 +241,12 @@ form input[type='file'] {
 
 form input[type='checkbox'] {
     width: auto !important;
+	height: 20px;
+}
+
+textarea {
+    width: 500px;
+    height: 500px;
 }
 
 img.qrcode {

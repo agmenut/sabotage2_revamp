@@ -3,7 +3,7 @@
 {% include 'profile/idbar.html' %}
 {% endblock %}
 {% block content %}
-    <section class="control_panel">
+    <section class="compose">
     <form method=POST action="{{ url_for('front_page.edit_article', articleid=g.articleid) }}" >
         <fieldset>
             <legend>Edit existing article</legend>
@@ -18,4 +18,8 @@
         </fieldset>
     </form>
     </section>
+	<section class="preview">Markdown quick guide</section>
+{% endblock %}
+{% block headers %}
+{{ pagedown.include_pagedown() }}
 {% endblock %}

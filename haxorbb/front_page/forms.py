@@ -5,6 +5,7 @@ from flask import Markup
 from wtforms import (Field, StringField, BooleanField, TextAreaField)
 from wtforms.validators import Length, DataRequired
 from wtforms.widgets.core import html_params
+from flask.ext.pagedown.fields import PageDownField
 
 
 class ButtonWidget(object):
@@ -40,13 +41,13 @@ class Button(Field):
 
 class Compose(Form):
     title = StringField('Title', validators=[DataRequired(), Length(1, 255)])
-    body = TextAreaField('Article', validators=[DataRequired(), Length(min=1)])
+    body = PageDownField('Article', validators=[DataRequired(), Length(min=1)])
     visibility = BooleanField('Publicly Visible')
     submit = Button('Submit')
 
 
 class Edit(Form):
     title = StringField('Title', validators=[DataRequired(), Length(1, 255)])
-    body = TextAreaField('Article', validators=[DataRequired(), Length(min=1)])
+    body = PageDownField('Article', validators=[DataRequired(), Length(min=1)])
     visibility = BooleanField('Publicly Visible')
     submit = Button('Submit')
