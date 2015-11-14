@@ -3,6 +3,7 @@ import os
 import base64
 import onetimepass
 from . import db, login_manager
+from .utilities.utils import Utilities
 from sqlalchemy import Integer
 from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -46,11 +47,17 @@ class Articles(db.Model):
     def on_changed_body(target, value, oldvalue, initator):
         allowed_tags = ['a', 'b', 'i', 'code', 'strong', 'pre', 'ul', 'li',
                         'em', 'ol', 'p', 'img']
+        allowed_attr = ['src', 'alt', 'title', 'href']
         target.html_body = bleach.linkify(bleach.clean(
             markdown(value, output_format='html5'),
-            tags=allowed_tags, strip=True))
+            tags=allowed_tags, attributes=allowed_attr, strip=True))
+
+    @staticmethod
+    def on_changed_title(target, value, oldvalue, initiator):
+        target.slug = Utilities.generate_slug(value)
 
 db.event.listen(Articles.content, 'set', Articles.on_changed_body)
+db.event.listen(Articles.title, 'set', Articles.on_changed_title)
 
 
 class User(UserMixin, db.Model):
@@ -163,6 +170,7 @@ class AnonymousUser(AnonymousUserMixin):
         return False
 
 login_manager.anonymous_user = AnonymousUser
+
 
 class OTP(db.Model):
     __tablename__ = 'otp'
