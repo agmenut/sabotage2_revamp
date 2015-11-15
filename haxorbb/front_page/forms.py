@@ -39,13 +39,6 @@ class Button(Field):
             return u''
 
 
-class Compose(Form):
-    title = StringField('Title', validators=[DataRequired(), Length(1, 255)])
-    body = PageDownField('Article', validators=[DataRequired(), Length(min=1)])
-    visibility = BooleanField('Publicly Visible')
-    submit = Button('Submit')
-
-
 class Edit(Form):
     title = StringField('Title', validators=[DataRequired(), Length(1, 255)])
     body = PageDownField('Article', validators=[DataRequired(), Length(min=1)])
