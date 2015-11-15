@@ -1,0 +1,27 @@
+{% extends 'master.html' %}
+{% block id %}
+{% include 'profile/idbar.html' %}
+{% endblock %}
+{% block content %}
+    <section class="compose">
+    <form method=POST action="{{ url_for('front_page.new_article') }}" >
+        <fieldset>
+            <legend>Create New article</legend>
+	        <div>{{ form.title.label }}
+	        {{ form.title }}</div>
+			<div>{{ form.visibility.label }}
+			{{ form.visibility }}</div>
+	        <div>{{ form.body.label }}
+	        {{ form.body(input_only=True) }}</div>
+	        {{ form.submit }}
+            {{ form.csrf_token }}
+        </fieldset>
+    </form>
+    </section>
+	<section id="flask-pagedown-body-preview" class="flask-pagedown-preview preview">Preview
+	{{ form.body(preview_only=True) }}
+	</section>
+{% endblock %}
+{% block headers %}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
