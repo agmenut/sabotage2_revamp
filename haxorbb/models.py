@@ -11,7 +11,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from flask import current_app
 from datetime import datetime
-from markdown import markdown
+import markdown
 import bleach
 
 
@@ -46,10 +46,11 @@ class Articles(db.Model):
     @staticmethod
     def on_changed_body(target, value, oldvalue, initator):
         allowed_tags = ['a', 'b', 'i', 'code', 'strong', 'pre', 'ul', 'li',
-                        'em', 'ol', 'p', 'img']
-        allowed_attr = ['src', 'alt', 'title', 'href']
+                        'em', 'ol', 'p', 'img', 'table', 'tr', 'td', 'th',
+                        'h1', 'h2', 'h3', 'br', 'code']
+        allowed_attr = ['src', 'alt', 'title', 'href', 'align']
         target.html_body = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html5'),
+            markdown.markdown(value, output_format='html5', extensions=['markdown.extensions.tables']),
             tags=allowed_tags, attributes=allowed_attr, strip=True))
 
     @staticmethod
