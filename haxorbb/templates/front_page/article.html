@@ -13,6 +13,9 @@
         {% if current_user.username == article.author.username or current_user.allowed(Permissions.EDITOR) %}
 	        <p><a href="{{ url_for('front_page.edit_article', articleid=article.id) }}">Edit this article</a>
         {% endif %}
+		{% if current_user.username == article.author.username or current_user.allowed(Permissions.ADMINISTRATOR) %}
+			| <a href="{{ url_for('front_page.delete_article', articleid=article.id) }}">Delete article</a>
+		{% endif %}
     </footer>
 {% else %}
 

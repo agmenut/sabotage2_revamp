@@ -367,6 +367,11 @@ button#change_password {
     margin-top: 5px;
 }
 
+
+#flask-pagedown-body-preview {
+    padding-left: 20px;
+}
+
 /*footer.vert_center{*/
 	/*vertical-align: middle;*/
 	/*padding: 2px;*/

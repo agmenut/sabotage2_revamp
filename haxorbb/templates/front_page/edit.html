@@ -2,6 +2,9 @@
 {% block id %}
 {% include 'profile/idbar.html' %}
 {% endblock %}
+{% block headers %}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
 {% block content %}
     <section class="compose">
     <form method=POST action="{{ url_for('front_page.edit_article', articleid=g.articleid) }}" >
@@ -12,14 +15,14 @@
 			<div>{{ form.visibility.label }}
 			{{ form.visibility }}</div>
 	        <div>{{ form.body.label }}
-	        {{ form.body }}</div>
+	        {{ form.body(only_input=True) }}</div>
 	        {{ form.submit }}
             {{ form.csrf_token }}
         </fieldset>
     </form>
     </section>
-	<section class="preview">Markdown quick guide</section>
-{% endblock %}
-{% block headers %}
-{{ pagedown.include_pagedown() }}
+	<section class="preview">
+	Preview
+	{{ form.body(only_preview=True) }}
+	</section>
 {% endblock %}
