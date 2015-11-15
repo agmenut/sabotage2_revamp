@@ -123,8 +123,7 @@ article {
 	padding-top: 10px;
 }
 
-article img {
-	float: left;
+article img{
 	padding-right: 4px
 }
 
@@ -235,7 +234,7 @@ select {
 }
 
 form input[type='file'] {
-    height: 2em;
+    height: 20px;
 }
 
 form input[type='checkbox'] {
@@ -372,21 +371,16 @@ button#change_password {
     padding-left: 20px;
 }
 
-/*footer.vert_center{*/
-	/*vertical-align: middle;*/
-	/*padding: 2px;*/
-/*}*/
+table {
+    background: #001123;
+    border: 1px solid #004499;
+}
 
-/*footer a:link {*/
-	/*color: orange;*/
-/*}*/
+th {
+    font-weight: bold;
+    background: #004499;
+}
 
-/*.counter {*/
-	/*position: relative;*/
-	/*border: 1px solid #004499;*/
-	/*background-color: #222222;*/
-	/*height: 30px;*/
-	/*width: 10%;*/
-	/*margin: 0 auto;*/
-	/*margin-bottom: 10px;*/
-/*}*/
+tr:nth-child(2n){
+    background: #0a0a1e;
+}
