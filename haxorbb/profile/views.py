@@ -45,7 +45,7 @@ def build_timezone_list():
 @profile.route('/view/<username>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_profile(username):
-    if current_user.username != username and not current_user.is_administrator:
+    if current_user.username != username or not current_user.is_administrator:
         return redirect(url_for('front_page.home_page'))
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
@@ -112,7 +112,7 @@ def manage_files(username):
 @profile.route('/view/<username>/files/upload', methods=['GET', 'POST'])
 @login_required
 def user_upload(username):
-    if current_user.username != username and not current_user.is_administrator:
+    if current_user.username != username or not current_user.is_administrator:
         return redirect(url_for('front_page.home_page'))
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
@@ -140,6 +140,8 @@ def request_entity_too_large(error):
 @profile.route('/view/<username>/files/rename/<filename>', methods=['GET', 'POST'])
 @login_required
 def rename_file(username, filename):
+    if current_user.username != username or not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
     form = Rename()
     if form.validate_on_submit():
         file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
@@ -153,6 +155,8 @@ def rename_file(username, filename):
 @profile.route('/view/<username>/files/delete/<filename>', methods=['GET'])
 @login_required
 def delete_file(username, filename):
+    if current_user.username != username or not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username, filename)
     os.remove(file_path)
     return redirect(url_for('profile.manage_files', username=username))
@@ -161,6 +165,8 @@ def delete_file(username, filename):
 @profile.route('/view/<username>/files/<filename>/set_avatar', methods=['GET'])
 @login_required
 def set_avatar(username, filename):
+    if current_user.username != username or not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
     user = User.query.filter_by(username=username).first()
     new_avatar = url_for('media', filename='users/{}/{}'.format(user.username, filename))
     user.set_avatar_url(new_avatar)
@@ -170,6 +176,8 @@ def set_avatar(username, filename):
 @profile.route('/view/<username>/files/<filename>/set_picture', methods=['GET'])
 @login_required
 def set_picture(username, filename):
+    if current_user.username != username or not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
     user = User.query.filter_by(username=username).first()
     new_picture = url_for('media', filename='users/{}/{}'.format(user.username, filename))
     user.set_picture(new_picture)
@@ -179,6 +187,8 @@ def set_picture(username, filename):
 @profile.route('/view/<username>/download/<filename>')
 @login_required
 def download_file(username, filename):
+    if current_user.username != username or not current_user.is_administrator:
+        return redirect(url_for('front_page.home_page'))
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username, filename)
     img_type = filename.rsplit('.')[1]
     return send_file(file_path, mimetype='image/{}'.format(img_type), as_attachment=True)
