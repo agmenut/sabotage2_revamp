@@ -3,9 +3,9 @@
 {% include 'profile/idbar.html' %}
 {% endblock %}
 {% block content %}
-	<section class="control_panel">
+	<section class="file_manage">
 		<a href="{{ url_for('profile.user_upload', username=current_user.username) }}">
-		<button class="upload">
+		<button class="upload control">
 			Upload {% include 'icon/cloud-upload.svg' %}
 		</button>
 	</a>
@@ -29,31 +29,33 @@
         </div>
         <div class="img_controls">
 	        {% if file['picture'] %}
-		        <p>Current Picture
+		        <button class="picture_link inactive control" disabled="true">Current Picture</button>
 	        {% else %}
 	        <a href="{{ url_for('profile.set_picture', username=user.username, filename=file['name']) }}">
-	        <button class="picture_link">Set as picture{% include 'icon/camera-slr.svg' %}</button>
+	        <button class="picture_link control">Set as picture{% include 'icon/camera-slr.svg' %}</button>
 	        </a>
             {% endif %}
 	        {% if file['avatar'] %}
-		        <p>Current Avatar
+		        <button class="avatar_link inactive control" disabled="true">
+		        Current Avatar
+		        </button>
             {% else %}
             <a href="{{ url_for('profile.set_avatar', username=user.username, filename=file['name']) }}">
-		        <button class="avatar_link">Set as avatar{% include 'icon/person.svg' %}</button>
+		        <button class="avatar_link control">Set as avatar{% include 'icon/person.svg' %}</button>
 	        </a>
 	        {% endif %}
             <a href="{{ url_for('profile.download_file', username=user.username, filename=file['name']) }}">
-	        <button class="download_link">Download
+	        <button class="download_link control">Download
                {%include 'icon/cloud-download.svg' %}
 	        </button>
             </a>
 		    <a href="{{ url_for('profile.rename_file', username=user.username, filename=file['name']) }}">
-	            <button class="rename_link">
+	            <button class="rename_link control">
 			        Rename{% include 'icon/document.svg' %}
 		        </button>
 		    </a>
 	        <a href="{{ url_for('profile.delete_file', username=user.username, filename=file['name']) }}">
-	            <button class="delete_link">Delete {% include 'icon/circle-x.svg' %}</button>
+	            <button class="delete_link control">Delete {% include 'icon/circle-x.svg' %}</button>
 	        </a>
         </div>
     </div>

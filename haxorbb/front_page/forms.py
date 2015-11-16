@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from flask.ext.wtf import Form
 from flask import Markup
-from wtforms import (Field, StringField, FileField, SelectField)
+from wtforms import (Field, StringField, BooleanField, TextAreaField)
 from wtforms.validators import Length, DataRequired
 from wtforms.widgets.core import html_params
+from flask.ext.pagedown.fields import PageDownField
 
 
 class ButtonWidget(object):
@@ -37,22 +39,8 @@ class Button(Field):
             return u''
 
 
-class Profile(Form):
-    fullname = StringField('Name', validators=[Length(0, 64)])
-    location = StringField('Location', validators=[Length(0, 64)])
-    picture_url = StringField('Picture', validators=[Length(0, 250)])
-    avatar_url = StringField('Avatar', validators=[Length(0, 250)])
-    avatar_text = StringField('Avatar Text', validators=[Length(0, 250)])
-    time_zone = SelectField('Time Zone', coerce=str)
-    submit = Button('Submit Changes')
-
-
-class Upload(Form):
-    file = FileField('File')
-    submit = Button('Upload')
-
-
-class Rename(Form):
-    filename = StringField('Filename', validators=[DataRequired(), Length(5, 64)])
-    submit = Button('Rename')
-
+class Edit(Form):
+    title = StringField('Title', validators=[DataRequired(), Length(1, 255)])
+    body = PageDownField('Article', validators=[DataRequired(), Length(min=1)])
+    visibility = BooleanField('Publicly Visible')
+    submit = Button('Submit')

@@ -14,8 +14,7 @@
         <dt>Post Count:</dt> <dd>{{ user.posts }}<dd>
         <dt>Average Posts per Day:</dt> <dd>{{ user.posts_per_day }}<dd>
         <dt>Date of Registration:</dt> <dd>{{ user.registration_date | datetime_filter }}<dd>
-        <dt>Last Visit:</dd> <dd>{{ user.last_seen | datetime_filter }}<dd>
-{#        Picture{{ user.picture_url }}#}
+        <dt>Last Visit:</dt> <dd>{{ user.last_seen | datetime_filter }}<dd>
         <dt>Title Text:</dt> <dd>{{ user.avatar_text | safe }}</dd>
     </dl>
 
@@ -27,6 +26,10 @@
 	<p><a href="{{ url_for('auth.login') }}">Login</a>
 	{% endif %}
     </section>
+    <div class="picture">
+	    <h2>Picture:</h2>
+	    <img src="{{ user.picture_url }}">
+    </div>
 	<section class="control_panel">
 	{% if user.username == current_user.username %}
 		<a href="{{ url_for('profile.manage_files', username=user.username) }}">File management</a>

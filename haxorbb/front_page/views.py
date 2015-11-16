@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from . import front_page
+from .. import db
+from .forms import Edit
 from ..models import Articles
-from flask import render_template, redirect, send_from_directory, request, current_app
-from flask.ext.login import current_user
+from ..utilities.utils import Utilities
+from datetime import datetime
+from flask import render_template, redirect, url_for, g
+from flask.ext.login import current_user, login_required
 
 
 @front_page.before_app_request
@@ -19,6 +23,65 @@ def home_page(article):
     else:
         articles = [article for article in Articles.query.order_by(Articles.datestamp.desc()).all()]
     return render_template("front_page/index.html", articles=articles)
+
+
+@front_page.route('/new_article', methods=['GET', 'POST'])
+@login_required
+def new_article():
+    form = Edit()
+    article = Articles()
+    if form.validate_on_submit():
+        article.content = form.body.data
+        article.title = form.title.data
+        article.slug = Utilities.generate_slug(form.title.data)
+        article.visibility = form.visibility.data
+        article.author_id = current_user.id
+        article.datestamp = datetime.utcnow()
+        db.session.add(article)
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            print e
+            db.session.rollback()
+        return redirect(url_for('front_page.home_page'))
+    return render_template('front_page/new_article.html', user=current_user, form=form)
+
+
+@front_page.route('/article/<articleid>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_article(articleid):
+    article = Articles.query.filter_by(id=articleid).first()
+    form = Edit()
+    if form.validate_on_submit():
+        article.content = form.body.data
+        article.title = form.title.data
+        article.visibility = form.visibility.data
+        db.session.add(article)
+        try:
+            db.session.commit()
+        except Exception as e:
+            print e
+            db.session.rollback()
+        return redirect(url_for('front_page.home_page'))
+    g.articleid = articleid
+    form.title.data = article.title
+    form.body.data = article.content
+    form.visibility.data = article.visibility
+    return render_template("front_page/edit.html", user=current_user, form=form)
+
+
+@front_page.route('/article/<articleid>/delete', methods=['GET'])
+@login_required
+def delete_article(articleid):
+    to_remove = Articles.query.filter_by(id=articleid).first()
+    db.session.delete(to_remove)
+    try:
+        db.session.commit()
+    except Exception as e:
+        print e
+        db.session.rollback()
+    return redirect(url_for('front_page.home_page'))
 
 
 @front_page.route('/oldnews/', defaults={'page': 'oldnews'})

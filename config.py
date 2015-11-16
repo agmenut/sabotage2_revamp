@@ -13,6 +13,7 @@ class BaseConfiguration(object):
     MAIL_USE_TLS = ast.literal_eval(os.environ.get('MAIL_USE_TLS'))
     MAIL_USE_SSL = ast.literal_eval(os.environ.get('MAIL_USE_SSL'))
     TIME_ZONE = os.environ.get('TIME_ZONE')
+    # Set max file upload to 16MB unless another value set in env. config.
     MAX_CONTENT_LENGTH = os.environ.get('MAX_CONTENT_LENGTH') or 16 * 1024 * 1024
 
     @staticmethod

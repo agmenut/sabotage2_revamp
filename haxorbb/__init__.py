@@ -3,6 +3,7 @@ from flask import Flask, send_from_directory, request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
+from flask.ext.pagedown import PageDown
 from config import config
 
 
@@ -48,6 +49,7 @@ login_manager.needs_refresh_message_category = 'info'
 
 db = SQLAlchemy()
 mail = Mail()
+pagedown = PageDown()
 
 
 def initialize_app(config_name):
@@ -59,6 +61,7 @@ def initialize_app(config_name):
     login_manager.init_app(app)
     db.init_app(app)
     mail.init_app(app)
+    pagedown.init_app(app)
 
     # Init the Media directory
     app.media = app.config['MEDIA_ROOT']

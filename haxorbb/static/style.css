@@ -123,12 +123,10 @@ article {
 	padding-top: 10px;
 }
 
-article img {
-	float: left;
+article img{
 	padding-right: 4px
 }
 
-article.text {}
 
 
 article a:link, article a:visited {
@@ -151,7 +149,7 @@ article footer {
 	margin-left: auto;
     margin-right: auto;
     position: relative;
-    width: 900px
+    width: 1024px
 }
 
 legend {
@@ -161,14 +159,32 @@ legend {
 	font-weight: bold;
 }
 
-section.control_panel{
-    margin-left: auto;
-    margin-right: auto;
+section.file_manage {
+    margin: auto;
     width: 85%;
 }
 
-section.control_panel dl:after {
+section.control_panel {
+    margin-left: 150px;
+    margin-right: auto;
+    width: 670px;
+    float: left;
+    clear: both;
+    word-wrap: break-word;
+}
 
+section.compose {
+    float: left;
+    width: 512px;
+}
+section.preview {
+    float: left;
+    padding-left: 30px;
+    padding-top: 14px;
+    width: 512px;
+}
+
+section.control_panel dl:after {
     display: table;
     width: 600px;
 }
@@ -185,9 +201,14 @@ section.control_panel dd {
     font-size: 16px;
 }
 
+div.picture {
+    float: left;
+    width: 512px;
+}
+
 form {
     margin-top: 5px;
-    width: 600px;
+    width: 512px;
 }
 
 form label {
@@ -216,6 +237,27 @@ form input {
     border-radius: 2px;
     margin: 2px;
     width: 250px;
+}
+
+select {
+    height: 22px;
+    border-radius: 2px;
+    margin: 2px;
+    width: 256px;
+}
+
+form input[type='file'] {
+    height: 20px;
+}
+
+form input[type='checkbox'] {
+    width: auto !important;
+	height: 20px;
+}
+
+textarea {
+    width: 500px;
+    height: 500px;
 }
 
 img.qrcode {
@@ -252,7 +294,7 @@ p.idbar {
     padding: 2px;
 }
 
-.file_desc:nth-child(2n){
+.file_desc:nth-child(odd){
     background: #1f1f1f;
 }
 
@@ -286,7 +328,7 @@ div.img_data {
 	left: 10px;
 }
 
-button {
+button.control {
 	border-radius: 3px;
 	box-shadow: #222222;
 	clear: both;
@@ -329,24 +371,29 @@ button.download_link > svg {
 	fill: #595959;
 }
 
-button.selected {
-
+button.inactive {
+    opacity: 0.75;
 }
-/*footer.vert_center{*/
-	/*vertical-align: middle;*/
-	/*padding: 2px;*/
-/*}*/
 
-/*footer a:link {*/
-	/*color: orange;*/
-/*}*/
+button#change_password {
+    margin-top: 5px;
+}
 
-/*.counter {*/
-	/*position: relative;*/
-	/*border: 1px solid #004499;*/
-	/*background-color: #222222;*/
-	/*height: 30px;*/
-	/*width: 10%;*/
-	/*margin: 0 auto;*/
-	/*margin-bottom: 10px;*/
-/*}*/
+
+#flask-pagedown-body-preview {
+    padding-left: 20px;
+}
+
+table {
+    background: #001123;
+    border: 1px solid #004499;
+}
+
+th {
+    font-weight: bold;
+    background: #004499;
+}
+
+tr:nth-child(2n){
+    background: #0a0a1e;
+}
