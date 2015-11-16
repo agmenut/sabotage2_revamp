@@ -79,10 +79,9 @@ def edit_profile(username):
 @profile.route('/view/<username>/files', methods=['GET', 'POST'])
 @login_required
 def manage_files(username):
-    filedata = []
-    if current_user.username != username and not current_user.is_administrator:
+    if current_user.username != username or not current_user.is_administrator:
         return redirect(url_for('front_page.home_page'))
-
+    filedata = []
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     if not os.path.isdir(file_path):
