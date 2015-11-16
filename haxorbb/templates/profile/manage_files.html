@@ -3,7 +3,7 @@
 {% include 'profile/idbar.html' %}
 {% endblock %}
 {% block content %}
-	<section class="control_panel">
+	<section class="file_manage">
 		<a href="{{ url_for('profile.user_upload', username=current_user.username) }}">
 		<button class="upload control">
 			Upload {% include 'icon/cloud-upload.svg' %}
