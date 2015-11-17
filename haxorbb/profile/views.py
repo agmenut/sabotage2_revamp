@@ -4,7 +4,7 @@ from .. import db
 from flask import (current_app, url_for, redirect, render_template, flash, send_file, request)
 from werkzeug import secure_filename
 from ..models import User
-from .forms import Profile, Upload, Rename
+from .forms import Profile, Upload, Rename, get_redirect_target
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
@@ -111,7 +111,7 @@ def manage_files(username):
 
 @profile.route('/view/<username>/files/upload', methods=['GET', 'POST'])
 @login_required
-def user_upload(username, referrer=None):
+def user_upload(username):
     if current_user.username != username or not current_user.is_administrator:
         return redirect(url_for('front_page.home_page'))
     user = User.query.filter_by(username=username).first()
@@ -128,8 +128,7 @@ def user_upload(username, referrer=None):
             flash("Unacceptable file type submitted for upload")
             return redirect(url_for('profile.manage_files', username=username))
         flash("Filed uploaded successfully")
-
-        return redirect(url_for('profile.manage_files', username=username))
+        return form.redirect()
 
     return render_template('profile/upload.html', username=username, form=form, user=user)
 
