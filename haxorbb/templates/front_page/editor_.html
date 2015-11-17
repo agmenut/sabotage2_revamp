@@ -1,0 +1,39 @@
+{% extends 'master.html' %}
+{% block id %}
+{% include 'profile/idbar.html' %}
+{% endblock %}
+{% block headers %}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
+{% block content %}
+    <section class="compose">
+	    <form method=POST>
+	        <fieldset>
+	            <legend>{% block legend %}Editor{% endblock %}</legend>
+		        <div>{{ form.title.label }}
+		        {{ form.title }}</div>
+				<div>{{ form.visibility.label }}
+				{{ form.visibility }}</div>
+		        <div>{{ form.body.label }}
+		        {{ form.body(only_input=True) }}</div>
+		        {{ form.submit }}
+	            {{ form.csrf_token }}
+	        </fieldset>
+	    </form>
+    </section>
+	<section class="preview">
+		<p>Preview
+		{{ form.body(only_preview=True) }}
+	</section>
+	<a href="{{ url_for('profile.user_upload', username=current_user.username) }}">
+		<button class="upload control">
+			Upload {% include 'icon/cloud-upload.svg' %}
+		</button>
+	</a>
+    <p>Available assets:
+    <ul class="asset_list">
+        {% for f in g.file_list %}
+            <li>{{ f.url }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

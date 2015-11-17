@@ -182,6 +182,7 @@ section.preview {
     padding-left: 30px;
     padding-top: 14px;
     width: 512px;
+	min-height: 600px;
 }
 
 section.control_panel dl:after {
@@ -396,4 +397,8 @@ th {
 
 tr:nth-child(2n){
     background: #0a0a1e;
+}
+
+ul.asset_list {
+    list-style: none;
 }

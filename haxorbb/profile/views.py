@@ -83,10 +83,7 @@ def manage_files(username):
         return redirect(url_for('front_page.home_page'))
     filedata = []
     user = User.query.filter_by(username=username).first()
-    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
-    if not os.path.isdir(file_path):
-        os.makedirs(file_path)
-    file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
+    file_list, file_path = get_file_list(user)
     if file_list:
         for userfile in file_list:
             data = {
@@ -107,6 +104,14 @@ def manage_files(username):
                     create_timg(os.path.join(file_path, userfile['name']))
             filedata.append(data)
     return render_template('profile/manage_files.html', user=user, filedata=filedata)
+
+
+def get_file_list(user):
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
+    if not os.path.isdir(file_path):
+        os.makedirs(file_path)
+    file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
+    return file_list, file_path
 
 
 @profile.route('/view/<username>/files/upload', methods=['GET', 'POST'])
