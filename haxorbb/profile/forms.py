@@ -48,7 +48,7 @@ class Profile(Form):
 
 
 class Upload(Form):
-    file = FileField('File')
+    file = FileField('File', validators=[DataRequired()])
     submit = Button('Upload')
 
 
