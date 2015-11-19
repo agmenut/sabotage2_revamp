@@ -5,13 +5,13 @@
 {% block content %}
 	<section class="file_manage">
 		<a href="{{ url_for('profile.user_upload', username=current_user.username) }}">
-		<button class="upload control">
-			Upload {% include 'icon/cloud-upload.svg' %}
-		</button>
-	</a>
-	{% if filedata %}
-		<h3>Total disk use: {{  filedata | sum(attribute='size') | filesizeformat }}</h3>
-	{% for file in filedata %}
+			<button class="upload control">
+				Upload {% include 'icon/cloud-upload.svg' %}
+			</button>
+		</a>
+		{% if filedata %}
+			<h3>Total disk use: {{  filedata | sum(attribute='size') | filesizeformat }}</h3>
+		{% for file in filedata %}
         <div class="file_desc">
 		<div>
 		{% if file['resize'] %}

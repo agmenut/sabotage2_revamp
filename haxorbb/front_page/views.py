@@ -5,8 +5,20 @@ from .forms import Edit
 from ..models import Articles
 from ..utilities.utils import Utilities
 from datetime import datetime
-from flask import render_template, redirect, url_for, g
+from flask import render_template, redirect, url_for, g, current_app
 from flask.ext.login import current_user, login_required
+import os
+from scandir import scandir
+
+
+def get_file_list(username):
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
+    if not os.path.isdir(file_path):
+        os.makedirs(file_path)
+    file_list = [{'file': f.name, 'url': url_for(
+        'media', filename='users/{}/{}'.format(username, f.name)
+    )} for f in scandir(file_path)]
+    return file_list
 
 
 @front_page.before_app_request
@@ -38,19 +50,22 @@ def new_article():
         article.author_id = current_user.id
         article.datestamp = datetime.utcnow()
         db.session.add(article)
-
         try:
             db.session.commit()
         except Exception as e:
             print e
             db.session.rollback()
         return redirect(url_for('front_page.home_page'))
-    return render_template('front_page/new_article.html', user=current_user, form=form)
+    file_list = get_file_list(current_user.username)
+    if file_list:
+        g.file_list = file_list
+    return render_template('front_page/editor_.html', user=current_user, form=form)
 
 
 @front_page.route('/article/<articleid>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_article(articleid):
+    file_list = get_file_list(current_user.username)
     article = Articles.query.filter_by(id=articleid).first()
     form = Edit()
     if form.validate_on_submit():
@@ -65,6 +80,8 @@ def edit_article(articleid):
             db.session.rollback()
         return redirect(url_for('front_page.home_page'))
     g.articleid = articleid
+    if file_list:
+        g.file_list = file_list
     form.title.data = article.title
     form.body.data = article.content
     form.visibility.data = article.visibility

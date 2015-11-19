@@ -3,12 +3,14 @@
 {% endblock %}
 {% block content %}
 <section class="control_panel">
-    <form method=POST action="{{ url_for('profile.user_upload', username=current_user.username) }}" enctype="multipart/form-data" >
+    <form method=POST enctype="multipart/form-data" >
         <fieldset>
             <legend>Select File to upload</legend>
             <div>{{ form.file.label }}{{ form.file }}</div>
             {{ form.submit }}
+            {{ form.next }}
             {{ form.csrf_token }}
+
         </fieldset>
 	    </form>
 </section>

@@ -127,13 +127,11 @@ article img{
 	padding-right: 4px
 }
 
-
-
-article a:link, article a:visited {
+ a:link,  a:visited {
 	color: orange;
 }
 
-article a:hover, article a:active {
+ a:hover,  a:active {
 	color: yellow;
 }
 
@@ -181,7 +179,9 @@ section.preview {
     float: left;
     padding-left: 30px;
     padding-top: 14px;
-    width: 512px;
+    padding-right: 20px;
+    max-width: 600px;
+	min-height: 1px;
 }
 
 section.control_panel dl:after {
@@ -396,4 +396,8 @@ th {
 
 tr:nth-child(2n){
     background: #0a0a1e;
+}
+
+ul.asset_list {
+    list-style: none;
 }

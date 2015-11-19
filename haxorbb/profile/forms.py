@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask.ext.wtf import Form
-from flask import Markup
-from wtforms import (Field, StringField, FileField, SelectField)
+from flask import Markup, request, redirect, url_for
+from urlparse import urlparse, urljoin
+from wtforms import (Field, StringField, FileField, SelectField, HiddenField)
 from wtforms.validators import Length, DataRequired
 from wtforms.widgets.core import html_params
 
@@ -37,6 +38,35 @@ class Button(Field):
             return u''
 
 
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
+
+def get_redirect_target():
+    for target in request.args.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
+
+
+class RedirectableForm(Form):
+    next = HiddenField()
+
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+        if not self.next.data:
+            self.next.data = get_redirect_target() or ''
+
+    def redirect(self, endpoint='', **values):
+        if is_safe_url(self.next.data):
+            return redirect(self.next.data)
+        target = get_redirect_target()
+        return redirect(target or url_for(endpoint, **values))
+
+
 class Profile(Form):
     fullname = StringField('Name', validators=[Length(0, 64)])
     location = StringField('Location', validators=[Length(0, 64)])
@@ -47,8 +77,8 @@ class Profile(Form):
     submit = Button('Submit Changes')
 
 
-class Upload(Form):
-    file = FileField('File')
+class Upload(RedirectableForm):
+    file = FileField('File', validators=[DataRequired()])
     submit = Button('Upload')
 
 
