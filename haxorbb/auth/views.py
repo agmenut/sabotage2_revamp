@@ -28,11 +28,12 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             print "OK to login"
             login_user(user, form.remember.data)
-            jar = request.cookies.get('2FA')
-            if jar and current_user.otp.validate_machine_token(jar):
-                cookie = True
-            if user.otp.secret and not cookie:
-                return redirect(url_for('auth.validate'))
+            if current_user.otp is not None:
+                jar = request.cookies.get('2FA')
+                if jar and current_user.otp is not None and current_user.otp.validate_machine_token(jar):
+                    cookie = True
+                if user.otp.secret and not cookie:
+                    return redirect(url_for('auth.validate'))
             return redirect(request.args.get('next') or url_for('front_page.home_page'))
         flash('Authentication failed')
         return redirect(url_for('auth.login'))

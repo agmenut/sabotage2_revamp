@@ -47,11 +47,11 @@ class Articles(db.Model):
     def on_changed_body(target, value, oldvalue, initator):
         allowed_tags = ['a', 'b', 'i', 'code', 'strong', 'pre', 'ul', 'li',
                         'em', 'ol', 'p', 'img', 'table', 'tr', 'td', 'th',
-                        'h1', 'h2', 'h3', 'br', 'code']
+                        'h1', 'h2', 'h3', 'br', 'code', 'pre', 'strike']
         allowed_attr = ['src', 'alt', 'title', 'href', 'align']
-        target.html_body = bleach.linkify(bleach.clean(
-            markdown.markdown(value, output_format='html5', extensions=['markdown.extensions.tables']),
-            tags=allowed_tags, attributes=allowed_attr, strip=True))
+        target.html_body = bleach.clean(markdown.markdown(
+            value, output_format='html5', extensions=['markdown.extensions.tables']),
+            tags=allowed_tags, attributes=allowed_attr, strip=True)
 
     @staticmethod
     def on_changed_title(target, value, oldvalue, initiator):

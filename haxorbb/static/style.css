@@ -175,13 +175,15 @@ section.compose {
     float: left;
     width: 512px;
 }
+
 section.preview {
-    float: left;
-    padding-left: 30px;
-    padding-top: 14px;
-    padding-right: 20px;
-    max-width: 600px;
-	min-height: 1px;
+	float: left;
+	padding-left: 30px;
+	padding-top: 14px;
+	padding-right: 20px;
+	max-width: 600px;
+	min-width: 512px;
+	min-height: 300px;
 }
 
 section.control_panel dl:after {
