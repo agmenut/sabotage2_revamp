@@ -71,8 +71,11 @@ def edit_profile(username):
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
     form.time_zone.data = user.timezone
-    file_list = [f.stat().st_size for f in scandir(file_path)]
-    disk_use = sum(file_list)
+    try:
+        file_list = [f.stat().st_size for f in scandir(file_path)]
+        disk_use = sum(file_list)
+    except OSError as e:
+        disk_use = 0
     return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state, disk_use=disk_use)
 
 
