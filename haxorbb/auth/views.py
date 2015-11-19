@@ -177,7 +177,7 @@ def qrcode():
     if user is None:
         abort(404)
 
-    if getattr(user.otp, 'secret') is None:
+    if user.otp is None:
         otp = OTP()
         otp.add_opt_secret(current_user)
 
