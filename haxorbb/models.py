@@ -176,7 +176,7 @@ login_manager.anonymous_user = AnonymousUser
 class OTP(db.Model):
     __tablename__ = 'otp'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    fk_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    fk_userid = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
     secret = db.Column(db.String(16))
     backup_code = db.Column(ARRAY(Integer))
 
