@@ -1,14 +1,21 @@
 @import "sabotage.css";
 
+/*html {*/
+	/*height: 100%;*/
+/*}*/
+
 html, body {
 	margin: 0;
 	padding: 0;
 	background-color: #000000;
 	color: #ffffff;
+    height: 100%;
 }
 
 .container {
-	width: 1024px;
+	/*width: 1024px;*/
+    margin: auto;
+    height: 100%;
 }
 
 p.tiny {
@@ -127,12 +134,12 @@ article img{
 	padding-right: 4px
 }
 
- a:link,  a:visited {
+a:link,  a:visited {
 	color: orange;
 }
 
- a:hover,  a:active {
-	color: yellow;
+a:hover,  a:active {
+    color: yellow;
 }
 
 article footer {
@@ -157,17 +164,35 @@ legend {
 	font-weight: bold;
 }
 
+nav.profile {
+    position: relative;
+    height: 100%;
+    display: inline-table;
+    float: left;
+    background-color: #1f1f1f;
+    width: 145px;
+}
+
+nav.profile ul {
+    list-style: none;
+}
+
 section.file_manage {
     margin: auto;
     width: 85%;
 }
 
+.clearfix {
+    content: "";
+    clear: both;
+}
+
 section.control_panel {
-    margin-left: 150px;
-    margin-right: auto;
+    position: relative;
+    top: 10px;
+    left: 80px;
     width: 670px;
     float: left;
-    clear: both;
     word-wrap: break-word;
 }
 
@@ -204,8 +229,9 @@ section.control_panel dd {
 }
 
 div.picture {
-    float: left;
-    width: 512px;
+    top: 0;
+    left: 700px;
+    position: absolute;
 }
 
 form {
