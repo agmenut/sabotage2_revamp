@@ -3,6 +3,9 @@
 {% include 'profile/idbar.html' %}
 {% endblock %}
 {% block content %}
+	{% block nav %}
+		{% include 'profile/navigation.html' %}
+	{% endblock %}
 	<section class="file_manage">
 		<a href="{{ url_for('profile.user_upload', username=current_user.username) }}">
 			<button class="upload control">

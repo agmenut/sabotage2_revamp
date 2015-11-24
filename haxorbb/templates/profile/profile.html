@@ -5,10 +5,11 @@
 
 
 {% block content %}
+
 	{% block nav %}
 		{% include 'profile/navigation.html' %}
 	{% endblock %}
-	<div class="container">
+
     <section class="control_panel">
 	    <dl>
 	        {% if current_user.is_authenticated %}
@@ -35,5 +36,5 @@
 		<p><a href="{{ url_for('profile.manage_files', username=user.username) }}">File management</a>
 	{% endif %}
 	</section>
-	</div>
+
 {% endblock %}

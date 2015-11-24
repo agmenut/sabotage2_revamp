@@ -1,19 +1,17 @@
 @import "sabotage.css";
 
-/*html {*/
-	/*height: 100%;*/
-/*}*/
-
-html, body {
+html {
+	height: 100%;
+}
+body {
 	margin: 0;
 	padding: 0;
 	background-color: #000000;
 	color: #ffffff;
-    height: 100%;
+    height: calc(100% - 2px);
 }
 
 .container {
-	/*width: 1024px;*/
     margin: auto;
     height: 100%;
 }
@@ -165,12 +163,11 @@ legend {
 }
 
 nav.profile {
-    position: relative;
-    height: 100%;
     display: inline-table;
     float: left;
-    background-color: #1f1f1f;
+    top: 145px;
     width: 145px;
+    height: 100%;
 }
 
 nav.profile ul {
@@ -294,28 +291,31 @@ img.qrcode {
 
 section.idbar {
     background: #1f1f1f;
-    height: 145px;
+    /*height: 145px;*/
+    padding: 10px;
+    overflow: hidden;
 }
 
 section.idbar img {
-    position: relative;
     float: left;
     height: 125px;
     width: 125px;
-    top: 10px;
-    left: 10px;
+
     border: 2px inset;
 }
 
 h1.idbar, h2.idbar{
+    position: relative;
     margin: 0;
-    padding-top: 10px;
-    padding-left: 145px;
+    top: 10px;
+    left: 15px;
 }
 
 p.idbar {
+    position: relative;
     margin: 0;
-    padding-left: 145px;
+    top: 25px;
+    left: 15px;
 }
 
 .file_desc{
