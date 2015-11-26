@@ -1,7 +1,6 @@
 {% extends 'master.html' %}
 {% block content %}
 
-<div id="container">
 	<div id="banner">
 		<img src="{{ url_for('media', filename='img/cover_60.jpg') }}" height="180" width="920" alt="Banner">
 	</div>
@@ -12,14 +11,11 @@
             {% include 'front_page/article.html' %}
         </article>
     {% endfor %}
-</div><!-- close content div -->
+
 
        <footer><a href="page=oldnews">older news...</a></footer>
+</div><!-- close content div -->
 
-</div> <!-- close Container div -->
-
-{#        <div class="footer">Other crap</div>#}
-<!-- close Container div -->
 {% endblock %}
 
 

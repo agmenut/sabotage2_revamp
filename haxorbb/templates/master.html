@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=808" />
 </head>
 <body>
+<div class="container">
 {% block id %}
 {% if current_user.is_authenticated %}
     Logged in as {{ current_user.username }} | <a href="{{ url_for('auth.logout') }}">Logout</a> | 
@@ -28,8 +29,12 @@
         {% endfor %}
     {% endif %}
 {% endwith %}
+
 {% block content %}
 {% endblock %}
 {% block headers %}{% endblock %}
+</div>
+
+
 </body>
 </html>

@@ -1,0 +1,19 @@
+<nav class="profile">
+	<ul>
+		<li>
+			<a href="{{ url_for('front_page.home_page') }}">News page</a>
+		</li>
+		<li {% if active_page == 'profile' %} class="active" {% endif %}>
+				<a href="{{ url_for('profile.view', username=current_user.username) }}"
+				{% if active_page == 'profile' %} {% endif %}>View Profile</a>
+		</li>
+		<li {% if active_page == 'edit' %} class="active" {% endif %}>
+				<a href="{{ url_for('profile.edit_profile', username=current_user.username) }}"
+				{% if active_page == 'edit' %} {% endif %}>Edit Profile</a>
+		</li>
+		<li {% if active_page == 'file_manage' %} class="active" {% endif %}>
+				<a href="{{ url_for('profile.manage_files', username=current_user.username) }}"
+				{% if active_page == 'file_manage' %} {% endif %}>Manage Files</a>
+		</li>
+	</ul>
+</nav>

@@ -3,7 +3,10 @@
 {% include 'profile/idbar.html' %}
 {% endblock %}
 {% block content %}
-
+	{% block nav %}
+		{% set active_page = 'edit' %}
+		{% include 'profile/navigation.html' with context %}
+	{% endblock %}
     <section class="control_panel">
     <form method=POST action="{{ url_for('profile.edit_profile', username=current_user.username) }}" >
         <fieldset>

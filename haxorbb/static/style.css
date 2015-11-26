@@ -1,14 +1,19 @@
 @import "sabotage.css";
 
-html, body {
+html {
+	height: 100%;
+}
+body {
 	margin: 0;
 	padding: 0;
 	background-color: #000000;
 	color: #ffffff;
+    height: calc(100% - 2px);
 }
 
 .container {
-	width: 1024px;
+    margin: auto;
+    height: 100%;
 }
 
 p.tiny {
@@ -127,12 +132,12 @@ article img{
 	padding-right: 4px
 }
 
- a:link,  a:visited {
+a:link,  a:visited {
 	color: orange;
 }
 
- a:hover,  a:active {
-	color: yellow;
+a:hover,  a:active {
+    color: yellow;
 }
 
 article footer {
@@ -140,7 +145,7 @@ article footer {
 }
 
 .submitter {
-	color: #90EE90 	;
+	color: #90EE90;
 }
 
 .footer {
@@ -157,17 +162,62 @@ legend {
 	font-weight: bold;
 }
 
+nav.profile {
+    background-color: #1f1f1f;
+    position: fixed;
+    top: 145px;
+    width: 145px;
+    height: 100%;
+}
+
+nav.profile ul {
+    list-style: none;
+    position: relative;
+    top: 30px;
+    padding: 2px;
+}
+
+nav.profile ul > li {
+    height: 40px;
+    width: 100%;
+    text-align: center;
+    background-color: rgb(65, 64, 64);
+    -webkit-border-radius: 2px;
+    -moz-border-radius:2px;
+    border-radius: 2px;
+}
+
+nav.profile ul > li a {
+    position: relative;
+    top: 10px;
+}
+
+nav.profile ul > li.active {
+    pointer-events: none;
+    cursor: default;
+    background-color: #191818;
+}
+
 section.file_manage {
     margin: auto;
     width: 85%;
+    position: relative;
+    top: 175px;
+    left: 15px;
+    z-index: 50;
+}
+
+.clear {
+    content: "";
+    clear: both;
 }
 
 section.control_panel {
-    margin-left: 150px;
-    margin-right: auto;
+    position: relative;
+    top: 175px;
+    left: 170px;
     width: 670px;
     float: left;
-    clear: both;
     word-wrap: break-word;
 }
 
@@ -204,8 +254,9 @@ section.control_panel dd {
 }
 
 div.picture {
-    float: left;
-    width: 512px;
+    top: 0;
+    left: 700px;
+    position: absolute;
 }
 
 form {
@@ -268,31 +319,37 @@ img.qrcode {
 
 section.idbar {
     background: #1f1f1f;
+    padding: 10px;
+    overflow: hidden;
+    position: fixed;
     height: 145px;
+    width: 100%;
+    z-index: 900;
 }
 
 section.idbar img {
-    position: relative;
     float: left;
     height: 125px;
     width: 125px;
-    top: 10px;
-    left: 10px;
+    z-index: 999;
     border: 2px inset;
 }
 
 h1.idbar, h2.idbar{
+    position: relative;
     margin: 0;
-    padding-top: 10px;
-    padding-left: 145px;
+    top: 10px;
+    left: 15px;
 }
 
 p.idbar {
+    position: relative;
     margin: 0;
-    padding-left: 145px;
+    top: 25px;
+    left: 15px;
 }
 
-.file_desc{
+.file_desc {
     padding: 2px;
 }
 
