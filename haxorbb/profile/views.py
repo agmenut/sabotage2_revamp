@@ -74,7 +74,7 @@ def edit_profile(username):
     try:
         file_list = [f.stat().st_size for f in scandir(file_path)]
         disk_use = sum(file_list)
-    except OSError as e:
+    except OSError:
         disk_use = 0
     return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state, disk_use=disk_use)
 
