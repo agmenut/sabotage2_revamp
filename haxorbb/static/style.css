@@ -221,6 +221,11 @@ section.control_panel {
     word-wrap: break-word;
 }
 
+div.edit_container {
+	position: relative;
+	top: 175px;
+}
+
 section.compose {
     float: left;
     width: 512px;

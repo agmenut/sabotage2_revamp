@@ -6,6 +6,7 @@
 {{ pagedown.include_pagedown() }}
 {% endblock %}
 {% block content %}
+<div class="edit_container">
     <section class="compose">
 	    <form method=POST>
 	        <fieldset>
@@ -37,4 +38,5 @@
             <li>{{ f.url }}</li>
         {% endfor %}
     </ul>
+</div>
 {% endblock %}
