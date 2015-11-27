@@ -335,7 +335,7 @@ section.idbar {
 section.idbar img {
     float: left;
     height: 125px;
-    width: 125px;
+    width: auto;
     z-index: 999;
     border: 2px inset;
 }
