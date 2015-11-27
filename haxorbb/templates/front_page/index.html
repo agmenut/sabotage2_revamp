@@ -4,8 +4,9 @@
 	<div id="banner">
 		<img src="{{ url_for('media', filename='img/cover_60.jpg') }}" height="180" width="920" alt="Banner">
 	</div>
-<div id="content">
     {% include 'front_page/navigation.html' %}
+	<div id="content">
+
     {% for article in articles %}
          <article>
             {% include 'front_page/article.html' %}

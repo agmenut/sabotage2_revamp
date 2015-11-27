@@ -55,7 +55,7 @@ span.author {
 
 #content {
 	position: relative;
-	width: 900px;
+	width: 50%;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -74,6 +74,12 @@ span.author {
 	font-weight: bold;
 	padding-bottom: 2px;
 	padding-left: 10px;
+}
+
+#nav {
+    margin: auto;
+    width: 900px;
+    min-height: 150px;
 }
 
 a.navlink {
