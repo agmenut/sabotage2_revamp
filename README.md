@@ -13,4 +13,6 @@ MAIL_REPLY=do-not-reply@example.com
 MAIL_SERVER=localhost  
 MAIL_USE_TLS=0  
 MAIL_USE_SSL=0  
+SECRET_KEY=Change_me_I'm_cryptographically_significant!  
+TIME_ZONE=US/Pacific  
 

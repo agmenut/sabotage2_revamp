@@ -79,6 +79,9 @@ def initialize_app(config_name):
     from .utilities import filters
     app.register_blueprint(filters.filters)
 
+    from .forum import forum
+    app.register_blueprint(forum)
+
     @app.route('/robots.txt')
     def robots():
         return send_from_directory(app.static_folder, request.path[1:])

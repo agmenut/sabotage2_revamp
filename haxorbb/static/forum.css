@@ -1,0 +1,101 @@
+/* CSS - Cascading Style Sheet */
+/* Palette color codes */
+/* Palette URL: http://paletton.com/#uid=63D0u0k++tgs5++++PfovZI8fRh */
+
+/* Feel free to copy&paste color codes to your application */
+
+
+/* As hex codes */
+
+.color-primary-0 { color: #004399 }	/* Main Primary color */
+.color-primary-1 { color: #328CFF }
+.color-primary-2 { color: #0062DF }
+.color-primary-3 { color: #4B98FB }
+.color-primary-4 { color: #AFC6E4 }
+
+.color-secondary-1-0 { color: #1400A2 }	/* Main Secondary color (1) */
+.color-secondary-1-1 { color: #543DFF }
+.color-secondary-1-2 { color: #1C00E2 }
+.color-secondary-1-3 { color: #6954FC }
+.color-secondary-1-4 { color: #BAB4E7 }
+
+.color-secondary-2-0 { color: #009872 }	/* Main Secondary color (2) */
+.color-secondary-2-1 { color: #1FFFC7 }
+.color-secondary-2-2 { color: #00DEA7 }
+.color-secondary-2-3 { color: #3BFBCB }
+.color-secondary-2-4 { color: #A9E4D5 }
+
+.color-complement-0 { color: #E99000 }	/* Main Complement color */
+.color-complement-1 { color: #FFAA1F }
+.color-complement-2 { color: #FF9E00 }
+.color-complement-3 { color: #FFB43C }
+.color-complement-4 { color: #FFE6BD }
+
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    color: #E99000;
+}
+
+body {
+    height: 100%;
+    background-color: #808080;
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    }
+
+nav {
+    background-color: #004399;
+    height: 1.5em;
+    line-height: 1.5em;
+    color: #ffffff;
+}
+
+div.container {
+    min-height: 700px;
+}
+
+table.forum_desc {
+    position: relative;
+    top: 20px;
+    margin: auto;
+    width: 60%;
+    border: 1px solid #004399;
+    background: #c0c0c0;
+}
+
+.forum_desc th {
+    background-color: #004399;
+    color: #ffffff;
+}
+
+.forum_desc tr:nth-child(odd) {
+    background-color: #e0e0e0;
+}
+
+.forum_desc tr td, .forum_desc tr th {
+    border: 1px solid #000000;
+    text-align: center;
+}
+
+span.title {
+    position: relative;
+    float: left;
+}
+
+span.subtitle {
+    float: left;
+    clear: left;
+    font-size: smaller;
+}
+
+footer {
+    color: #ffffff;
+    clear: both;
+    width: 40%;
+    margin: auto;
+    border: 1px solid #004499;
+    text-align: center;
+    background: #0062DF;
+}
