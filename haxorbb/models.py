@@ -65,6 +65,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     roles_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    forum_roles_id = db.Column(db.Integer, db.ForeignKey('forum_roles.id'))
     password_hash = db.Column(db.String(160), nullable=False)
     username = db.Column(db.String(32), nullable=False, unique=True, index=True)
     fullname = db.Column(db.String(64))
@@ -159,12 +160,21 @@ class User(UserMixin, db.Model):
     def allowed(self, permissions):
         return self.role is not None and (self.role.permissions & permissions) == permissions
 
+    def forum_permissions(self, permissions):
+        return False
+
     def is_administrator(self):
         return self.allowed(Permissions.ADMINISTRATOR)
+
+    def is_forum_administrator(self):
+        return self.forum_permissions(ForumPermissions.ADMINISTRATOR)
 
 
 class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
+        return False
+
+    def is_forum_administrator(self):
         return False
 
     def allowed(self, permissions):
@@ -215,6 +225,12 @@ class Permissions(object):
     ADMINISTRATOR = 0xff
 
 
+class ForumPermissions(object):
+    USER = 0x01
+    MODERATOR = 0x02
+    ADMINISTRATOR = 0xff
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -244,3 +260,13 @@ class Role(db.Model):
         return "<Role {!r}>".format(self.name)
 
 
+class ForumRole(db.Model):
+    __tablename__ = 'forum_roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    permissions = db.Column(db.Integer)
+    default = db.Column(db.Boolean, default=False, index=True)
+    users = db.relationship('User', backref='forum_role', lazy='dynamic')
+
+    def __repr__self(self):
+        return "<Role {!r}>".format(self.name)
