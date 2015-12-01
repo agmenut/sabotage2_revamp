@@ -81,10 +81,11 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime)
     timezone = db.Column(db.String(20), default='US/Pacific')
     posts = db.Column(db.Integer, default=0)
-    threads = db.Column(db.Integer, default=0)
+    # threads = db.Column(db.Integer, default=0)
     threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
+    threads = db.relationship('Threads', backref='poster', uselist=False)
     otp = db.relationship('OTP', uselist=False, backref='otp')
 
     def __init__(self, **kwargs):
@@ -169,6 +170,8 @@ class User(UserMixin, db.Model):
     def is_forum_administrator(self):
         return self.forum_permissions(ForumPermissions.ADMINISTRATOR)
 
+    def increment_post_count(self):
+        self.posts += 1
 
 class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
@@ -268,5 +271,36 @@ class ForumRole(db.Model):
     default = db.Column(db.Boolean, default=False, index=True)
     users = db.relationship('User', backref='forum_role', lazy='dynamic')
 
-    def __repr__self(self):
+    def __repr__(self):
         return "<Role {!r}>".format(self.name)
+
+
+class Forums(db.Model):
+    __tablename__ = 'forum'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, nullable=False, unique=True)
+    subtitle = db.Column(db.String)
+    group = db.Column(db.String)
+    restricted = db.Column(db.Boolean, default=False)
+    threads = db.relationship('Threads', backref='thread', lazy='dynamic')
+
+    def __repr__(self):
+        return "<Forum {!r}>".format(self.title)
+
+
+class Threads(db.Model):
+    __tablename__ = 'thread'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80), nullable=False, index=True)
+    fk_forum = db.Column(db.Integer, db.ForeignKey('forum.id', ondelete='cascade'))
+    thread_author = db.Column(db.Integer, db.ForeignKey('users.id'))
+    last_post = db.Column(db.DateTime, nullable=False)
+
+
+class Posts(db.Model):
+    __tablename__ = 'post'
+    id = db.Column(db.Integer, primary_key=True)
+    poster = db.Column(db.Integer, db.ForeignKey('users.id'))
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, nullable=False)
+    edit_time = db.Column(db.DateTime)

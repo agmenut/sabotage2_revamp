@@ -8,20 +8,18 @@
 			<th>Posts</th>
 			<th>Posts Today</th>
 		</tr>
-		<tr>
-			<td><span class="title">Behind the Scenes</span><span class="subtitle">Everyday conversations</span></td>
-			<td>2015-11-27 18:15</td>
-			<td>1224</td>
-			<td>9901</td>
-			<td>11</td>
-		</tr>
-		<tr>
-			<td><span class="title">Parade of Goats</span><span class="subtitle">Goats!</span></td>
-			<td>2015-11-27 18:15</td>
-			<td>1224</td>
-			<td>9901</td>
-			<td>11</td>
-		</tr>
+		{% for f in fora %}
+			<tr>
+				<td><span class="title"><a href="{{ url_for('forum.show_forum', forum_id=f.id) }}">{{ f.title }}</a></span>
+					{% if f.subtitle %}<span class="subtitle">{{ f.subtitle }}</span>{% endif %}
+				</td>
+				<td>2015-11-27 18:15</td>
+				<td>{{ f.threads.count() }}</td>
+				<td>9901</td>
+				<td>11</td>
+			</tr>
+			{{ f.threads.count() }}
+	{% endfor %}
 
 	</table>
 {% endblock content %}
