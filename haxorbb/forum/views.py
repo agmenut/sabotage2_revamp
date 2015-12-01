@@ -11,7 +11,6 @@ def before_request():
 
 
 @forum.route('/')
-@login_required
 def forum_index():
     g.user = current_user
     return render_template('forum/index.html')
