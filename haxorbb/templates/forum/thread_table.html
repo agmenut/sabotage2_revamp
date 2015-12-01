@@ -1,0 +1,10 @@
+{% extends 'forum/forum_base.html' %}
+{% block title %}
+	[{{ super() }}] {{ g.title_ }}
+{% endblock %}
+
+{% block content %}
+	{% if not threads %}
+	No threads
+	{%  endif %}
+{% endblock %}
