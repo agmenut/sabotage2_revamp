@@ -81,11 +81,10 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime)
     timezone = db.Column(db.String(20), default='US/Pacific')
     posts = db.Column(db.Integer, default=0)
-    # threads = db.Column(db.Integer, default=0)
     threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
-    threads = db.relationship('Threads', backref='poster', uselist=False)
+    threads = db.relationship('Threads', backref='poster', lazy='dynamic')
     otp = db.relationship('OTP', uselist=False, backref='otp')
 
     def __init__(self, **kwargs):
@@ -103,6 +102,10 @@ class User(UserMixin, db.Model):
     @password.setter
     def password(self, password):
         self.password_hash = generate_password_hash(password, method='pbkdf2:sha512:5000', salt_length=12)
+
+    @property
+    def thread_count(self):
+        return self.get_thread_count()
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -172,6 +175,9 @@ class User(UserMixin, db.Model):
 
     def increment_post_count(self):
         self.posts += 1
+
+    def get_thread_count(self):
+        return self.threads.count()
 
 class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
@@ -296,6 +302,7 @@ class Threads(db.Model):
     thread_author = db.Column(db.Integer, db.ForeignKey('users.id'))
     last_post = db.Column(db.DateTime, nullable=False)
     posts = db.relationship('Posts', backref='posts', lazy='dynamic')
+    views = db.Column(db.Integer, default=0)
 
     def post(self):
         try:

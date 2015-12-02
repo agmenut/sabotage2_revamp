@@ -26,10 +26,8 @@ def show_forum(forum_id):
     g.user = current_user
     title = Forums.query.with_entities(Forums.title).filter_by(id=forum_id).one()
     g.title_ = title[0]
-    threads = Threads.query.order_by(Threads.last_post.desc()).all()
-    print threads
-    g.threads = threads
-    return render_template('forum/thread_table.html', forum_id=forum_id)
+    threads = [t for t in Threads.query.order_by(Threads.last_post.desc()).all()]
+    return render_template('forum/thread_table.html', forum_id=forum_id, threads=threads)
 
 
 @forum.route('/<int:forum_id>/new_thread/', methods=['GET', 'POST'])
