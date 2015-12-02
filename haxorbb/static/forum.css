@@ -31,12 +31,13 @@
 .color-complement-3 { color: #FFB43C }
 .color-complement-4 { color: #FFE6BD }
 
-a {
+a:link, a:visited, a:hover, a:active {
+    color: #222288;
     text-decoration: none;
 }
 
-a:link, a:visited, a:hover, a:active {
-    color: #222288;
+a#identity {
+    color: #FFAA1F;
 }
 
 body {
