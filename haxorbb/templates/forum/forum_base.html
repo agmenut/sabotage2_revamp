@@ -13,7 +13,7 @@
 
 <nav>
 	<span id="controls">
-		Logged in as <a href="{{ url_for('profile.view', username=g.user.username) }}">{{ g.user.username }}</a>
+		Logged in as <a id="identity" href="{{ url_for('profile.view', username=g.user.username) }}">{{ g.user.username }}</a>
 	</span>
 </nav>
 
