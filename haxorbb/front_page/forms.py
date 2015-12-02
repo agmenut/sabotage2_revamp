@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 from flask.ext.wtf import Form
 from flask import Markup
 from wtforms import (Field, StringField, BooleanField, TextAreaField)

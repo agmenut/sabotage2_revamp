@@ -35,8 +35,8 @@ a {
     text-decoration: none;
 }
 
-a:visited {
-    color: #E99000;
+a:link, a:visited, a:hover, a:active {
+    color: #222288;
 }
 
 body {

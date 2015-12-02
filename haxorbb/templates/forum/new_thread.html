@@ -1,0 +1,23 @@
+{% extends 'forum/forum_base.html' %}
+{% block title %}
+	[{{ super() }}] Post New Thread
+{% endblock %}
+
+{% block content %}
+<div class="edit_container">
+    <section class="compose">
+	    <form method=POST>
+	        <fieldset>
+	            <legend>{% block legend %}Post New Thread{% endblock %}</legend>
+		        <div>{{ form.title.label }}
+		        {{ form.title }}</div>
+			    <div>{{ form.body.label }}
+		        {{ form.body }}</div>
+		        {{ form.submit }}
+	            {{ form.csrf_token }}
+	        </fieldset>
+	    </form>
+    </section>
+</div>
+	{{ pagedown.include_pagedown() }}
+{% endblock %}

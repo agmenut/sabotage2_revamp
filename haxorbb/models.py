@@ -295,12 +295,44 @@ class Threads(db.Model):
     fk_forum = db.Column(db.Integer, db.ForeignKey('forum.id', ondelete='cascade'))
     thread_author = db.Column(db.Integer, db.ForeignKey('users.id'))
     last_post = db.Column(db.DateTime, nullable=False)
+    posts = db.relationship('Posts', backref='posts', lazy='dynamic')
+
+    def post(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return self.id
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
 
 class Posts(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     poster = db.Column(db.Integer, db.ForeignKey('users.id'))
+    thread = db.Column(db.Integer, db.ForeignKey('thread.id'))
     body = db.Column(db.Text)
+    html_body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, nullable=False)
     edit_time = db.Column(db.DateTime)
+
+    def post(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initator):
+        allowed_tags = ['a', 'b', 'i', 'code', 'strong', 'pre', 'ul', 'li',
+                        'em', 'ol', 'p', 'img', 'table', 'tr', 'td', 'th',
+                        'h1', 'h2', 'h3', 'br', 'code', 'pre', 'strike']
+        allowed_attr = ['src', 'alt', 'title', 'href', 'align']
+        target.html_body = bleach.clean(markdown.markdown(
+            value, output_format='html5', extensions=['markdown.extensions.tables']),
+            tags=allowed_tags, attributes=allowed_attr, strip=True)
+
+db.event.listen(Posts.body, 'set', Posts.on_changed_body)
