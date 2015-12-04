@@ -318,7 +318,7 @@ class Posts(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     poster = db.Column(db.Integer, db.ForeignKey('users.id'))
-    thread = db.Column(db.Integer, db.ForeignKey('thread.id'))
+    thread = db.Column(db.Integer, db.ForeignKey('thread.id', ondelete='cascade'))
     body = db.Column(db.Text)
     html_body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, nullable=False)
