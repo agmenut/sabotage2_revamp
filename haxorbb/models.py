@@ -80,7 +80,7 @@ class User(UserMixin, db.Model):
     active = db.Column(db.Boolean, nullable=False, default=False)
     last_seen = db.Column(db.DateTime)
     timezone = db.Column(db.String(20), default='US/Pacific')
-    # posts = db.Column(db.Integer, default=0)
+Set     post_count = db.Column(db.Integer, default=0)
     posts = db.relationship('Posts', backref='post_author', lazy='dynamic')
     threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
@@ -107,6 +107,23 @@ class User(UserMixin, db.Model):
     @property
     def thread_count(self):
         return self.get_thread_count()
+
+    def get_thread_count(self):
+        return self.threads.count()
+
+    # @property
+    # def get_post_count(self):
+    #     return self.post_count
+    #
+    #
+    #
+    # def increment_post_count(self):
+    #     self.post_count += 1
+    #
+    # def decrement_post_count(self):
+    #     self.post_count -= 1
+    #
+
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -174,15 +191,10 @@ class User(UserMixin, db.Model):
     def is_forum_administrator(self):
         return self.forum_permissions(ForumPermissions.ADMINISTRATOR)
 
-    def increment_post_count(self):
-        self.posts += 1
+    # @post_count.setter
+    # def post_count(self, value):
+    #     self._post_count = value
 
-    def get_thread_count(self):
-        return self.threads.count()
-
-    @property
-    def get_post_count(self):
-        return self.posts.count
 
 class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
