@@ -19,7 +19,7 @@
 	        <dt>Time Zone:</dt> <dd>{{ user.timezone }}<dd>
 	        <dt>Threads Created:</dt> <dd>{{ user.get_thread_count() }}<dd>
 	        <dt>Threads Posted To:</dt> <dd>{{ user.posted_to or "N/A"}}</dd><dd>
-	        <dt>Post Count:</dt> <dd>{{ user.get_post_count() }}<dd>
+	        <dt>Post Count:</dt> <dd>{{ user.post_count }}<dd>
 	        <dt>Average Posts per Day:</dt> <dd>{{ user.posts_per_day }}<dd>
 	        <dt>Date of Registration:</dt> <dd>{{ user.registration_date | datetime_filter }}<dd>
 	        <dt>Last Visit:</dt> <dd>{{ user.last_seen | datetime_filter }}<dd>
