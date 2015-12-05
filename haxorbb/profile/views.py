@@ -27,7 +27,6 @@ def before_request():
 @profile.route('/view/<username>')
 def view(username):
     user = User.query.filter_by(username=username).first()
-    g.post_count = user.get_post_count()
     if user:
         try:
             days = datetime.now() - user.registration_date
