@@ -4,7 +4,17 @@
 {% endblock %}
 
 {% block content %}
-	{% if not threads %}
-	No threads
-	{%  endif %}
+<a href="{{ url_for('forum.new_thread', forum_id=forum_id) }}">
+	<button>
+		New Thread
+	</button>
+</a>
+	<div class="threads">
+		{%  for thread in threads %}
+			{{ thread.title }} | {{ thread.author.username }} | {{ thread.last_post }} |  {{ thread.views }}<br>
+		{% endfor %}
+		{% if not threads %}
+		No threads
+		{%  endif %}
+	</div>
 {% endblock %}

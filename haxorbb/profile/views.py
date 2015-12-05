@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (current_app, url_for, redirect, render_template, flash, send_file, request)
+from flask import (current_app, url_for, redirect, render_template, flash, send_file, g)
 from werkzeug import secure_filename
 from ..models import User
-from .forms import Profile, Upload, Rename, get_redirect_target
+from .forms import Profile, Upload, Rename
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
@@ -30,7 +30,7 @@ def view(username):
     if user:
         try:
             days = datetime.now() - user.registration_date
-            user.posts_per_day = user.posts / float(days.days)
+            user.posts_per_day = user.post_count / float(days.days)
         except (ValueError, TypeError, AttributeError):
             user.posts_per_day = 0
         return render_template('profile/profile.html', user=user)

@@ -80,12 +80,12 @@ class User(UserMixin, db.Model):
     active = db.Column(db.Boolean, nullable=False, default=False)
     last_seen = db.Column(db.DateTime)
     timezone = db.Column(db.String(20), default='US/Pacific')
-    posts = db.Column(db.Integer, default=0)
-    # threads = db.Column(db.Integer, default=0)
+    post_count = db.Column(db.Integer, default=0)
+    posts = db.relationship('Posts', backref='post_author', lazy='dynamic')
     threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
-    threads = db.relationship('Threads', backref='poster', uselist=False)
+    threads = db.relationship('Threads', backref='thread_author', lazy='dynamic')
     otp = db.relationship('OTP', uselist=False, backref='otp')
 
     def __init__(self, **kwargs):
@@ -103,6 +103,21 @@ class User(UserMixin, db.Model):
     @password.setter
     def password(self, password):
         self.password_hash = generate_password_hash(password, method='pbkdf2:sha512:5000', salt_length=12)
+
+    @property
+    def thread_count(self):
+        return self.get_thread_count()
+
+    def get_thread_count(self):
+        return self.threads.count()
+
+    def increment_post_count(self):
+        self.post_count += 1
+        db.session.commit()
+
+    def decrement_post_count(self):
+        self.post_count -= 1
+        db.session.commit()
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -170,8 +185,6 @@ class User(UserMixin, db.Model):
     def is_forum_administrator(self):
         return self.forum_permissions(ForumPermissions.ADMINISTRATOR)
 
-    def increment_post_count(self):
-        self.posts += 1
 
 class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
@@ -293,14 +306,47 @@ class Threads(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False, index=True)
     fk_forum = db.Column(db.Integer, db.ForeignKey('forum.id', ondelete='cascade'))
-    thread_author = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author = db.Column(db.Integer, db.ForeignKey('users.id'))
     last_post = db.Column(db.DateTime, nullable=False)
+    posts = db.relationship('Posts', backref='posts', lazy='dynamic')
+    views = db.Column(db.Integer, default=0)
+
+    def post(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return self.id
+        except Exception as e:
+            db.session.rollback()
+            raise e
 
 
 class Posts(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
     poster = db.Column(db.Integer, db.ForeignKey('users.id'))
+    thread = db.Column(db.Integer, db.ForeignKey('thread.id', ondelete='cascade'))
     body = db.Column(db.Text)
+    html_body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, nullable=False)
     edit_time = db.Column(db.DateTime)
+
+    def post(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initator):
+        allowed_tags = ['a', 'b', 'i', 'code', 'strong', 'pre', 'ul', 'li',
+                        'em', 'ol', 'p', 'img', 'table', 'tr', 'td', 'th',
+                        'h1', 'h2', 'h3', 'br', 'code', 'pre', 'strike']
+        allowed_attr = ['src', 'alt', 'title', 'href', 'align']
+        target.html_body = bleach.clean(markdown.markdown(
+            value, output_format='html5', extensions=['markdown.extensions.tables']),
+            tags=allowed_tags, attributes=allowed_attr, strip=True)
+
+db.event.listen(Posts.body, 'set', Posts.on_changed_body)

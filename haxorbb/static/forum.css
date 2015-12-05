@@ -31,17 +31,18 @@
 .color-complement-3 { color: #FFB43C }
 .color-complement-4 { color: #FFE6BD }
 
-a {
+a:link, a:visited, a:hover, a:active {
+    color: #222288;
     text-decoration: none;
 }
 
-a:visited {
-    color: #E99000;
+a#identity {
+    color: #FFAA1F;
 }
 
 body {
     height: 100%;
-    background-color: #808080;
+    background-color: #525151;
     font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
     }
 
