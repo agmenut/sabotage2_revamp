@@ -111,6 +111,14 @@ class User(UserMixin, db.Model):
     def get_thread_count(self):
         return self.threads.count()
 
+    def increment_post_count(self):
+        self.post_count += 1
+        db.session.commit()
+
+    def decrement_post_count(self):
+        self.post_count -= 1
+        db.session.commit()
+
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 

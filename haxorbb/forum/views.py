@@ -45,8 +45,10 @@ def new_thread(forum_id):
         post = Posts()
         post.body = form.body.data
         post.timestamp = thread.last_post
-        post.author = current_user.id
+        post.poster = current_user.id
         post.thread = thread_id
         post.post()
+
+        current_user.increment_post_count()
 
     return render_template('forum/new_thread.html', form=form)
