@@ -31,7 +31,7 @@ def view(username):
     if user:
         try:
             days = datetime.now() - user.registration_date
-            user.posts_per_day = g.post_count / float(days.days)
+            user.posts_per_day = user.post_count / float(days.days)
         except (ValueError, TypeError, AttributeError):
             user.posts_per_day = 0
         return render_template('profile/profile.html', user=user)
