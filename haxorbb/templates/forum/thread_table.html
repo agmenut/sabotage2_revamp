@@ -11,7 +11,7 @@
 </a>
 	<div class="threads">
 		{%  for thread in threads %}
-			{{ thread.title }} | {{ thread.poster.username }} | {{ thread.last_post }} |  {{ thread.views }}<br>
+			{{ thread.title }} | {{ thread.author.username }} | {{ thread.last_post }} |  {{ thread.views }}<br>
 		{% endfor %}
 		{% if not threads %}
 		No threads

@@ -39,13 +39,13 @@ def new_thread(forum_id):
         thread.title = form.title.data
         thread.fk_forum = forum_id
         thread.last_post = datetime.utcnow()
-        thread.thread_author = current_user.id
+        thread.author = current_user.id
         thread_id = thread.post()
 
         post = Posts()
         post.body = form.body.data
         post.timestamp = thread.last_post
-        post.poster = current_user.id
+        post.author = current_user.id
         post.thread = thread_id
         post.post()
 

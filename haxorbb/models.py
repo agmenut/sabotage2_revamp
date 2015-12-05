@@ -80,11 +80,12 @@ class User(UserMixin, db.Model):
     active = db.Column(db.Boolean, nullable=False, default=False)
     last_seen = db.Column(db.DateTime)
     timezone = db.Column(db.String(20), default='US/Pacific')
-    posts = db.Column(db.Integer, default=0)
+    # posts = db.Column(db.Integer, default=0)
+    posts = db.relationship('Posts', backref='post_author', lazy='dynamic')
     threads_posted_to = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
-    threads = db.relationship('Threads', backref='poster', lazy='dynamic')
+    threads = db.relationship('Threads', backref='thread_author', lazy='dynamic')
     otp = db.relationship('OTP', uselist=False, backref='otp')
 
     def __init__(self, **kwargs):
@@ -178,6 +179,10 @@ class User(UserMixin, db.Model):
 
     def get_thread_count(self):
         return self.threads.count()
+
+    @property
+    def get_post_count(self):
+        return self.posts.count
 
 class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
@@ -299,7 +304,7 @@ class Threads(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False, index=True)
     fk_forum = db.Column(db.Integer, db.ForeignKey('forum.id', ondelete='cascade'))
-    thread_author = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author = db.Column(db.Integer, db.ForeignKey('users.id'))
     last_post = db.Column(db.DateTime, nullable=False)
     posts = db.relationship('Posts', backref='posts', lazy='dynamic')
     views = db.Column(db.Integer, default=0)
