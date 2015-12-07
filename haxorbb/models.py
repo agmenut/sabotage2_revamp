@@ -4,13 +4,13 @@ import base64
 import onetimepass
 from . import db, login_manager
 from .utilities.utils import Utilities
-from sqlalchemy import Integer
+from sqlalchemy import Integer, func, and_, between
 from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from flask import current_app
-from datetime import datetime
+from datetime import datetime, timedelta
 import markdown
 import bleach
 
@@ -299,6 +299,25 @@ class Forums(db.Model):
 
     def __repr__(self):
         return "<Forum {!r}>".format(self.title)
+
+    def get_last_post(self):
+        most_recent = db.session.query(func.max(Threads.last_post)).filter_by(fk_forum=self.id).one()
+        return most_recent[0]
+
+    def get_post_count(self):
+        total = 0
+        for t in self.threads:
+            total += t.posts.count()
+        return total
+
+    def get_last_24_hour_post_count(self):
+        qry = Posts.query.filter(
+            and_(
+                    Posts.thread.in_(Threads.query.with_entities(Threads.id).filter_by(fk_forum=self.id)),
+                    between(Posts.timestamp, datetime.utcnow() - timedelta(days=1), datetime.utcnow())
+                ),
+            )
+        return qry.count()
 
 
 class Threads(db.Model):
