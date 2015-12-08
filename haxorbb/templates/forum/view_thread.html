@@ -1,0 +1,33 @@
+{% extends 'forum/forum_base.html' %}
+{% block title %}
+	[{{ super() }}] {{ g.thread_data['title'] }}
+{% endblock %}
+
+{% block content %}
+	<div>
+		<a href="{{ url_for('forum.forum_index') }}">
+			Main Index
+		</a> &raquo;
+		<a href="{{ url_for('forum.show_forum', forum_id=g.thread_data['forum_id']) }}">
+			{{ g.thread_data['forum'] }}
+		</a> &raquo;
+		<a href="{{ url_for('forum.view_thread', thread_id=g.thread_data['id']) }}">
+			{{ g.thread_data['title'] }}
+		</a>
+	</div>
+{#<a href="{{ url_for('forum.new_thread', forum_id=forum_id) }}">#}
+{#	<button>#}
+{#		New Thread#}
+{#	</button>#}
+{#</a>#}
+{#	<div class="threads">#}
+{#		{%  for thread in threads %}#}
+{#			<a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>#}
+{#			| {{ thread.author.username }} | {{ thread.last_post }} | {{ thread.views }}<br>#}
+{##}
+{#		{% endfor %}#}
+{#		{% if not threads %}#}
+{#		No threads#}
+{#		{%  endif %}#}
+{#	</div>#}
+{% endblock %}

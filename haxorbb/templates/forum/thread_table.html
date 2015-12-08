@@ -19,7 +19,9 @@
 </a>
 	<div class="threads">
 		{%  for thread in threads %}
-			{{ thread.title }} | {{ thread.author.username }} | {{ thread.last_post }} |  {{ thread.views }}<br>
+			<a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
+			| {{ thread.author.username }} | {{ thread.last_post }} | {{ thread.views }}<br>
+
 		{% endfor %}
 		{% if not threads %}
 		No threads

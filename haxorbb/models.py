@@ -339,6 +339,18 @@ class Threads(db.Model):
             db.session.rollback()
             raise e
 
+    @staticmethod
+    def increment_view_count(thread_id):
+        thread = Threads.query.filter_by(id=thread_id).one()
+        thread.views += 1
+        db.session.commit()
+
+    @staticmethod
+    def get_thread_metadata(thread_id):
+        thread = Threads.query.filter_by(id=thread_id).one()
+        forum = Forums.query.with_entities(Forums.title).filter_by(id=thread.fk_forum).one()
+        return {'title': thread.title, 'forum_id': thread.fk_forum, 'forum': forum.title}
+
 
 class Posts(db.Model):
     __tablename__ = 'post'

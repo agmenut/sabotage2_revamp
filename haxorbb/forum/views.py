@@ -3,7 +3,7 @@ from . import forum
 from flask import render_template, g
 from flask.ext.login import current_user
 from .. import db
-from ..models import Forums, Threads, Posts, User
+from ..models import Forums, Threads, Posts
 from .forms import NewThread
 from datetime import datetime
 
@@ -52,3 +52,13 @@ def new_thread(forum_id):
         current_user.increment_post_count()
 
     return render_template('forum/new_thread.html', form=form)
+
+
+@forum.route('/thread/<int:thread_id>', methods=['GET'])
+def view_thread(thread_id):
+    Threads.increment_view_count(thread_id)
+    g.thread_data = Threads.get_thread_metadata(thread_id)
+    g.thread_data['id'] = thread_id
+    g.user = current_user
+    posts = [p for p in Posts.query.filter(Posts.thread == thread_id).all()]
+    return render_template('forum/view_thread.html', posts=posts)
