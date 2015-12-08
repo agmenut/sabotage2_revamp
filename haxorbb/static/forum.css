@@ -55,6 +55,7 @@ nav {
 
 div.container {
     min-height: 700px;
+    line-height: 1em;
 }
 
 table.forum_desc {
@@ -112,16 +113,19 @@ section.post {
 
 div.identity {
     float: left;
-
     min-height: 225px;
     width: 15%;
     font-size: 11pt;
     border-right: 1px solid #000000;
 }
 
+div.identity > div {
+    left: 15px;
+    position: relative;
+}
+
 div.identity img {
     top: 5px;
-    left: 15px;
     height: 125px;
     position: relative;
 }
