@@ -20,14 +20,27 @@
 {#		New Thread#}
 {#	</button>#}
 {#</a>#}
-{#	<div class="threads">#}
-{#		{%  for thread in threads %}#}
+	<div class="thread">
+		{% for post in posts %}
+			<section class="post">
+				<div class="identity">
+					<div>
+						<a class="user" href="{{ url_for('profile.view', username=post.post_author.username) }}">
+						{{- post.post_author.username -}}
+						</a>
+					</div>
+					<div>Posts: {{ post.post_author.post_count }}</div>
+					<img src="{{ post.post_author.avatar_url }}">
+					<div>{{ post.post_author.avatar_text | safe }}</div>
+					<div>{{ post.timestamp | forum_datetime }}</div>
+				</div>
+				<div class="post_body">
+					{{ post.html_body | safe }}
+				</div>
+			</section>
 {#			<a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>#}
 {#			| {{ thread.author.username }} | {{ thread.last_post }} | {{ thread.views }}<br>#}
-{##}
-{#		{% endfor %}#}
-{#		{% if not threads %}#}
-{#		No threads#}
-{#		{%  endif %}#}
-{#	</div>#}
+
+		{% endfor %}
+	</div>
 {% endblock %}

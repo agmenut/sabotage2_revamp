@@ -100,3 +100,38 @@ footer {
     text-align: center;
     background: #0062DF;
 }
+div.thread {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+section.post {
+    background: #C0C0C0;
+}
+
+div.identity {
+    float: left;
+
+    min-height: 225px;
+    width: 15%;
+    font-size: 11pt;
+    border-right: 1px solid #000000;
+}
+
+div.identity img {
+    top: 5px;
+    left: 15px;
+    height: 125px;
+    position: relative;
+}
+
+div.identity a.user {
+   position: relative;
+}
+
+div.post_body {
+    width: 85%;
+    min-height: 225px;
+    /*display: inline;*/
+}
