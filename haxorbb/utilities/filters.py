@@ -29,7 +29,7 @@ filters.add_app_template_filter(datetime_filter)
 
 
 def forum_datetime(value):
-    return base_datetime_filter(value, '%b %d, %Y %H:%m')
+    return base_datetime_filter(value, '%b %d, %Y %H:%M')
 filters.add_app_template_filter(forum_datetime)
 
 
