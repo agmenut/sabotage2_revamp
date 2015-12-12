@@ -36,7 +36,7 @@ a:link, a:visited, a:hover, a:active {
     text-decoration: none;
 }
 
-a#identity {
+a#identity, .breadcrumbs a {
     color: #FFAA1F;
 }
 
@@ -53,9 +53,13 @@ nav {
     color: #ffffff;
 }
 
+button {
+    border-radius: 3px;
+    font-size: 12px;
+}
+
 div.container {
     min-height: 700px;
-    line-height: 1em;
 }
 
 table.forum_desc {
@@ -82,6 +86,7 @@ table.forum_desc {
 }
 
 span.title {
+    font-size: 14px;
     position: relative;
     float: left;
 }
@@ -101,41 +106,100 @@ footer {
     text-align: center;
     background: #0062DF;
 }
-div.thread {
+
+div.post_container, div.forum_nav {
     width: 98%;
     margin-left: auto;
     margin-right: auto;
 }
 
-section.post {
+.forum_nav {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.thread_header {
+    background: #004499;
+    border-right: 1px solid #004499;
+    content: 'Bookmark';
+}
+
+.thread_header span.reply{
+    position: absolute;
+    right: 18px;
+}
+
+.post {
+    position: relative;
     background: #C0C0C0;
+    width: 100%;
 }
 
-div.identity {
-    float: left;
-    min-height: 225px;
+.post:nth-child(odd) {
+    background: #E0E0E0;
+}
+
+.identity {
+    line-height: 1em;
+    display: table-cell;
+    min-height: 235px;
+    min-width: 145px;
     width: 15%;
-    font-size: 11pt;
+    font-size: 14px;
     border-right: 1px solid #000000;
+    overflow: hidden;
 }
 
-div.identity > div {
-    left: 15px;
+.post_body {
+    position: relative;
+    margin: auto;
+    width: 75%;
+    min-height: 235px;
+    display: table-cell;
+}
+
+.footer {
+    font-size: 12px;
+    height: 25px;
+    /*width: inherit;*/
+    clear: both;
+}
+
+.timestamp{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    position: absolute !important;
+    bottom: 0px;
+    /*position: relative;*/
+    /*left: 10px;*/
+}
+
+.identity > div {
+    left: 10px;
     position: relative;
 }
 
-div.identity img {
-    top: 5px;
+.avatar {
     height: 125px;
     position: relative;
+    padding-bottom: 10px;
 }
 
-div.identity a.user {
-   position: relative;
+.avatar img {
+    height: 125px;
 }
 
-div.post_body {
-    width: 85%;
-    min-height: 225px;
-    /*display: inline;*/
+span.identity .user {
+    position: relative;
+    top: -10px;
+    font-weight: bold;
+}
+
+span.identity .post_count {
+    position: relative;
+    top: -5px;
+}
+
+span.identity .title {
+    font-size: 14px;
 }
