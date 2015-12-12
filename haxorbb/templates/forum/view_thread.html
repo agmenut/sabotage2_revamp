@@ -4,7 +4,8 @@
 {% endblock %}
 
 {% block content %}
-	<div>
+Ad<div class="forum_nav">
+	<span class="breadcrumbs">
 		<a href="{{ url_for('forum.forum_index') }}">
 			Main Index
 		</a> &raquo;
@@ -14,29 +15,37 @@
 		<a href="{{ url_for('forum.view_thread', thread_id=g.thread_data['id']) }}">
 			{{ g.thread_data['title'] }}
 		</a>
-	</div>
-{#<a href="{{ url_for('forum.new_thread', forum_id=forum_id) }}">#}
+	</span>
+</div>{#<a href="{{ url_for('forum.new_thread', forum_id=forum_id) }}">#}
 {#	<button>#}
 {#		New Thread#}
 {#	</button>#}
 {#</a>#}
-	<div class="thread">
+	<div class="post_container">
+		<div class="thread_header">
+			<button>Bookmark thread(soon)</button>
+			<span class="reply"><button>Reply</button></span>
+		</div>
 		{% for post in posts %}
-			<section class="post">
-				<div class="identity">
-					<div>
-						<a class="user" href="{{ url_for('profile.view', username=post.post_author.username) }}">
+			<section class="post" post_id="{{ post.id }}">
+				<span class="identity">
+					<div class="user">
+						<a href="{{ url_for('profile.view', username=post.post_author.username) }}">
 						{{- post.post_author.username -}}
 						</a>
 					</div>
-					<div>Posts: {{ post.post_author.post_count }}</div>
-					<img src="{{ post.post_author.avatar_url }}">
-					<div>{{ post.post_author.avatar_text | safe }}</div>
-					<div>{{ post.timestamp | forum_datetime }}</div>
-				</div>
-				<div class="post_body">
-					{{ post.html_body | safe }}
-				</div>
+					<div class="post_count">Posts: {{ post.post_author.post_count }}</div>
+					<div class="avatar"><img src="{{ post.post_author.avatar_url }}"></div>
+					<div class="title">{{ post.post_author.avatar_text | safe }}</div>
+					<div class="timestamp">{{ post.timestamp | forum_datetime }}</div>
+				</span>
+				<span class="post_body">
+					{{ post.html_body | safe }}{{ lipsum() }}
+				</span>
+{#				<div class="footer">#}
+{#					<span class="timestamp">{{ post.timestamp | forum_datetime }}</span>#}
+{#					<span class="controls"></span>#}
+{#				</div>#}
 			</section>
 {#			<a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>#}
 {#			| {{ thread.author.username }} | {{ thread.last_post }} | {{ thread.views }}<br>#}
