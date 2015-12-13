@@ -47,10 +47,13 @@ body {
     }
 
 nav {
+    position: fixed;
     background-color: #004399;
     height: 1.5em;
     line-height: 1.5em;
     color: #ffffff;
+    width: 100%;
+    z-index: 999;
 }
 
 button {
@@ -60,6 +63,7 @@ button {
 
 div.container {
     min-height: 700px;
+    padding-top: 24px;
 }
 
 table.forum_desc {
@@ -121,7 +125,6 @@ div.post_container, div.forum_nav {
 .thread_header {
     background: #004499;
     border-right: 1px solid #004499;
-    content: 'Bookmark';
 }
 
 .thread_header span.reply{
