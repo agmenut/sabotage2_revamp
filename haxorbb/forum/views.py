@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from . import forum
-from flask import render_template, g
+from flask import render_template, g, redirect, url_for, flash
 from flask.ext.login import current_user
 from .. import db
-from ..models import Forums, Threads, Posts, User
-from .forms import NewThread
+from ..models import Forums, Threads, Posts
+from .forms import NewThread, Reply
 from datetime import datetime
 
 
@@ -32,6 +32,9 @@ def show_forum(forum_id):
 
 @forum.route('/<int:forum_id>/new_thread/', methods=['GET', 'POST'])
 def new_thread(forum_id):
+    if current_user.is_anonymous:
+        flash("You must be logged in create theads")
+        return redirect(url_for('forum.forum_index'))
     g.user = current_user
     form = NewThread()
     if form.validate_on_submit():
@@ -52,3 +55,35 @@ def new_thread(forum_id):
         current_user.increment_post_count()
 
     return render_template('forum/new_thread.html', form=form)
+
+
+@forum.route('/thread/<int:thread_id>', methods=['GET'])
+def view_thread(thread_id):
+    Threads.increment_view_count(thread_id)
+    g.thread_data = Threads.get_thread_metadata(thread_id)
+    g.thread_data['id'] = thread_id
+    g.user = current_user
+    posts = [p for p in Posts.query.filter(Posts.thread == thread_id).all()]
+    return render_template('forum/view_thread.html', posts=posts)
+
+
+@forum.route('/thread/<int:thread_id>/reply', methods=['GET', 'POST'])
+def post_reply(thread_id):
+    if current_user.is_anonymous:
+        flash("You must be logged in to reply.")
+        return redirect(url_for('forum.view_thread', thread_id=thread_id))
+    form = Reply()
+    g.thread_data = Threads.get_thread_metadata(thread_id)
+    g.thread_data['id'] = thread_id
+    g.user = current_user
+    if form.validate_on_submit():
+        post = Posts()
+        post.body = form.message.data
+        post.timestamp = datetime.utcnow()
+        post.poster = current_user.id
+        post.thread = thread_id
+        post.post()
+
+        current_user.increment_post_count()
+        return redirect(url_for('forum.view_thread', thread_id=thread_id))
+    return render_template('forum/post_reply.html', form=form)

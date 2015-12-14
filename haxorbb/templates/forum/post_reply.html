@@ -1,0 +1,22 @@
+{% extends 'forum/forum_base.html' %}
+{% block title %}
+	[{{ super() }}] Post reply
+{% endblock %}
+
+{% block content %}
+<div class="edit_container">
+    <section class="compose">
+	    <form method=POST>
+	        <fieldset>
+	            <legend>{% block legend %}Post reply{% endblock %}</legend>
+
+			    <div>{{ form.message.label }}
+		        {{ form.message }}</div>
+		        {{ form.submit }}
+	            {{ form.csrf_token }}
+	        </fieldset>
+	    </form>
+    </section>
+</div>
+	{{ pagedown.include_pagedown() }}
+{% endblock %}

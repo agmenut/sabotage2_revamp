@@ -4,13 +4,13 @@ import base64
 import onetimepass
 from . import db, login_manager
 from .utilities.utils import Utilities
-from sqlalchemy import Integer
+from sqlalchemy import Integer, func, and_, between
 from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from flask import current_app
-from datetime import datetime
+from datetime import datetime, timedelta
 import markdown
 import bleach
 
@@ -300,6 +300,25 @@ class Forums(db.Model):
     def __repr__(self):
         return "<Forum {!r}>".format(self.title)
 
+    def get_last_post(self):
+        most_recent = db.session.query(func.max(Threads.last_post)).filter_by(fk_forum=self.id).one()
+        return most_recent[0]
+
+    def get_post_count(self):
+        total = 0
+        for t in self.threads:
+            total += t.posts.count()
+        return total
+
+    def get_last_24_hour_post_count(self):
+        qry = Posts.query.filter(
+            and_(
+                    Posts.thread.in_(Threads.query.with_entities(Threads.id).filter_by(fk_forum=self.id)),
+                    between(Posts.timestamp, datetime.utcnow() - timedelta(days=1), datetime.utcnow())
+                ),
+            )
+        return qry.count()
+
 
 class Threads(db.Model):
     __tablename__ = 'thread'
@@ -319,6 +338,18 @@ class Threads(db.Model):
         except Exception as e:
             db.session.rollback()
             raise e
+
+    @staticmethod
+    def increment_view_count(thread_id):
+        thread = Threads.query.filter_by(id=thread_id).one()
+        thread.views += 1
+        db.session.commit()
+
+    @staticmethod
+    def get_thread_metadata(thread_id):
+        thread = Threads.query.filter_by(id=thread_id).one()
+        forum = Forums.query.with_entities(Forums.title).filter_by(id=thread.fk_forum).one()
+        return {'title': thread.title, 'forum_id': thread.fk_forum, 'forum': forum.title}
 
 
 class Posts(db.Model):

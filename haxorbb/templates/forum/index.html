@@ -13,10 +13,10 @@
 				<td><span class="title"><a href="{{ url_for('forum.show_forum', forum_id=f.id) }}">{{ f.title }}</a></span>
 					{% if f.subtitle %}<span class="subtitle">{{ f.subtitle }}</span>{% endif %}
 				</td>
-				<td>2015-11-27 18:15</td>
+				<td>{{ f.get_last_post() | datetime_filter }}</td>
 				<td>{{ f.threads.count() }}</td>
-				<td>9901</td>
-				<td>11</td>
+				<td>{{ f.get_post_count() }}</td>
+				<td>{{ f.get_last_24_hour_post_count() }}</td>
 			</tr>
 	{% endfor %}
 

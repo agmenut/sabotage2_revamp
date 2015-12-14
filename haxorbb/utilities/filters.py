@@ -10,7 +10,7 @@ import os.path
 filters = Blueprint('filters', __name__)
 
 
-def datetime_filter(value):
+def base_datetime_filter(value, format_):
     if current_user.is_anonymous:
         usertz = pytz.timezone(current_app.config['TIME_ZONE'])
     else:
@@ -18,10 +18,19 @@ def datetime_filter(value):
     if value:
         utc_value = pytz.utc.localize(value)
         user_value = usertz.normalize(utc_value)
-        return user_value.strftime("%Y-%m-%d %H:%M:%S %Z")
+        return user_value.strftime(format_)
     else:
         return "None"
+
+
+def datetime_filter(value):
+        return base_datetime_filter(value, "%Y-%m-%d %H:%M:%S %Z")
 filters.add_app_template_filter(datetime_filter)
+
+
+def forum_datetime(value):
+    return base_datetime_filter(value, '%b %d, %Y %H:%M')
+filters.add_app_template_filter(forum_datetime)
 
 
 def create_timg(img):

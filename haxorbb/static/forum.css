@@ -36,7 +36,7 @@ a:link, a:visited, a:hover, a:active {
     text-decoration: none;
 }
 
-a#identity {
+a#identity, .breadcrumbs a {
     color: #FFAA1F;
 }
 
@@ -47,14 +47,23 @@ body {
     }
 
 nav {
+    position: fixed;
     background-color: #004399;
     height: 1.5em;
     line-height: 1.5em;
     color: #ffffff;
+    width: 100%;
+    z-index: 999;
+}
+
+button {
+    border-radius: 3px;
+    font-size: 12px;
 }
 
 div.container {
     min-height: 700px;
+    padding-top: 24px;
 }
 
 table.forum_desc {
@@ -81,6 +90,7 @@ table.forum_desc {
 }
 
 span.title {
+    font-size: 14px;
     position: relative;
     float: left;
 }
@@ -99,4 +109,145 @@ footer {
     border: 1px solid #004499;
     text-align: center;
     background: #0062DF;
+}
+
+div.post_container, div.forum_nav {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.forum_nav {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.thread_header {
+    background: #004499;
+    border: 1px solid #000000;
+
+}
+
+button.reply{
+    position: absolute;
+    right: 18px;
+}
+
+.post {
+    position: relative;
+    background: #C0C0C0;
+    width: 100%;
+    min-height: 300px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.post:nth-child(odd) {
+    background: #E0E0E0;
+}
+
+.identity {
+    line-height: 1em;
+    display: table-cell;
+    height: 280px;
+    width: 230px;
+    font-size: 14px;
+    border-right: 1px solid #000000;
+    overflow: hidden;
+}
+
+span.post_body {
+    position: relative;
+    margin: auto;
+    width: calc(100% - 230px);
+    min-height: 280px;
+    display: table-cell;
+}
+
+.footer {
+    font-size: 12px;
+    height: 25px;
+    clear: both;
+}
+
+.timestamp{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    position: absolute !important;
+    bottom: 0;
+}
+
+.identity > div {
+    left: 10px;
+    position: relative;
+}
+
+.avatar {
+    height: 125px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.avatar img {
+    height: 125px;
+}
+
+span.identity .user {
+    position: relative;
+    top: -10px;
+    font-weight: bold;
+}
+
+span.identity .post_count {
+    position: relative;
+    top: -5px;
+}
+
+/*span.identity .title {*/
+    /*font-size: 14px;*/
+/*}*/
+
+div.flask-pagedown-preview{
+    min-height: 200px;
+    background: #C0C0C0;
+}
+
+form {
+    margin-top: 5px;
+    width: 512px;
+    font-size: 12px;
+}
+
+form label {
+    font-weight: bold;
+    padding: 2px;
+}
+
+form label:after {
+    content: ":";
+}
+
+fieldset {
+	border: 1px solid #ffffff;
+    background: #525151;
+}
+
+form label {
+	min-width: 150px !important;
+	float: left;
+    height: 1.5em;
+    margin: 2px;
+}
+
+textarea {
+    width: 550px;
+    min-height: 350px;
+}
+
+legend {
+	border: 1px solid #ffffff;
+    background: #525151;
+	padding: 3px;
+	font-weight: bold;
 }
