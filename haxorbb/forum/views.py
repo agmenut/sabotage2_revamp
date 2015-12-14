@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import forum
-from flask import render_template, g, redirect, url_for
+from flask import render_template, g, redirect, url_for, flash
 from flask.ext.login import current_user
 from .. import db
 from ..models import Forums, Threads, Posts
@@ -32,6 +32,9 @@ def show_forum(forum_id):
 
 @forum.route('/<int:forum_id>/new_thread/', methods=['GET', 'POST'])
 def new_thread(forum_id):
+    if current_user.is_anonymous:
+        flash("You must be logged in create theads")
+        return redirect(url_for('forum.forum_index'))
     g.user = current_user
     form = NewThread()
     if form.validate_on_submit():
@@ -66,8 +69,10 @@ def view_thread(thread_id):
 
 @forum.route('/thread/<int:thread_id>/reply', methods=['GET', 'POST'])
 def post_reply(thread_id):
+    if current_user.is_anonymous:
+        flash("You must be logged in to reply.")
+        return redirect(url_for('forum.view_thread', thread_id=thread_id))
     form = Reply()
-    # print thread_id
     g.thread_data = Threads.get_thread_metadata(thread_id)
     g.thread_data['id'] = thread_id
     g.user = current_user

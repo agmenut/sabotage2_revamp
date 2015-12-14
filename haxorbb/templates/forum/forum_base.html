@@ -13,7 +13,11 @@
 
 <nav>
 	<span id="controls">
+		{% if current_user.is_authenticated %}
 		Logged in as <a id="identity" href="{{ url_for('profile.view', username=g.user.username) }}">{{ g.user.username }}</a>
+		{% else %}
+			<a id="identity" href="{{ url_for('auth.login') }}">Login</a>
+		{% endif %}
 	</span>
 </nav>
 
