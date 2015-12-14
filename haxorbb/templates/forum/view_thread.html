@@ -23,11 +23,13 @@
 {#</a>#}
 	<div class="post_container">
 		<div class="thread_header">
+		<a href="#">
 			<button>Bookmark thread(soon)</button>
-			<span class="reply"><button>Reply</button></span>
+		</a>
+			<a href="{{ url_for('forum.post_reply', thread_id=g.thread_data['id']) }}"><button class="reply">Reply</button></a>
 		</div>
 		{% for post in posts %}
-			<section class="post" post_id="{{ post.id }}">
+			<section class="post" id="{{ post.id }}">
 				<span class="identity">
 					<div class="user">
 						<a href="{{ url_for('profile.view', username=post.post_author.username) }}">
@@ -40,7 +42,7 @@
 					<div class="timestamp">{{ post.timestamp | forum_datetime }}</div>
 				</span>
 				<span class="post_body">
-					{{ post.html_body | safe }}{{ lipsum() }}
+					{{ post.html_body | safe }}
 				</span>
 {#				<div class="footer">#}
 {#					<span class="timestamp">{{ post.timestamp | forum_datetime }}</span>#}

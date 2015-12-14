@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from . import forum
-from flask import render_template, g
+from flask import render_template, g, redirect, url_for
 from flask.ext.login import current_user
 from .. import db
 from ..models import Forums, Threads, Posts
-from .forms import NewThread
+from .forms import NewThread, Reply
 from datetime import datetime
 
 
@@ -62,3 +62,23 @@ def view_thread(thread_id):
     g.user = current_user
     posts = [p for p in Posts.query.filter(Posts.thread == thread_id).all()]
     return render_template('forum/view_thread.html', posts=posts)
+
+
+@forum.route('/thread/<int:thread_id>/reply', methods=['GET', 'POST'])
+def post_reply(thread_id):
+    form = Reply()
+    # print thread_id
+    g.thread_data = Threads.get_thread_metadata(thread_id)
+    g.thread_data['id'] = thread_id
+    g.user = current_user
+    if form.validate_on_submit():
+        post = Posts()
+        post.body = form.message.data
+        post.timestamp = datetime.utcnow()
+        post.poster = current_user.id
+        post.thread = thread_id
+        post.post()
+
+        current_user.increment_post_count()
+        return redirect(url_for('forum.view_thread', thread_id=thread_id))
+    return render_template('forum/post_reply.html', form=form)

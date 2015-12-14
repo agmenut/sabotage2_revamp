@@ -124,10 +124,11 @@ div.post_container, div.forum_nav {
 
 .thread_header {
     background: #004499;
-    border-right: 1px solid #004499;
+    border: 1px solid #000000;
+
 }
 
-.thread_header span.reply{
+button.reply{
     position: absolute;
     right: 18px;
 }
@@ -136,6 +137,10 @@ div.post_container, div.forum_nav {
     position: relative;
     background: #C0C0C0;
     width: 100%;
+    min-height: 300px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .post:nth-child(odd) {
@@ -145,26 +150,24 @@ div.post_container, div.forum_nav {
 .identity {
     line-height: 1em;
     display: table-cell;
-    min-height: 235px;
-    min-width: 145px;
-    width: 15%;
+    height: 280px;
+    width: 230px;
     font-size: 14px;
     border-right: 1px solid #000000;
     overflow: hidden;
 }
 
-.post_body {
+span.post_body {
     position: relative;
     margin: auto;
-    width: 75%;
-    min-height: 235px;
+    width: calc(100% - 230px);
+    min-height: 280px;
     display: table-cell;
 }
 
 .footer {
     font-size: 12px;
     height: 25px;
-    /*width: inherit;*/
     clear: both;
 }
 
@@ -172,9 +175,7 @@ div.post_container, div.forum_nav {
     padding-top: 5px;
     padding-bottom: 5px;
     position: absolute !important;
-    bottom: 0px;
-    /*position: relative;*/
-    /*left: 10px;*/
+    bottom: 0;
 }
 
 .identity > div {
@@ -203,6 +204,50 @@ span.identity .post_count {
     top: -5px;
 }
 
-span.identity .title {
-    font-size: 14px;
+/*span.identity .title {*/
+    /*font-size: 14px;*/
+/*}*/
+
+div.flask-pagedown-preview{
+    min-height: 200px;
+    background: #C0C0C0;
+}
+
+form {
+    margin-top: 5px;
+    width: 512px;
+    font-size: 12px;
+}
+
+form label {
+    font-weight: bold;
+    padding: 2px;
+}
+
+form label:after {
+    content: ":";
+}
+
+fieldset {
+	border: 1px solid #ffffff;
+    background: #525151;
+}
+
+form label {
+	min-width: 150px !important;
+	float: left;
+    height: 1.5em;
+    margin: 2px;
+}
+
+textarea {
+    width: 550px;
+    min-height: 350px;
+}
+
+legend {
+	border: 1px solid #ffffff;
+    background: #525151;
+	padding: 3px;
+	font-weight: bold;
 }

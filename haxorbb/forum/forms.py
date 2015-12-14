@@ -39,6 +39,11 @@ class Button(Field):
 
 
 class NewThread(Form):
-    title = StringField('title', validators=[DataRequired(), Length(3, 80)])
-    body = PageDownField('body', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired(), Length(3, 80)])
+    body = PageDownField('Body', validators=[DataRequired()])
     submit = Button('Post')
+
+
+class Reply(Form):
+    message = PageDownField('Message', validators=[DataRequired()])
+    submit = Button('Post Reply')
