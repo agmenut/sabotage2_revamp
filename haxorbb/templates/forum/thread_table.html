@@ -4,27 +4,45 @@
 {% endblock %}
 
 {% block content %}
-	<div>
-		<a href="{{ url_for('forum.forum_index') }}">
-			Main Index
-		</a> &raquo;
-		<a href="{{ url_for('forum.show_forum', forum_id=forum_id) }}">
-			{{ g.title_ }}
+	<div class="forum_nav">
+		<span class="breadcrumbs">
+			<a href="{{ url_for('forum.forum_index') }}">
+				Main Index
+			</a> &raquo;
+			<a href="{{ url_for('forum.show_forum', forum_id=forum_id) }}">
+				{{ g.title_ }}
+			</a>
+		</span>
+	</div>
+
+</a>
+	<div class="thread_container">
+		<a href="{{ url_for('forum.new_thread', forum_id=forum_id) }}">
+			<button>New Thread</button>
 		</a>
 	</div>
-<a href="{{ url_for('forum.new_thread', forum_id=forum_id) }}">
-	<button>
-		New Thread
-	</button>
-</a>
-	<div class="threads">
+	<table class="forum_desc">
+		<tr>
+			<th>Subject</th>
+			<th>Author</th>
+			<th>Latest</th>
+			<th>Replies</th>
+			<th>Views</th>
+		</tr>
+		
 		{%  for thread in threads %}
-			<a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>
-			| {{ thread.author.username }} | {{ thread.last_post }} | {{ thread.views }}<br>
+			<tr>
+				<td><a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a></td>
+				<td>{{ thread.thread_author.username }}</td>
+				<td>{{ thread.last_post }}</td>
+				<td>{{ thread.replies }}</td>
+				<td>{{ thread.views }}</td>
+			</tr>
 
 		{% endfor %}
 		{% if not threads %}
-		No threads
+		<tr><td>No threads</td></tr>
 		{%  endif %}
+	</table>
 	</div>
 {% endblock %}

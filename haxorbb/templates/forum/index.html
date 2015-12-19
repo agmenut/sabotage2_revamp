@@ -8,15 +8,15 @@
 			<th>Posts</th>
 			<th>Posts Today</th>
 		</tr>
-		{% for f in fora %}
+		{% for forum in fora %}
 			<tr>
-				<td><span class="title"><a href="{{ url_for('forum.show_forum', forum_id=f.id) }}">{{ f.title }}</a></span>
-					{% if f.subtitle %}<span class="subtitle">{{ f.subtitle }}</span>{% endif %}
+				<td><span class="title"><a href="{{ url_for('forum.show_forum', forum_id=forum.id) }}">{{ forum.title }}</a></span>
+					{% if forum.subtitle %}<span class="subtitle">{{ forum.subtitle }}</span>{% endif %}
 				</td>
-				<td>{{ f.get_last_post() | datetime_filter }}</td>
-				<td>{{ f.threads.count() }}</td>
-				<td>{{ f.get_post_count() }}</td>
-				<td>{{ f.get_last_24_hour_post_count() }}</td>
+				<td>{{ forum.get_last_post() | datetime_filter }}</td>
+				<td>{{ forum.threads.count() }}</td>
+				<td>{{ forum.get_post_count() }}</td>
+				<td>{{ forum.get_last_24_hour_post_count() }}</td>
 			</tr>
 	{% endfor %}
 
