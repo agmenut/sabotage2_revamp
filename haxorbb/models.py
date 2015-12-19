@@ -351,6 +351,10 @@ class Threads(db.Model):
         forum = Forums.query.with_entities(Forums.title).filter_by(id=thread.fk_forum).one()
         return {'title': thread.title, 'forum_id': thread.fk_forum, 'forum': forum.title}
 
+    @property
+    def replies(self):
+        return self.posts.count() - 1
+
 
 class Posts(db.Model):
     __tablename__ = 'post'
