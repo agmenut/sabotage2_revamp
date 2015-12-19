@@ -111,7 +111,7 @@ footer {
     background: #0062DF;
 }
 
-div.post_container, div.forum_nav {
+div.post_container, div.forum_nav, div.thread_container {
     width: 98%;
     margin-left: auto;
     margin-right: auto;
