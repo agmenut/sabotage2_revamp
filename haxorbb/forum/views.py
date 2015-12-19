@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import forum
 from flask import render_template, g, redirect, url_for, flash
-from flask.ext.login import current_user
+from flask.ext.login import current_user, login_required
 from .. import db
 from ..models import Forums, Threads, Posts
 from .forms import NewThread, Reply
@@ -31,9 +31,10 @@ def show_forum(forum_id):
 
 
 @forum.route('/<int:forum_id>/new_thread/', methods=['GET', 'POST'])
+@login_required
 def new_thread(forum_id):
     if current_user.is_anonymous:
-        flash("You must be logged in create theads")
+        flash("You must be logged in create threads")
         return redirect(url_for('forum.forum_index'))
     g.user = current_user
     form = NewThread()
@@ -53,7 +54,7 @@ def new_thread(forum_id):
         post.post()
 
         current_user.increment_post_count()
-
+        return redirect(url_for('forum.show_forum', forum_id=forum_id))
     return render_template('forum/new_thread.html', form=form)
 
 
