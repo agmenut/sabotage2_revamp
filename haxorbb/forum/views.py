@@ -86,5 +86,6 @@ def post_reply(thread_id):
         post.post()
 
         current_user.increment_post_count()
+
         return redirect(url_for('forum.view_thread', thread_id=thread_id))
     return render_template('forum/post_reply.html', form=form)
