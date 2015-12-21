@@ -4,13 +4,14 @@ from .. import db
 from flask import (current_app, url_for, redirect, render_template, flash, send_file, g)
 from werkzeug import secure_filename
 from ..models import User
-from .forms import Profile, Upload, Rename
+from .forms import Profile, Upload, Rename, Transload
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
 from PIL import Image
 from ..utilities.filters import create_timg
 import pytz
+from requests import get as transload
 
 try:
     from os import scandir
@@ -137,6 +138,19 @@ def user_upload(username):
             return redirect(url_for('profile.manage_files', username=username))
         flash("Filed uploaded successfully")
         return form.redirect()
+
+    return render_template('profile/upload.html', username=username, form=form, user=user)
+
+
+@profile.route('/view/<username>/files/transload', methods=['GET', 'POST'])
+@login_required
+def user_transload(username):
+    if current_user.username != username and not current_user.is_administrator():
+            return redirect(url_for('front_page.home_page'))
+    user = User.query.filter_by(username=username).first()
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
+    ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif', 'jpeg']
+    form = Transload()
 
     return render_template('profile/upload.html', username=username, form=form, user=user)
 
