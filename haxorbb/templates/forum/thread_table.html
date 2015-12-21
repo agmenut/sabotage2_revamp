@@ -34,7 +34,7 @@
 			<tr>
 				<td><a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a></td>
 				<td>{{ thread.thread_author.username }}</td>
-				<td>{{ thread.last_post }}</td>
+				<td>{{ thread.last_post | forum_datetime}}</td>
 				<td>{{ thread.replies }}</td>
 				<td>{{ thread.views }}</td>
 			</tr>
