@@ -39,7 +39,7 @@ def create_timg(img):
     image_buffer = StringIO()
     im = Image.open(path)
     format_ = im.format
-    target_w = 300  # MAGIC NUMBER, WHEE
+    target_w = 300  # TODO: Replace MAGIC NUMBER with parameter
     ratio = float(im.size[0]) / float(im.size[1])
     target_h = int(target_w / ratio)
     resized = im.resize((target_w, target_h), Image.ANTIALIAS)
