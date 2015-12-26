@@ -13,6 +13,11 @@
 				Upload {% include 'icon/cloud-upload.svg' %}
 			</button>
 		</a>
+		<a href="{{ url_for('profile.user_transload', username=current_user.username) }}">
+			<button class="transload control">
+				Transload {% include 'icon/transfer.svg' %}
+			</button>
+		</a>
 		{% if filedata %}
 			<h3>Total disk use: {{  filedata | sum(attribute='size') | filesizeformat }}</h3>
 		{% for file in filedata %}

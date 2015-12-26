@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (current_app, url_for, redirect, render_template, flash, send_file, g)
+from flask import (current_app, url_for, redirect, render_template, flash, send_file, abort)
 from werkzeug import secure_filename
 from ..models import User
 from .forms import Profile, Upload, Rename, Transload
@@ -9,6 +9,7 @@ from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
 from PIL import Image
+from io import BytesIO
 from ..utilities.filters import create_timg
 import pytz
 from requests import get as transload
@@ -17,6 +18,8 @@ try:
     from os import scandir
 except ImportError:
     from scandir import scandir
+
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif', 'jpeg']
 
 
 @profile.before_request
@@ -125,14 +128,17 @@ def user_upload(username):
         return redirect(url_for('front_page.home_page'))
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
-    ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif', 'jpeg']
     form = Upload()
 
     if form.validate_on_submit():
         file_data = form.file.data
         filename = secure_filename(file_data.filename)
         if filename.rsplit('.')[1] in ALLOWED_EXTENSIONS:
-            file_data.save(os.path.join(file_path, filename))
+            try:
+                file_data.save(os.path.join(file_path, filename))
+            except IOError:
+                flash('Image appears corrupted or failed verification')
+                return redirect(url_for('profile.manage_files', username=username))
         else:
             flash("Unacceptable file type submitted for upload")
             return redirect(url_for('profile.manage_files', username=username))
@@ -149,10 +155,27 @@ def user_transload(username):
             return redirect(url_for('front_page.home_page'))
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
-    ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif', 'jpeg']
     form = Transload()
 
-    return render_template('profile/upload.html', username=username, form=form, user=user)
+    if form.validate_on_submit():
+        url = form.url.data
+        response = transload(url)
+        if int(response.headers['Content-Length']) > int(current_app.config['MAX_CONTENT_LENGTH']):
+            return abort(413)
+        img = Image.open(BytesIO(response.content))
+
+        if img.format.lower() in ALLOWED_EXTENSIONS:
+            secured_name = secure_filename(response.url.split('/')[-1])
+            outfile = os.path.join(file_path, secured_name)
+            try:
+                img.save(outfile, img.format)
+            except IOError:
+                flash('Image appears corrupted or failed verification')
+                return redirect(url_for('profile.manage_files', username=username))
+        else:
+            flash("Unacceptable file type submitted for upload")
+        return redirect(url_for('profile.manage_files', username=username))
+    return render_template('profile/transload.html', username=username, form=form, user=user)
 
 
 @profile.errorhandler(413)
