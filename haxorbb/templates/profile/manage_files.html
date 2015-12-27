@@ -24,7 +24,8 @@
         <div class="file_desc">
 		<div>
 		{% if file['resize'] %}
-            <a href="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) }}"><img src={{ url_for('media', filename='users/tn/tn_{}'.format(file['name'])) }}></a>
+            <a href="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) }}">
+	            <img src={{ url_for('media', filename='users/{}/tn/tn_{}'.format(user.username, file['name'])) }}></a>
             <span class="caption">Resized, click to see full sized.</span>
         {% else %}
                 <img src="{{ url_for('media', filename='users/{}/{}'.format(user.username, file['name'])) }}">
