@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import os
 from PIL import Image
 from io import BytesIO
-from ..utilities.filters import create_timg
+from ..utilities.utils import generate_thumbnail
 import pytz
 from requests import get as transload
 
@@ -108,7 +108,8 @@ def manage_files(username):
             if data['w'] > 300 and data['h'] > 300:
                 data['resize'] = True
                 if not os.path.isfile(os.path.join(file_path, 'tn/tn_{}'.format(userfile['name']))):
-                    create_timg(os.path.join(file_path, userfile['name']))
+                    dest_path = os.path.join(file_path, 'tn')
+                    generate_thumbnail(userfile['name'], source_path=file_path, dest_path=dest_path, width=300)
             filedata.append(data)
     return render_template('profile/manage_files.html', user=user, filedata=filedata)
 
@@ -117,7 +118,7 @@ def get_file_list(user):
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     if not os.path.isdir(file_path):
         os.makedirs(file_path)
-    file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
+    file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path) if f.is_file()]
     return file_list, file_path
 
 
@@ -133,7 +134,7 @@ def user_upload(username):
     if form.validate_on_submit():
         file_data = form.file.data
         filename = secure_filename(file_data.filename)
-        if filename.rsplit('.')[1] in ALLOWED_EXTENSIONS:
+        if filename.rsplit('.')[1].lower() in ALLOWED_EXTENSIONS:
             try:
                 file_data.save(os.path.join(file_path, filename))
             except IOError:
