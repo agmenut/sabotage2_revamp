@@ -4,7 +4,7 @@ from .. import db
 from flask import (current_app, url_for, redirect, render_template, flash, send_file, abort)
 from werkzeug import secure_filename
 from ..models import User
-from .forms import Profile, Upload, Rename, Transload
+from .forms import Profile, Upload, Rename, Transload, Signature
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
@@ -80,7 +80,27 @@ def edit_profile(username):
         disk_use = sum(file_list)
     except OSError:
         disk_use = 0
-    return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state, disk_use=disk_use)
+    return render_template('profile/edit.html', user=user, form=form,
+                           tfa=tfa_state, disk_use=disk_use)
+
+
+@profile.route('/view/<username>/edit_signature', methods=['GET', 'POST'])
+@login_required
+def edit_signature(username):
+    if current_user.username != username and not current_user.is_administrator():
+        return redirect(url_for('front_page.home_page'))
+    user = User.query.filter_by(username=username).first()
+    form = Signature()
+
+    form.signature.data = user.signature_text
+
+    if form.validate_on_submit():
+        print "Signature form fired"
+        user.signature_text = form.signature.data
+        db.session.add(user)
+        db.session.commit()
+
+    return render_template('profile/signature.html', user=user, form=form)
 
 
 @profile.route('/view/<username>/files', methods=['GET', 'POST'])

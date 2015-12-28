@@ -1,0 +1,23 @@
+{% extends 'master.html' %}
+{% block id %}
+{% include 'profile/idbar.html' %}
+{% endblock %}
+{% block content %}
+	{% block nav %}
+		{% set active_page = 'edit_signature' %}
+		{% include 'profile/navigation.html' with context %}
+	{% endblock %}
+	<section class="control_panel">
+		<form method=POST>
+			<fieldset>
+				<legend>Edit Signature</legend>
+				<div>{{ form.signature.label }}</div>
+				<div>{{ form.signature }}</div>
+				{{ form.submit }}
+			</fieldset>
+            {{ form.csrf_token }}
+		</form>
+	</section>
+
+	{{ pagedown.include_pagedown() }}
+{% endblock %}

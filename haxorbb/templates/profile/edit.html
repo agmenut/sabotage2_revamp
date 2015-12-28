@@ -8,9 +8,9 @@
 		{% include 'profile/navigation.html' with context %}
 	{% endblock %}
     <section class="control_panel">
-    <form method=POST action="{{ url_for('profile.edit_profile', username=current_user.username) }}" >
+    <form method=POST>
         <fieldset>
-            <legend>User Profile for {{ current_user.username }}</legend>
+            <legend>Edit Profile for {{ current_user.username }}</legend>
             <div>{{ form.fullname.label }}{{ form.fullname }}</div>
             <div>{{ form.location.label }}{{ form.location }}</div>
             <div>{{ form.avatar_url.label }}{{ form.avatar_url }}</div>
