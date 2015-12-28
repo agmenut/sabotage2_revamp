@@ -204,9 +204,16 @@ span.identity .post_count {
     top: -5px;
 }
 
-/*span.identity .title {*/
-    /*font-size: 14px;*/
-/*}*/
+footer.signature {
+    font-size: 12px;
+    height: auto;
+    clear: both;
+    background: none;
+    position: relative;
+    text-align: right;
+    width: auto;
+    border: none;
+}
 
 div.flask-pagedown-preview{
     min-height: 200px;

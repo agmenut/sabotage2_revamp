@@ -44,14 +44,12 @@
 				<span class="post_body">
 					{{ post.html_body | safe }}
 				</span>
-{#				<div class="footer">#}
-{#					<span class="timestamp">{{ post.timestamp | forum_datetime }}</span>#}
-{#					<span class="controls"></span>#}
-{#				</div>#}
+				{% if post.post_author.signature_text != None %}
+				<footer class="signature">
+					{{ post.post_author.signature_html | safe }}
+				</footer>
+				{% endif %}
 			</section>
-{#			<a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>#}
-{#			| {{ thread.author.username }} | {{ thread.last_post }} | {{ thread.views }}<br>#}
-
 		{% endfor %}
 	</div>
 {% endblock %}
