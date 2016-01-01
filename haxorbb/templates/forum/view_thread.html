@@ -16,12 +16,8 @@
 			{{ g.thread_data['title'] }}
 		</a>
 	</span>
-</div>{#<a href="{{ url_for('forum.new_thread', forum_id=forum_id) }}">#}
-{#	<button>#}
-{#		New Thread#}
-{#	</button>#}
-{#</a>#}
-	<div class="post_container">
+</div>
+	<div class="thread_container">
 		<div class="thread_header">
 		<a href="#">
 			<button>Bookmark thread(soon)</button>
@@ -30,28 +26,37 @@
 		</div>
 		{% for post in posts %}
 			<section class="post" id="{{ post.id }}">
-				<span class="identity">
-					<div class="user">
-						<a href="{{ url_for('profile.view', username=post.post_author.username) }}">
-						{{- post.post_author.username -}}
-						</a>
+				<section class="post_container">
+					<div class="identity">
+						<div class="user">
+							<a href="{{ url_for('profile.view', username=post.post_author.username) }}">
+							{{- post.post_author.username -}}
+							</a>
+						</div>
+						<div class="post_count">Posts: {{ post.post_author.post_count }}</div>
+						<div class="avatar"><img src="{{ post.post_author.avatar_url }}"></div>
+						<div class="title">{{ post.post_author.avatar_text | safe }}</div>
+	{#					<div class="timestamp">{{ post.timestamp | forum_datetime }}</div>#}
 					</div>
-					<div class="post_count">Posts: {{ post.post_author.post_count }}</div>
-					<div class="avatar"><img src="{{ post.post_author.avatar_url }}"></div>
-					<div class="title">{{ post.post_author.avatar_text | safe }}</div>
-					<div class="timestamp">{{ post.timestamp | forum_datetime }}</div>
-				</span>
-				<span class="post_body">
-					{{ post.html_body | safe }}
-				</span>
-{#				<div class="footer">#}
-{#					<span class="timestamp">{{ post.timestamp | forum_datetime }}</span>#}
-{#					<span class="controls"></span>#}
-{#				</div>#}
-			</section>
-{#			<a href="{{ url_for('forum.view_thread', thread_id=thread.id) }}">{{ thread.title }}</a>#}
-{#			| {{ thread.author.username }} | {{ thread.last_post }} | {{ thread.views }}<br>#}
+					<div class="post_body">
+						{{ post.html_body | safe }}
+					</div>
 
+				</section>
+
+
+				<section class="signature">
+					<div class="spacer">
+						<div class="timestamp">{{ post.timestamp | forum_datetime }}</div>
+					</div>
+					{% if post.post_author.signature_text != None %}
+						{{ post.post_author.signature_html | safe }}
+					{% endif %}
+				</section>
+{#				<section class="controls">#}
+{#				More stuff#}
+{#				</section>#}
+			</section>
 		{% endfor %}
 	</div>
 {% endblock %}

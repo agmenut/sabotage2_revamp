@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from flask.ext.wtf import Form
 from flask import Markup, request, redirect, url_for
+from flask.ext.pagedown.fields import PageDownField
 from urlparse import urlparse, urljoin
 from wtforms import (Field, StringField, FileField, SelectField, HiddenField)
-from wtforms.validators import Length, DataRequired
+from wtforms.fields.html5 import URLField
+from wtforms.validators import Length, URL, DataRequired
 from wtforms.widgets.core import html_params
 
 
@@ -77,9 +79,19 @@ class Profile(Form):
     submit = Button('Submit Changes')
 
 
+class Signature(Form):
+    signature = PageDownField('Signature')
+    submit = Button('Update signature')
+
+
 class Upload(RedirectableForm):
     file = FileField('File', validators=[DataRequired()])
     submit = Button('Upload')
+
+
+class Transload(RedirectableForm):
+    url = URLField('Image URL', validators=[DataRequired(), URL()])
+    submit = Button('Transload')
 
 
 class Rename(Form):

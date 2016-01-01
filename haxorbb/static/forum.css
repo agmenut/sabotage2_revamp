@@ -111,7 +111,12 @@ footer {
     background: #0062DF;
 }
 
-div.post_container, div.forum_nav, div.thread_container {
+.thread_header {
+    border: 1px solid #004499;
+    background: #004499;
+}
+
+div.forum_nav, div.thread_container {
     width: 98%;
     margin-left: auto;
     margin-right: auto;
@@ -120,12 +125,6 @@ div.post_container, div.forum_nav, div.thread_container {
 .forum_nav {
     padding-top: 5px;
     padding-bottom: 5px;
-}
-
-.thread_header {
-    background: #004499;
-    border: 1px solid #000000;
-
 }
 
 button.reply{
@@ -137,10 +136,17 @@ button.reply{
     position: relative;
     background: #C0C0C0;
     width: 100%;
-    min-height: 300px;
+    min-height: 250px;
+    height: 100%;
     border-left: 1px solid black;
     border-right: 1px solid black;
     border-bottom: 1px solid black;
+
+}
+
+.post_container {
+    display: table-row;
+    width: 100%;
 }
 
 .post:nth-child(odd) {
@@ -150,19 +156,23 @@ button.reply{
 .identity {
     line-height: 1em;
     display: table-cell;
-    height: 280px;
-    width: 230px;
+    height: auto;
+    min-width: 225px;
+    width: 225px;
     font-size: 14px;
     border-right: 1px solid #000000;
-    overflow: hidden;
 }
 
-span.post_body {
-    position: relative;
-    margin: auto;
-    width: calc(100% - 230px);
-    min-height: 280px;
+.post_body {
+    padding-left: 5px;
     display: table-cell;
+    width: inherit;
+    clear: right;
+}
+
+.controls {
+    /*float: left;*/
+    /*clear: both;*/
 }
 
 .footer {
@@ -174,13 +184,17 @@ span.post_body {
 .timestamp{
     padding-top: 5px;
     padding-bottom: 5px;
-    position: absolute !important;
+    padding-left: 10px;
+    text-align: start;
+    font-size: 11pt;
     bottom: 0;
 }
 
 .identity > div {
     left: 10px;
     position: relative;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .avatar {
@@ -193,20 +207,34 @@ span.post_body {
     height: 125px;
 }
 
-span.identity .user {
+.identity .user{
     position: relative;
     top: -10px;
     font-weight: bold;
 }
 
-span.identity .post_count {
+.identity .post_count {
     position: relative;
     top: -5px;
 }
 
-/*span.identity .title {*/
-    /*font-size: 14px;*/
-/*}*/
+div.spacer {
+    min-width: 225px;
+    width: 225px;
+    border-right: 1px solid #000000;
+    display: table-cell;
+}
+
+.signature {
+    background: transparent;
+    text-align: right;
+    display: table-row;
+}
+
+.signature p {
+    margin: 0;
+    padding: 0;
+}
 
 div.flask-pagedown-preview{
     min-height: 200px;

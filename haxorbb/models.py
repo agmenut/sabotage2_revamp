@@ -75,6 +75,8 @@ class User(UserMixin, db.Model):
     avatar_url = db.Column(db.String(250))
     avatar_text = db.Column(db.String(250))
     picture_url = db.Column(db.String(250))
+    signature_text = db.Column(db.Text())
+    signature_html = db.Column(db.Text())
     quota = db.Column(db.Integer)
     disk_used = db.Column(db.Integer)
     active = db.Column(db.Boolean, nullable=False, default=False)
@@ -184,6 +186,16 @@ class User(UserMixin, db.Model):
 
     def is_forum_administrator(self):
         return self.forum_permissions(ForumPermissions.ADMINISTRATOR)
+
+    @staticmethod
+    def on_changed_signature(target, value, oldvalue, initator):
+        allowed_tags = ['a', 'b', 'i', 'code', 'strong', 'pre', 'ul', 'li',
+                        'em', 'ol', 'p', 'img', 'h1', 'h2', 'h3', 'br', 'code', 'pre', 'strike']
+        allowed_attr = ['src', 'alt', 'title', 'href']
+        target.signature_html = bleach.clean(markdown.markdown(value, output_format='html5'),
+                                             tags=allowed_tags, attributes=allowed_attr, strip=True)
+
+db.event.listen(User.signature_text, 'set', User.on_changed_signature)
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -351,6 +363,12 @@ class Threads(db.Model):
         forum = Forums.query.with_entities(Forums.title).filter_by(id=thread.fk_forum).one()
         return {'title': thread.title, 'forum_id': thread.fk_forum, 'forum': forum.title}
 
+    @staticmethod
+    def update_last_post_timestamp(thread_id):
+        thread = Threads.query.filter_by(id=thread_id).one()
+        thread.last_post = datetime.utcnow()
+        db.session.commit()
+
     @property
     def replies(self):
         return self.posts.count() - 1
@@ -373,6 +391,7 @@ class Posts(db.Model):
         except Exception as e:
             db.session.rollback()
             raise e
+        Threads.update_last_post_timestamp(self.thread)
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initator):

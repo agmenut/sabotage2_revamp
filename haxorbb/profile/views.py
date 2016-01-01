@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (current_app, url_for, redirect, render_template, flash, send_file, g)
+from flask import (current_app, url_for, redirect, render_template, flash, send_file, abort)
 from werkzeug import secure_filename
 from ..models import User
-from .forms import Profile, Upload, Rename
+from .forms import Profile, Upload, Rename, Transload, Signature
 from flask.ext.login import login_required, current_user
 from datetime import datetime, timedelta
 import os
 from PIL import Image
-from ..utilities.filters import create_timg
+from io import BytesIO
+from ..utilities.utils import generate_thumbnail
 import pytz
+from requests import get as transload
 
 try:
     from os import scandir
 except ImportError:
     from scandir import scandir
+
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif', 'jpeg']
 
 
 @profile.before_request
@@ -76,7 +80,27 @@ def edit_profile(username):
         disk_use = sum(file_list)
     except OSError:
         disk_use = 0
-    return render_template('profile/edit.html', user=user, form=form, tfa=tfa_state, disk_use=disk_use)
+    return render_template('profile/edit.html', user=user, form=form,
+                           tfa=tfa_state, disk_use=disk_use)
+
+
+@profile.route('/view/<username>/edit_signature', methods=['GET', 'POST'])
+@login_required
+def edit_signature(username):
+    if current_user.username != username and not current_user.is_administrator():
+        return redirect(url_for('front_page.home_page'))
+    user = User.query.filter_by(username=username).first()
+    form = Signature()
+
+    form.signature.data = user.signature_text
+
+    if form.validate_on_submit():
+        print "Signature form fired"
+        user.signature_text = form.signature.data
+        db.session.add(user)
+        db.session.commit()
+
+    return render_template('profile/signature.html', user=user, form=form)
 
 
 @profile.route('/view/<username>/files', methods=['GET', 'POST'])
@@ -104,7 +128,8 @@ def manage_files(username):
             if data['w'] > 300 and data['h'] > 300:
                 data['resize'] = True
                 if not os.path.isfile(os.path.join(file_path, 'tn/tn_{}'.format(userfile['name']))):
-                    create_timg(os.path.join(file_path, userfile['name']))
+                    dest_path = os.path.join(file_path, 'tn')
+                    generate_thumbnail(userfile['name'], source_path=file_path, dest_path=dest_path, width=300)
             filedata.append(data)
     return render_template('profile/manage_files.html', user=user, filedata=filedata)
 
@@ -113,7 +138,7 @@ def get_file_list(user):
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     if not os.path.isdir(file_path):
         os.makedirs(file_path)
-    file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path)]
+    file_list = [{'name': f.name, 'size': f.stat().st_size} for f in scandir(file_path) if f.is_file()]
     return file_list, file_path
 
 
@@ -124,14 +149,17 @@ def user_upload(username):
         return redirect(url_for('front_page.home_page'))
     user = User.query.filter_by(username=username).first()
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
-    ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif', 'jpeg']
     form = Upload()
 
     if form.validate_on_submit():
         file_data = form.file.data
         filename = secure_filename(file_data.filename)
-        if filename.rsplit('.')[1] in ALLOWED_EXTENSIONS:
-            file_data.save(os.path.join(file_path, filename))
+        if filename.rsplit('.')[1].lower() in ALLOWED_EXTENSIONS:
+            try:
+                file_data.save(os.path.join(file_path, filename))
+            except IOError:
+                flash('Image appears corrupted or failed verification')
+                return redirect(url_for('profile.manage_files', username=username))
         else:
             flash("Unacceptable file type submitted for upload")
             return redirect(url_for('profile.manage_files', username=username))
@@ -139,6 +167,36 @@ def user_upload(username):
         return form.redirect()
 
     return render_template('profile/upload.html', username=username, form=form, user=user)
+
+
+@profile.route('/view/<username>/files/transload', methods=['GET', 'POST'])
+@login_required
+def user_transload(username):
+    if current_user.username != username and not current_user.is_administrator():
+            return redirect(url_for('front_page.home_page'))
+    user = User.query.filter_by(username=username).first()
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
+    form = Transload()
+
+    if form.validate_on_submit():
+        url = form.url.data
+        response = transload(url)
+        if int(response.headers['Content-Length']) > int(current_app.config['MAX_CONTENT_LENGTH']):
+            return abort(413)
+        img = Image.open(BytesIO(response.content))
+
+        if img.format.lower() in ALLOWED_EXTENSIONS:
+            secured_name = secure_filename(response.url.split('/')[-1])
+            outfile = os.path.join(file_path, secured_name)
+            try:
+                img.save(outfile, img.format)
+            except IOError:
+                flash('Image appears corrupted or failed verification')
+                return redirect(url_for('profile.manage_files', username=username))
+        else:
+            flash("Unacceptable file type submitted for upload")
+        return redirect(url_for('profile.manage_files', username=username))
+    return render_template('profile/transload.html', username=username, form=form, user=user)
 
 
 @profile.errorhandler(413)

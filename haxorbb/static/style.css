@@ -364,7 +364,7 @@ p.idbar {
     padding: 2px;
 }
 
-.file_desc:nth-child(odd){
+.file_desc:nth-child(even){
     background: #1f1f1f;
 }
 
@@ -416,6 +416,13 @@ button.upload {
 	top: 10px;
 }
 
+button.transload {
+    position: relative;
+    float: none;
+    height: 30px;
+    top: 10px;
+}
+
 button.upload > svg {
 	fill: #575656;
 }
@@ -439,6 +446,10 @@ button.delete_link > svg {
 }
 button.download_link > svg {
 	fill: #595959;
+}
+
+button.transload > svg {
+    fill: rgba(45, 93, 45, 1);
 }
 
 button.inactive {

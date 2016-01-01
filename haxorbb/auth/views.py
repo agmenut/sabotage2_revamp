@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, flash, request, abort, make_response
+from flask import render_template, redirect, url_for, flash, request, abort, make_response, current_app
 from . import auth
 from .forms import (Registration, Login, ChangePassword, ResetPassword,
                     ResetPasswordRequest, TFAToken)
@@ -13,6 +13,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from io import BytesIO
 from datetime import timedelta
 import pyqrcode
+from os import path, mkdir
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -44,13 +45,11 @@ def login():
 def register():
     form = Registration()
     if form.validate_on_submit():
-        print "Good"
         user = User()
         user.email = form.email.data
         user.username = form.username.data
         user.password = form.password.data
         db.session.add(user)
-        print "Trying commit of new user"
         try:
             db.session.commit()
             token = user.generate_confirmation_token()
@@ -60,7 +59,7 @@ def register():
         except SQLAlchemyError as e:
             db.session.rollback()
             flash('An error occurred')
-            print form.errors
+            print form.errors, e
         return redirect(url_for('front_page.home_page'))
     return render_template('auth/register.html', form=form)
 
@@ -71,6 +70,9 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for('front_page.home_page'))
     if current_user.confirm(token):
+        # Create user directories on account confirmation
+        mkdir(path.join(current_app.config['MEDIA_ROOT'], 'users', current_user.username))
+        mkdir(path.join(current_app.config['MEDIA_ROOT'], 'users', current_user.username, 'tn'))
         flash("Your account has been confirmed.")
     else:
         flash("Confirmation link invalid.")

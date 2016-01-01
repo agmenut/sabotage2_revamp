@@ -1,0 +1,17 @@
+{% extends 'master.html' %}
+{% block id %}
+{% endblock %}
+{% block content %}
+<section class="control_panel">
+    <form method=POST enctype="multipart/form-data" >
+        <fieldset>
+            <legend>Enter URL of image to load</legend>
+            <div>{{ form.url.label }}{{ form.url }}</div>
+            {{ form.submit }}
+            {{ form.next }}
+            {{ form.csrf_token }}
+
+        </fieldset>
+	    </form>
+</section>
+{% endblock %}
