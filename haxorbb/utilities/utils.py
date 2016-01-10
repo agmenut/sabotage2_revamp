@@ -53,15 +53,16 @@ def generate_thumbnail(source, dest_path, source_path=None, height=None, width=N
     if not os.path.exists(dest_path):
         os.mkdir(dest_path)
 
+    orientation = exif_data['Orientation']
+
+    if orientation:
+        im = exif_orientation_transform(im, orientation)
+
     if width:
         height = int(width / ratio)
     elif width is None and height:
         width = int(height / ratio)
     resized = im.resize((width, height), Image.ANTIALIAS)
-    orientation = exif_data['Orientation']
-
-    if orientation:
-        resized = exif_orientation_transform(resized, orientation)
 
     target_file = os.path.join(dest_path, "{}{}".format(prefix, img))
     resized.save(target_file, im.format)
