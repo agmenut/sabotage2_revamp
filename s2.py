@@ -24,6 +24,7 @@ manager.add_command('db', MigrateCommand)
 server = Server(host='0.0.0.0')
 manager.add_command('runserver', server)
 
+
 def make_shell_context():
     return {'app': app, 'db': db, 'User': User, 'Role': Role}
 

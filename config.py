@@ -15,6 +15,9 @@ class BaseConfiguration(object):
     TIME_ZONE = os.environ.get('TIME_ZONE')
     # Set max file upload to 16MB unless another value set in env. config.
     MAX_CONTENT_LENGTH = os.environ.get('MAX_CONTENT_LENGTH') or 16 * 1024 * 1024
+    # Set the logging directory to application root unless overridden in env
+    LOG_DIR = os.environ.get('LOG_DIR') or os.path.dirname(os.path.realpath(__file__))
+
 
     @staticmethod
     def initapp(app):

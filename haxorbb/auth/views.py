@@ -70,11 +70,14 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for('front_page.home_page'))
     if current_user.confirm(token):
+        current_app.logger.info("Starting confirmation process for newly registered user: {}".format(
+                current_user.username))
         # Create user directories on account confirmation
         mkdir(path.join(current_app.config['MEDIA_ROOT'], 'users', current_user.username))
         mkdir(path.join(current_app.config['MEDIA_ROOT'], 'users', current_user.username, 'tn'))
         flash("Your account has been confirmed.")
     else:
+        current_app.logger.warning("User {} tried to confirm an account with an invalid link".format(current_user.username))
         flash("Confirmation link invalid.")
     return redirect(url_for('front_page.home_page'))
 
@@ -86,6 +89,7 @@ def resend_confirmation():
     send_mail(current_user.email, 'Confirm your account',
               'auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to {}.'.format(current_user.email))
+    current_app.logger.info("A new confirmation email has been sent to {}.".format(current_user.email))
     return redirect(url_for('front_page.home_page'))
 
 
@@ -102,6 +106,7 @@ def change_password():
             send_mail(current_user.email, 'Your password has changed',
                       'auth/email/password_change', user=current_user)
             return redirect(url_for('front_page.home_page'))
+    current_app.logger.info("User {} has requested a password change".format(current_user.username))
     return render_template('auth/change_password.html', form=form)
 
 
