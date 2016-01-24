@@ -14,27 +14,27 @@ function process_twitter_urls(elems){
                 twttr.widgets.createTweet(id_, parent[0], {maxwidth:500});
             }
         })
-
     });
 }
 
-function process_youtube_urls(elems) {
-    $.each(elems, function(){
-        var links = $(this).find("a");
-        $.each(links, function(i, v) {
-            var video_id;
-            if (/:\/\/(?:www\.)?youtube\.com/.test(v.innerHTML)) {
-                video_id = v.innerHTML.split('=').pop();
-            } else if (/:\/\/youtu\.be\//.test(v.innerHTML)) {
-                video_id = v.innerHTML.split('/').pop();
-            }
-            if (video_id != undefined) {
-                var parent = $(v).parent();
-                parent.addClass('ytplayer');
-                $(parent).html('<iframe id="player" type="text/html" width="640" height="390"' +
-                    'src="https://www.youtube.com/embed/'+video_id+'?enablejsapi=1" frameborder="0"></iframe>');
-            }
-            video_id = null;
-        });
-    })
+function process_youtube_urls() {
+    var links = $(document).find('#content').find('a');
+    $.each(links, function(i, v){
+        var a = v.href.match(/(?:.*youtube\.com\/watch\?v=|.*youtu\.be\/)([a-zA-Z0-9\-]*)/);
+        var video_id;
+        if (a && a[1]){
+            video_id = a[1];
+            var d = v.ownerDocument;
+            var p = d.createElement('p');
+            var v_container = d.createElement('div');
+            v_container.id = 'ytplayer_' + video_id;
+            p.appendChild(v_container);
+            v.parentNode.insertBefore(p, v.nextSibling);
+            player = new YT.Player('ytplayer_' + video_id, {
+                                height: '390',
+                                width: '640',
+                                videoId: video_id,
+                            });
+        }
+    });
 }
