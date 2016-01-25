@@ -31,10 +31,21 @@ function process_youtube_urls() {
             p.appendChild(v_container);
             v.parentNode.insertBefore(p, v.nextSibling);
             player = new YT.Player('ytplayer_' + video_id, {
-                                height: '390',
-                                width: '640',
-                                videoId: video_id,
-                            });
+                height: '405',
+                width: '720',
+                videoId: video_id,
+                controls: 1,
+                events: {
+                    onStateChange: onPlayerStateChange
+                }
+            });
         }
     });
+}
+
+
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+        event.target.setPlaybackQuality('hd720');
+    }
 }
