@@ -5,6 +5,9 @@ from flask.ext.login import LoginManager
 from flask.ext.mail import Mail
 from flask.ext.pagedown import PageDown
 from config import config
+from os.path import join as os_join
+from logging.handlers import TimedRotatingFileHandler
+from logging import Formatter
 
 
 class ReverseProxied(object):
@@ -57,6 +60,13 @@ def initialize_app(config_name):
     app.config.from_object(config[config_name])
     config[config_name].initapp(app)
 
+    logfile = os_join(app.config['LOG_DIR'], 'haxxorbb.log')
+    handler = TimedRotatingFileHandler(logfile, when='d', interval=1, backupCount=3)
+    handler.setFormatter(Formatter("[%(asctime)s] - %(name)s: %(message)s"))
+    handler.setLevel('INFO')
+    app.logger.addHandler(handler)
+
+    app.logger.info('Initialization started')
     app.wsgi_app = ReverseProxied(app.wsgi_app)
     login_manager.init_app(app)
     db.init_app(app)
@@ -94,4 +104,5 @@ def initialize_app(config_name):
     def media(filename):
         return send_from_directory(app.config['MEDIA_ROOT'], filename)
 
+    app.logger.info('Initialization completed.')
     return app

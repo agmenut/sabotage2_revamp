@@ -1,13 +1,43 @@
+{#<script src="{{ url_for('static', filename='helpers.js') }}"></script>#}
+<script>
+function loadPlayer() {
+	if (typeof(YT) == 'undefined' || typeof(YT.Player) == 'undefined') {
+		var tag = document.createElement('script');
+		tag.src = 'https://www.youtube.com/iframe_api';
+		var firstScriptTag = document.getElementsByTagName('script')['0'];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+		window.onYouTubePlayerAPIReady = function () {
+			onYouTubePlayer();
+		};
+	} else {
+		onYouTubePlayer();
+	}
+}
+
+var player;
+
+function onYouTubePlayer() {
+	process_youtube_urls(get_post_elements());
+}
+
+$(document).ready(function() {
+	loadPlayer();
+});
+
+</script>
 {% if article.is_public or current_user.is_authenticated %}
     <header><h3>{{ article.title }}</h3>
         <span><time itemprop="datePublished" datetime="{{ article.datestamp }}">{{ article.datestamp | datetime_filter }}</time>
         Submitted by <span class="submitter">{{ article.author.username }}</span></span>
     </header>
+	<div class="content">
 	{% if article.html_body %}
 		{{ article.html_body | safe }}
 	{% else %}
         {{ article.content | safe }}
     {% endif %}
+	</div>
 	<footer>
         Permalink: <a href="{{  url_for('front_page.home_page', article=article.slug) }}">{{ article.slug }}</a>
         {% if current_user.username == article.author.username or current_user.allowed(Permissions.EDITOR) %}

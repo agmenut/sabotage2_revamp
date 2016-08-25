@@ -1,4 +1,8 @@
 {% extends 'master.html' %}
+{% block additional_scripts %}
+{% include 'twitterjs_include.html' %}
+<script src="{{ url_for('static', filename='helpers.js') }}"></script>
+{% endblock %}
 {% block content %}
 
 	<div id="banner">
@@ -16,7 +20,15 @@
 
        <footer><a href="page=oldnews">older news...</a></footer>
 </div><!-- close content div -->
+<script>
+	$(document).ready(function() {
+		var elems = get_post_elements();
+		twttr.ready(function (twttr) {
+			process_twitter_urls(elems);
+		});
+	});
 
+</script>
 {% endblock %}
 
 

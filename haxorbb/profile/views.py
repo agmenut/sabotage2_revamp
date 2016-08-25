@@ -224,6 +224,7 @@ def rename_file(username, filename):
 def delete_file(username, filename):
     if current_user.username != username and not current_user.is_administrator():
         return redirect(url_for('front_page.home_page'))
+    current_app.logger.info("User {} requested deletion of file {}".format(username, filename))
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username, filename)
     os.remove(file_path)
     return redirect(url_for('profile.manage_files', username=username))
