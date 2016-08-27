@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, send_from_directory, request, render_template
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
-from flask.ext.mail import Mail
-from flask.ext.pagedown import PageDown
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_mail import Mail
+from flask_pagedown import PageDown
 from config import config
 from os.path import join as os_join
 from logging.handlers import TimedRotatingFileHandler

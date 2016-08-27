@@ -6,7 +6,7 @@ from .forms import (Registration, Login, ChangePassword, ResetPassword,
 from .. import db
 from ..email import send_mail
 from ..models import User, OTP
-from flask.ext.login import (login_user, logout_user, login_required, fresh_login_required,
+from flask_login import (login_user, logout_user, login_required, fresh_login_required,
                              current_user)
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import SQLAlchemyError
@@ -223,3 +223,14 @@ def validate():
         else:
             flash("Invalid token")
     return render_template('auth/validate2fa.html', form=form)
+
+
+@auth.route('/disable_2FA', methods=['GET'])
+def disable_2fa():
+    if not current_user.is_authentication or current_user is None:
+        abort(401)
+    user = User.query.filter_by(username=current_user.username).first()
+    if user is None:
+        abort(404, "No such user")
+
+    user.remove_opt_token()

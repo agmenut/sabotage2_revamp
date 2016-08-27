@@ -8,7 +8,7 @@ from sqlalchemy import Integer, func, and_, between
 from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
-from flask.ext.login import UserMixin, AnonymousUserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from flask import current_app
 from datetime import datetime, timedelta
 import markdown
@@ -186,6 +186,9 @@ class User(UserMixin, db.Model):
 
     def is_forum_administrator(self):
         return self.forum_permissions(ForumPermissions.ADMINISTRATOR)
+
+    def remove_otp_token(self):
+        print "Should remove the OTP token for this user."
 
     @staticmethod
     def on_changed_signature(target, value, oldvalue, initator):

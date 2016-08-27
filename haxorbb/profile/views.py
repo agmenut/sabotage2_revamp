@@ -2,10 +2,10 @@
 from . import profile
 from .. import db
 from flask import (current_app, url_for, redirect, render_template, flash, send_file, abort)
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from ..models import User
 from .forms import Profile, Upload, Rename, Transload, Signature
-from flask.ext.login import login_required, current_user
+from flask_login import login_required, current_user
 from datetime import datetime, timedelta
 import os
 from PIL import Image
