@@ -1,4 +1,4 @@
-from sqlalchemy import Integer
+from sqlalchemy import Integer, INTEGER
 
 """Pluralizing backup_codes in OTP table.
 
