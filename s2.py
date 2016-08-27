@@ -12,8 +12,8 @@ if os.path.exists('.env'):
                 os.environ[var[0]] = var[1]
 
 from haxorbb import initialize_app, db
-from flask.ext.script import Manager, Shell, Server
-from flask.ext.migrate import Migrate, MigrateCommand
+from flask_script import Manager, Shell, Server
+from flask_migrate import Migrate, MigrateCommand
 from haxorbb.models import User, Role
 
 app = initialize_app(os.getenv('FLASK_CONFIG'))
