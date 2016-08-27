@@ -220,7 +220,7 @@ class OTP(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fk_userid = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
     secret = db.Column(db.String(16))
-    backup_code = db.Column(ARRAY(Integer))
+    backup_codes = db.Column(ARRAY(Integer))
 
     def add_opt_secret(self, user):
         if self.secret is None:
@@ -228,6 +228,16 @@ class OTP(db.Model):
             self.fk_userid = user.id
             db.session.add(self)
             db.session.commit()
+
+    def generate_backup_codes(self):
+        if self.secret is None:
+            raise UserWarning('Cannot generated codes for a user without 2FA enabled.')
+
+        codes = map(lambda c: base64.b32encode(os.urandom(10)).decode('utf-8'), range(0, 10))
+        print codes
+        self.backup_codes = codes
+        db.session.add(self)
+        db.session.commit()
 
     def get_totp_uri(self, username):
         return 'otpauth://totp/haxorbb:{}?secret={}&issuer=haxorbb'.format(
