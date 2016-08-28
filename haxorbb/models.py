@@ -220,7 +220,7 @@ class OTP(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fk_userid = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
     secret = db.Column(db.String(16))
-    backup_codes = db.Column(ARRAY(Integer))
+    backup_codes = db.Column(ARRAY(db.String(16)))
 
     def add_opt_secret(self, user):
         if self.secret is None:

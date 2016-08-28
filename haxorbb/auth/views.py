@@ -225,6 +225,19 @@ def validate():
     return render_template('auth/validate2fa.html', form=form)
 
 
+@auth.route('/generate_backup_codes')
+@login_required
+def generate_backup_codes():
+    if not current_user.is_authenticated or current_user is None:
+        abort(401)
+    user = User.query.filter_by(username=current_user.username).first()
+    if user is None:
+        abort(404, "No such user")
+
+    user.otp.generate_backup_codes()
+    return redirect(url_for('profile.edit_profile', username=current_user.username))
+
+
 @auth.route('/disable_2FA', methods=['GET'])
 def disable_2fa():
     if not current_user.is_authenticated or current_user is None:
