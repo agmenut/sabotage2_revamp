@@ -481,3 +481,9 @@ tr:nth-child(2n){
 ul.asset_list {
     list-style: none;
 }
+
+ul.code {
+    list-style: none;
+    font-family: "Lucida Console", monospace;
+    font-size: 12pt;
+}

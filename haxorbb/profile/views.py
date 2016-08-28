@@ -13,6 +13,9 @@ from io import BytesIO
 from ..utilities.utils import generate_thumbnail
 import pytz
 from requests import get as transload
+from pygments import highlight
+from pygments.lexers import text
+from pygments.formatters import html
 
 try:
     from os import scandir

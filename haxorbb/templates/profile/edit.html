@@ -30,13 +30,12 @@
         <a href="{{ url_for('auth.generate_backup_codes', __METHOD_OVERRIDE__='POST') }}">
             <button id="backup codes">Regenerate backup up codes</button>
         </a>
-        <ul>
+        <ul class="code">
             {% for code in user.otp.backup_codes %}
                 <li>{{ code }}</li>
             {% endfor %}
-
-        <p> You have {{ user.otp.backup_codes | count }} backup codes remaining.</p>
         </ul>
+        <p> You have {{ user.otp.backup_codes | count }} backup codes remaining.</p>
     {% else %}
         <p><a href="{{ url_for('auth.enable_2fa') }}"><button>Enable 2FA</button></a></p>
 	{% endif %}
