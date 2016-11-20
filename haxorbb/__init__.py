@@ -102,7 +102,7 @@ def initialize_app(config_name):
 
     @app.errorhandler(404)
     def page_not_found(e):
-        return render_template("error.html", error=e), 404
+        return render_template("404.html", error=e), 404
 
     @app.route('/media/<path:filename>')
     def media(filename):
