@@ -76,6 +76,7 @@ class Profile(Form):
     avatar_url = StringField('Avatar', validators=[Length(0, 250)])
     avatar_text = StringField('Avatar Text', validators=[Length(0, 250)])
     time_zone = SelectField('Time Zone', coerce=str)
+    redirect_target = SelectField('Preferred redirect target', coerce=str)
     submit = Button('Submit Changes')
 
 

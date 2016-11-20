@@ -120,7 +120,8 @@ def before_request():
 @auth.route('/recover', methods=['GET', 'POST'])
 def recover_account():
     if not current_user.is_anonymous:
-        return redirect(url_for('front_page.home_page'))
+        current_app.logger.warning("Known user {}".format(current_user.username))
+        return redirect(current_user.landing_page)
     form = ResetPasswordRequest()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()

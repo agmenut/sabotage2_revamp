@@ -31,7 +31,7 @@ def before_request():
         current_user.seen()
 
 
-@profile.route('/view/<username>')
+@profile.route('/view/<username>/')
 def view(username):
     user = User.query.filter_by(username=username).first()
     if user:
@@ -58,18 +58,22 @@ def edit_profile(username):
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     form = Profile()
     form.time_zone.choices = build_timezone_list()
+    form.redirect_target.choices = [(url_for('front_page.home_page'), 'Front Page'),
+                                    (url_for('forum.forum_index'), 'Forum Home')]
 
     # Check if the user is using 2FA, and needs to auth.
     if user.otp:
         tfa_state = True
     else:
         tfa_state = False
+
     if form.validate_on_submit():
         user.fullname = form.fullname.data
         user.location = form.location.data
         user.avatar_text = form.avatar_text.data
         user.avatar_url = form.avatar_url.data
         user.timezone = form.time_zone.data
+        user.landing_page = form.redirect_target.data
         db.session.add(user)
         db.session.commit()
 
@@ -78,6 +82,9 @@ def edit_profile(username):
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
     form.time_zone.data = user.timezone
+    # print user.landing_page
+    form.redirect_target.data = user.landing_page
+
     try:
         file_list = [f.stat().st_size for f in scandir(file_path)]
         disk_use = sum(file_list)

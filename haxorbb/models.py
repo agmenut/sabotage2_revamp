@@ -14,7 +14,6 @@ from datetime import datetime, timedelta
 import markdown
 import bleach
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -89,6 +88,7 @@ class User(UserMixin, db.Model):
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
     threads = db.relationship('Threads', backref='thread_author', lazy='dynamic')
     otp = db.relationship('OTP', uselist=False, backref='otp')
+    landing_page = db.Column(db.String(), default='/')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
