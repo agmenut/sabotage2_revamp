@@ -148,7 +148,7 @@ class User(UserMixin, db.Model):
             return True
         except Exception as e:
             db.session.rollback()
-            print e
+            print(e)
             return False
 
     def reset_password(self, token, new_password):
@@ -234,7 +234,7 @@ class OTP(db.Model):
             raise UserWarning('Cannot generated codes for a user without 2FA enabled.')
 
         codes = map(lambda c: base64.b32encode(os.urandom(10)).decode('utf-8'), range(0, 10))
-        print codes
+        print(codes)
         self.backup_codes = codes
         db.session.add(self)
         db.session.commit()
@@ -290,7 +290,7 @@ class Role(db.Model):
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
-            print role
+            print(role)
             if role is None:
                 role = Role(name=r)
             role.permissions = roles[r][0]

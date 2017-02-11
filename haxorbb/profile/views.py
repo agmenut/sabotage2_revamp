@@ -82,7 +82,7 @@ def edit_profile(username):
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
     form.time_zone.data = user.timezone
-    # print user.landing_page
+    # print(user.landing_page)
     form.redirect_target.data = user.landing_page
 
     try:
@@ -105,7 +105,7 @@ def edit_signature(username):
     form.signature.data = user.signature_text
 
     if form.validate_on_submit():
-        print "Signature form fired"
+        print("Signature form fired")
         user.signature_text = form.signature.data
         db.session.add(user)
         db.session.commit()
