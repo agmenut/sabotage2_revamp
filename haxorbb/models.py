@@ -8,7 +8,7 @@ from sqlalchemy import Integer, func, and_, between
 from sqlalchemy.dialects.postgresql import ARRAY
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, Signer, BadSignature
-from flask.ext.login import UserMixin, AnonymousUserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from flask import current_app
 from datetime import datetime, timedelta
 import markdown
@@ -216,7 +216,7 @@ class OTP(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fk_userid = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
     secret = db.Column(db.String(16))
-    backup_code = db.Column(ARRAY(Integer))
+    backup_codes = db.Column(ARRAY(db.String(16)))
 
     def add_opt_secret(self, user):
         if self.secret is None:
