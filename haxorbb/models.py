@@ -187,6 +187,9 @@ class User(UserMixin, db.Model):
     def is_forum_administrator(self):
         return self.forum_permissions(ForumPermissions.ADMINISTRATOR)
 
+    def remove_otp_token(self):
+        print "Should remove the OTP token for this user."
+
     @staticmethod
     def on_changed_signature(target, value, oldvalue, initator):
         allowed_tags = ['a', 'b', 'i', 'code', 'strong', 'pre', 'ul', 'li',

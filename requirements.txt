@@ -12,6 +12,6 @@ scandir
 onetimepass
 pyqrcode
 pytz
-pillow
+Pillow
 bleach
 requests
