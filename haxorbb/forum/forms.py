@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from flask.ext.wtf import Form
+from flask_wtf import Form
 from flask import Markup
 from wtforms import (Field, StringField, BooleanField)
 from wtforms.validators import Length, DataRequired
 from wtforms.widgets.core import html_params
-from flask.ext.pagedown.fields import PageDownField
+from flask_pagedown.fields import PageDownField
 
 
 class ButtonWidget(object):
@@ -47,3 +47,4 @@ class NewThread(Form):
 class Reply(Form):
     message = PageDownField('Message', validators=[DataRequired()])
     submit = Button('Post Reply')
+

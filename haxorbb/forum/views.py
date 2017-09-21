@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import forum
 from flask import render_template, g, redirect, url_for, flash
-from flask.ext.login import current_user, login_required
+from flask_login import current_user, login_required
 from .. import db
 from ..models import Forums, Threads, Posts
 from .forms import NewThread, Reply

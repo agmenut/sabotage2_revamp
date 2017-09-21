@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from flask.ext.wtf import Form
+from flask_wtf import Form
 from flask import Markup, request, redirect, url_for
-from flask.ext.pagedown.fields import PageDownField
+from flask_pagedown.fields import PageDownField
 from urlparse import urlparse, urljoin
 from wtforms import (Field, StringField, FileField, SelectField, HiddenField)
 from wtforms.fields.html5 import URLField

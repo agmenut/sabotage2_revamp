@@ -6,7 +6,7 @@ from ..models import Articles
 from ..utilities.utils import Utilities
 from datetime import datetime
 from flask import render_template, redirect, url_for, g, current_app
-from flask.ext.login import current_user, login_required
+from flask_login import current_user, login_required
 import os
 from scandir import scandir
 

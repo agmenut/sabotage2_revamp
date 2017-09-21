@@ -6,7 +6,7 @@ from .forms import (Registration, Login, ChangePassword, ResetPassword,
 from .. import db
 from ..email import send_mail
 from ..models import User, OTP
-from flask.ext.login import (login_user, logout_user, login_required, fresh_login_required,
+from flask_login import (login_user, logout_user, login_required, fresh_login_required,
                              current_user)
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import SQLAlchemyError
