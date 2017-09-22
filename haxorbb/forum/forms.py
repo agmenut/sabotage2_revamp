@@ -47,3 +47,4 @@ class NewThread(Form):
 class Reply(Form):
     message = PageDownField('Message', validators=[DataRequired()])
     submit = Button('Post Reply')
+
