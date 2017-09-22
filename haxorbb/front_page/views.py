@@ -87,10 +87,10 @@ def edit_article(articleid):
     return render_template("front_page/edit.html", user=current_user, form=form)
 
 
-@front_page.route('/article/<article_id>/delete', methods=['GET'])
+@front_page.route('/article/<articleid>/delete', methods=['GET'])
 @login_required
-def delete_article(article_id):
-    to_remove = Articles.query.filter_by(id=article_id).first()
+def delete_article(articleid):
+    to_remove = Articles.query.filter_by(id=articleid).first()
     db.session.delete(to_remove)
     try:
         db.session.commit()
