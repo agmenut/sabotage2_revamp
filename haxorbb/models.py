@@ -14,7 +14,6 @@ from datetime import datetime, timedelta
 import markdown
 import bleach
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -89,6 +88,7 @@ class User(UserMixin, db.Model):
     articles = db.relationship('Articles', backref='author', lazy='dynamic')
     threads = db.relationship('Threads', backref='thread_author', lazy='dynamic')
     otp = db.relationship('OTP', uselist=False, backref='otp')
+    landing_page = db.Column(db.String(), default='/')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -148,7 +148,7 @@ class User(UserMixin, db.Model):
             return True
         except Exception as e:
             db.session.rollback()
-            print e
+            print(e)
             return False
 
     def reset_password(self, token, new_password):
@@ -188,7 +188,8 @@ class User(UserMixin, db.Model):
         return self.forum_permissions(ForumPermissions.ADMINISTRATOR)
 
     def remove_otp_token(self):
-        print "Should remove the OTP token for this user."
+        db.session.delete(self.otp)
+        db.session.commit()
 
     @staticmethod
     def on_changed_signature(target, value, oldvalue, initator):
@@ -227,6 +228,16 @@ class OTP(db.Model):
             self.fk_userid = user.id
             db.session.add(self)
             db.session.commit()
+
+    def generate_backup_codes(self):
+        if self.secret is None:
+            raise UserWarning('Cannot generated codes for a user without 2FA enabled.')
+
+        codes = map(lambda c: base64.b32encode(os.urandom(10)).decode('utf-8'), range(0, 10))
+        print(codes)
+        self.backup_codes = codes
+        db.session.add(self)
+        db.session.commit()
 
     def get_totp_uri(self, username):
         return 'otpauth://totp/haxorbb:{}?secret={}&issuer=haxorbb'.format(
@@ -279,7 +290,7 @@ class Role(db.Model):
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
-            print role
+            print(role)
             if role is None:
                 role = Role(name=r)
             role.permissions = roles[r][0]

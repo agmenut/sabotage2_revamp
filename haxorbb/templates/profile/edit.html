@@ -16,6 +16,7 @@
             <div>{{ form.avatar_url.label }}{{ form.avatar_url }}</div>
             <div>{{ form.avatar_text.label }}{{ form.avatar_text }}</div>
 	        <div>{{ form.time_zone.label }}{{ form.time_zone }}</div>
+            <div>{{ form.redirect_target.label }}{{ form.redirect_target }}</div>
             {{ form.submit }}
             {{ form.csrf_token }}
         </fieldset>
@@ -27,6 +28,15 @@
         <a href="{{ url_for('auth.disable_2fa') }}">
             <button id="disable_2FA">Disable 2 Factor Authentication</button>
         </a>
+        <a href="{{ url_for('auth.generate_backup_codes', __METHOD_OVERRIDE__='POST') }}">
+            <button id="backup codes">Regenerate backup up codes</button>
+        </a>
+        <ul class="code">
+            {% for code in user.otp.backup_codes %}
+                <li>{{ code }}</li>
+            {% endfor %}
+        </ul>
+        <p> You have {{ user.otp.backup_codes | count }} backup codes remaining.</p>
     {% else %}
         <p><a href="{{ url_for('auth.enable_2fa') }}"><button>Enable 2FA</button></a></p>
 	{% endif %}

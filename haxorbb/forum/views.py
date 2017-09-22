@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from . import forum
-from flask import render_template, g, redirect, url_for, flash
+from flask import render_template, g, redirect, url_for, flash, current_app, abort
 from flask_login import current_user, login_required
+from sqlalchemy.orm.exc import NoResultFound
 from .. import db
 from ..models import Forums, Threads, Posts
 from .forms import NewThread, Reply
@@ -11,6 +12,7 @@ from datetime import datetime
 @forum.before_request
 def before_request():
     if current_user.is_authenticated:
+        current_app.logger.info("User {} is authenticated".format(current_user.username))
         current_user.seen()
 
 
@@ -24,7 +26,10 @@ def forum_index():
 @forum.route('/<int:forum_id>')
 def show_forum(forum_id):
     g.user = current_user
-    title = Forums.query.with_entities(Forums.title).filter_by(id=forum_id).one()
+    try:
+        title = Forums.query.with_entities(Forums.title).filter_by(id=forum_id).one()
+    except NoResultFound:
+        abort(404)
     g.title_ = title[0]
     threads = [t for t in Threads.query.filter_by(fk_forum=forum_id).order_by(Threads.last_post.desc()).all()]
     return render_template('forum/thread_table.html', forum_id=forum_id, threads=threads)

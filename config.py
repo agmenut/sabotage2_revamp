@@ -17,7 +17,10 @@ class BaseConfiguration(object):
     MAX_CONTENT_LENGTH = os.environ.get('MAX_CONTENT_LENGTH') or 16 * 1024 * 1024
     # Set the logging directory to application root unless overridden in env
     LOG_DIR = os.environ.get('LOG_DIR') or os.path.dirname(os.path.realpath(__file__))
-
+    REMEMBER_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_SECURE = True
+    SESSION_PROTECTION = "strong"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod
     def initapp(app):
@@ -28,6 +31,7 @@ class DevelopmentConfig(BaseConfiguration):
     DEBUG = True
     TESTING = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     @classmethod
     def initapp(cls, app):
