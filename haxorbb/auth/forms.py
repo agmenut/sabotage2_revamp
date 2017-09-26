@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import Form
 from flask import Markup
-from wtforms import (Field, StringField, PasswordField, BooleanField, SubmitField)
+from wtforms import (Field, StringField, PasswordField, BooleanField, IntegerField)
 from wtforms.validators import Length, Email, EqualTo, DataRequired
 from wtforms.fields.html5 import EmailField
 from wtforms.widgets.core import html_params
@@ -87,6 +87,6 @@ class ResetPassword(Form):
 
 
 class TFAToken(Form):
-    token = StringField('Token', validators=[DataRequired(), Length(6, 6)])
+    token = IntegerField('Token', validators=[DataRequired()])
     remember = BooleanField('Remember this computer', default=False)
     submit = Button('Validate Token')
