@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from flask import Markup
 from wtforms import (Field, StringField, PasswordField, BooleanField, IntegerField)
 from wtforms.validators import Length, Email, EqualTo, DataRequired
@@ -40,7 +40,7 @@ class Button(Field):
             return u''
 
 
-class Registration(Form):
+class Registration(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(3, 64), Email()])
     username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('verify_password')])
@@ -56,26 +56,26 @@ class Registration(Form):
             raise ValidationError("Username already registered")
 
 
-class Login(Form):
+class Login(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember me')
     submit = Button('Submit')
 
 
-class ChangePassword(Form):
+class ChangePassword(FlaskForm):
     current = PasswordField('Current Password', validators=[DataRequired(), Length(1, 64)])
     new = PasswordField('New Password', validators=[DataRequired(), Length(1, 64), EqualTo('confirm_new')])
     confirm_new = PasswordField('Confirm Password', validators=[DataRequired(), Length(1, 64), EqualTo('new')])
     submit = Button('Change password')
 
 
-class ResetPasswordRequest(Form):
+class ResetPasswordRequest(FlaskForm):
     email = StringField('Email Address', validators=[DataRequired(), Email(), Length(3, 64)])
     submit = Button('Request Password Reset')
 
 
-class ResetPassword(Form):
+class ResetPassword(FlaskForm):
     email = StringField('Email Address', validators=[DataRequired(), Email(), Length(3, 64)])
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('verify_password')])
     verify_password = PasswordField('Verify Password', validators=[DataRequired(), EqualTo('password')])
@@ -86,7 +86,7 @@ class ResetPassword(Form):
             raise ValidationError('Email address not found')
 
 
-class TFAToken(Form):
+class TFAToken(FlaskForm):
     token = IntegerField('Token', validators=[DataRequired()])
     remember = BooleanField('Remember this computer', default=False)
     submit = Button('Validate Token')
