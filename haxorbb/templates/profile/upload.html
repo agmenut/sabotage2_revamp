@@ -6,9 +6,11 @@
     <form method=POST enctype="multipart/form-data" >
         <fieldset>
             <legend>Select File to upload</legend>
-            <div>{{ form.file.label }}{{ form.file }}</div>
-            {{ form.submit }}
-            {{ form.next }}
+            <div><label class="file_upload">Upload file</label>
+            </div>
+            {{ form.upload_file }}
+{#            {{ form.submit }}#}
+{#            {{ form.next }}#}
             {{ form.csrf_token }}
 
         </fieldset>
