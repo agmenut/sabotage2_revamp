@@ -9,11 +9,51 @@
             <div><label class="file_upload">Upload file</label>
             </div>
             {{ form.upload_file }}
-{#            {{ form.submit }}#}
+            {{ form.submit }}
 {#            {{ form.next }}#}
             {{ form.csrf_token }}
 
         </fieldset>
 	    </form>
 </section>
+
+    <script>
+$(document).on('ready', function() {
+   let drop_point = $('.dragtarget')[0];
+   drop_point.addEventListener("dragover", function(e){
+       e.stopPropagation();
+       e.preventDefault();
+       $(drop_point).addClass("hover");
+   });
+   drop_point.addEventListener("dragleave", function(e) {
+       $(drop_point).removeClass("hover");
+   });
+   drop_point.addEventListener("drop", function(e) {
+      e.preventDefault();
+      $(drop_point).removeClass("droperror");
+      $(drop_point).removeClass("hover");
+
+      let file = e.dataTransfer.files[0];
+      let filedata = new FormData();
+      let target = $('label').innerHTML;
+      filedata.append('file', file);
+      filedata.append('filename', file.name);
+      filedata.append('target', target);
+
+    $.ajax({
+        url: "{{ url_for('profile.file_upload_handler', username=username) }}",
+        data: filedata,
+        type: 'POST',
+        processData: false,
+        contentType: false
+    })
+        .done(data => {
+            $(drop_point).addClass("ok");
+            drop_point.innerHTML = "File Accepted";
+            $(p).prepend("<a href=\"{{ url_for('profile.edit_profile', username=username) }}\"><button class=\"next\">Continue</button></a>");
+        })
+   });
+});
+</script>
+
 {% endblock %}

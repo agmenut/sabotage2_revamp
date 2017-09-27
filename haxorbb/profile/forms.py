@@ -99,7 +99,11 @@ class Signature(FlaskForm):
 class Upload(RedirectableForm):
     # file = FileField('File', validators=[DataRequired()])
     upload_file = DragAndDropFileField(validators=[Optional()])
-    submit = Button('Upload')
+    submit = Button(text='Upload')
+
+    # def validate(self):
+    #     if self.upload_file.data:
+    #         print("Data encountered")
 
 
 class Transload(RedirectableForm):

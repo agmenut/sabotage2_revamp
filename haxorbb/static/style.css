@@ -490,11 +490,11 @@ ul.code {
 
 input[type=file]{
     content: '';
-    background: url('/../../static/ic_file_upload_black_24px.svg') no-repeat;
+    background: url('img/ic_file_upload_black_24px.svg') no-repeat;
 }
 
 .dragtarget {
-    background: url('/../../static/ic_file_upload_black_24px.svg') no-repeat 75% 75%;
+    background: url('img/ic_file_upload_black_24px.svg') no-repeat 75% 75%;
     display: inline-flex;
     border: 2px dashed #555555;
     border-radius: 8px;

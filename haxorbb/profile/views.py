@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (current_app, url_for, redirect, render_template, flash, send_file, abort)
+from flask import (current_app, url_for, redirect, render_template, flash, send_file, abort, request)
 from werkzeug.utils import secure_filename
 from ..models import User
 from .forms import Profile, Upload, Rename, Transload, Signature
@@ -105,7 +105,6 @@ def edit_signature(username):
     form.signature.data = user.signature_text
 
     if form.validate_on_submit():
-        print("Signature form fired")
         user.signature_text = form.signature.data
         db.session.add(user)
         db.session.commit()
@@ -163,7 +162,9 @@ def user_upload(username):
 
     if form.validate_on_submit():
         file_data = form.file.data
+        import pdb; pdb.set_trace()
         filename = secure_filename(file_data.filename)
+        print(filename)
         if filename.rsplit('.')[1].lower() in ALLOWED_EXTENSIONS:
             try:
                 file_data.save(os.path.join(file_path, filename))
@@ -177,6 +178,26 @@ def user_upload(username):
         return form.redirect()
 
     return render_template('profile/upload.html', username=username, form=form, user=user)
+
+
+@profile.route('/view/<username>/files/file_upload_handler', methods=['POST'])
+def file_upload_handler(username):
+    user_file = request.files['file']
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
+    file_name = secure_filename(user_file.filename)
+
+    if file_name.rsplit('.')[1].lower() in ALLOWED_EXTENSIONS:
+        try:
+            user_file.save(os.path.join(file_path, file_name))
+        except IOError:
+            flash('Image data appears corrupted or failed verification')
+            return redirect(url_for('profile.manage_files', username=username))
+    else:
+        flash('Unacceptable file type submitted for upload')
+        return redirect(url_for('profile.manage_files', username=username))
+    flash(f"File {file_name} successfully uploaded")
+
+    return url_for('profile.user_upload', username=username)
 
 
 @profile.route('/view/<username>/files/transload', methods=['GET', 'POST'])
