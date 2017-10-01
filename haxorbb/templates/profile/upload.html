@@ -51,9 +51,9 @@ $(document).on('ready', function() {
             $(drop_point).addClass("ok");
             drop_point.innerHTML = "File Accepted";
             let next_button = $('#submit')[0];
-            p = next_button.parentNode;
+            let p = $('section');
             next_button.remove();
-            $(p).prepend("<a href=\"{{ url_for('profile.manage_files', username=username) }}\"><button class=\"next\">Return to file management</button></a>");
+            $(p).append("<a href=\"{{ url_for('profile.manage_files', username=username) }}\"><button class=\"next\">Return to file management</button></a>");
         })
    });
 });
