@@ -50,7 +50,10 @@ $(document).on('ready', function() {
         .done(data => {
             $(drop_point).addClass("ok");
             drop_point.innerHTML = "File Accepted";
-            $(p).prepend("<a href=\"{{ url_for('profile.edit_profile', username=username) }}\"><button class=\"next\">Continue</button></a>");
+            let next_button = $('#submit')[0];
+            p = next_button.parentNode;
+            next_button.remove();
+            $(p).prepend("<a href=\"{{ url_for('profile.manage_files', username=username) }}\"><button class=\"next\">Return to file management</button></a>");
         })
    });
 });
