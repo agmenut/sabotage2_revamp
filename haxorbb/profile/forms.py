@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from flask import Markup, request, redirect, url_for
 from flask_pagedown.fields import PageDownField
-from urlparse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin
 from wtforms import (Field, StringField, FileField, SelectField, HiddenField)
 from wtforms.fields.html5 import URLField
-from wtforms.validators import Length, URL, DataRequired
-from wtforms.widgets.core import html_params
+from wtforms.validators import Length, URL, DataRequired, Optional
+from wtforms.widgets.core import html_params, HTMLString
 
 
 class ButtonWidget(object):
@@ -40,6 +40,17 @@ class Button(Field):
             return u''
 
 
+class CustomFileInput:
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault('id', field.id)
+        img = url_for('static', filename='ic_file_upload_black_24px.svg')
+        return HTMLString(f"<input type=file id={field.id}><div class=\"dragtarget\">Drop file here</div>")
+
+
+class DragAndDropFileField(StringField):
+    widget = CustomFileInput()
+
+
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
@@ -54,11 +65,11 @@ def get_redirect_target():
             return target
 
 
-class RedirectableForm(Form):
+class RedirectableForm(FlaskForm):
     next = HiddenField()
 
     def __init__(self, *args, **kwargs):
-        Form.__init__(self, *args, **kwargs)
+        FlaskForm.__init__(self, *args, **kwargs)
         if not self.next.data:
             self.next.data = get_redirect_target() or ''
 
@@ -69,7 +80,7 @@ class RedirectableForm(Form):
         return redirect(target or url_for(endpoint, **values))
 
 
-class Profile(Form):
+class Profile(FlaskForm):
     fullname = StringField('Name', validators=[Length(0, 64)])
     location = StringField('Location', validators=[Length(0, 64)])
     picture_url = StringField('Picture', validators=[Length(0, 250)])
@@ -80,14 +91,19 @@ class Profile(Form):
     submit = Button('Submit Changes')
 
 
-class Signature(Form):
+class Signature(FlaskForm):
     signature = PageDownField('Signature')
     submit = Button('Update signature')
 
 
 class Upload(RedirectableForm):
-    file = FileField('File', validators=[DataRequired()])
-    submit = Button('Upload')
+    # file = FileField('File', validators=[DataRequired()])
+    upload_file = DragAndDropFileField(validators=[Optional()])
+    submit = Button(text='Upload')
+
+    # def validate(self):
+    #     if self.upload_file.data:
+    #         print("Data encountered")
 
 
 class Transload(RedirectableForm):
@@ -95,7 +111,7 @@ class Transload(RedirectableForm):
     submit = Button('Transload')
 
 
-class Rename(Form):
+class Rename(FlaskForm):
     filename = StringField('Filename', validators=[DataRequired(), Length(5, 64)])
     submit = Button('Rename')
 

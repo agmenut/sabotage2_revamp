@@ -1,3 +1,4 @@
+wtforms
 Flask>=0.10.1
 Flask-SQLAlchemy
 Flask-WTF

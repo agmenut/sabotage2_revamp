@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 import markdown
 import bleach
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -248,9 +249,10 @@ class OTP(db.Model):
         return onetimepass.valid_totp(token, self.secret)
 
     def generate_machine_token(self):
+
         s = Signer(self.secret)
-        s = s.sign('haxxorbb')
-        return s
+        machine_token = s.sign('haxxorbb')
+        return machine_token
 
     def validate_machine_token(self, token):
         s = Signer(self.secret)

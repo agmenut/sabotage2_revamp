@@ -487,3 +487,42 @@ ul.code {
     font-family: "Lucida Console", monospace;
     font-size: 12pt;
 }
+
+input[type=file]{
+    content: '';
+    background: url('img/ic_file_upload_black_24px.svg') no-repeat;
+}
+
+.dragtarget {
+    background: url('img/ic_file_upload_black_24px.svg') no-repeat 75% 75%;
+    display: inline-flex;
+    border: 2px dashed #555555;
+    border-radius: 8px;
+    height: 50px;
+    width: 80px;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+.dragtarget.hover {
+    color: #3c64ff;
+    border-color: #3c64ff;
+    box-shadow: inset 0 3px 4px #888888;
+}
+
+.dragtarget.droperror {
+    color: #ff0000;
+    border-color: #cd0a0a;
+    box-shadow: inset 0 3px 4px #970000;
+}
+
+.dragtarget.ok {
+    background: none;
+    /*color: #5dff4d;*/
+    border-color: #3ccd22;
+    box-shadow: inset 3px 3px 65px #4e9b4c;
+}
+
+.file_upload {
+    cursor: pointer;
+}
