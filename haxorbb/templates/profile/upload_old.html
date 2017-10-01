@@ -1,0 +1,17 @@
+{% extends 'master.html' %}
+{% block id %}
+{% endblock %}
+{% block content %}
+<section class="control_panel">
+    <form method=POST enctype="multipart/form-data" >
+        <fieldset>
+            <legend>Select File to upload</legend>
+            <div>{{ form.file.label }}{{ form.file }}</div>
+            {{ form.submit }}
+            {{ form.next }}
+            {{ form.csrf_token }}
+
+        </fieldset>
+	    </form>
+</section>
+{% endblock %}

@@ -2,6 +2,9 @@
 from flask import Blueprint, current_app
 from flask_login import current_user
 import pytz
+from pygments import highlight
+from pygments.lexers import guess_lexer, get_lexer_by_name
+from pygments.formatters import html
 
 filters = Blueprint('filters', __name__)
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import profile
 from .. import db
-from flask import (current_app, url_for, redirect, render_template, flash, send_file, abort)
+from flask import (current_app, url_for, redirect, render_template, flash, send_file, abort, request)
 from werkzeug.utils import secure_filename
 from ..models import User
 from .forms import Profile, Upload, Rename, Transload, Signature
@@ -13,6 +13,9 @@ from io import BytesIO
 from ..utilities.utils import generate_thumbnail
 import pytz
 from requests import get as transload
+from pygments import highlight
+from pygments.lexers import text
+from pygments.formatters import html
 
 try:
     from os import scandir
@@ -28,7 +31,7 @@ def before_request():
         current_user.seen()
 
 
-@profile.route('/view/<username>')
+@profile.route('/view/<username>/')
 def view(username):
     user = User.query.filter_by(username=username).first()
     if user:
@@ -55,18 +58,22 @@ def edit_profile(username):
     file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', user.username)
     form = Profile()
     form.time_zone.choices = build_timezone_list()
+    form.redirect_target.choices = [(url_for('front_page.home_page'), 'Front Page'),
+                                    (url_for('forum.forum_index'), 'Forum Home')]
 
     # Check if the user is using 2FA, and needs to auth.
     if user.otp:
         tfa_state = True
     else:
         tfa_state = False
+
     if form.validate_on_submit():
         user.fullname = form.fullname.data
         user.location = form.location.data
         user.avatar_text = form.avatar_text.data
         user.avatar_url = form.avatar_url.data
         user.timezone = form.time_zone.data
+        user.landing_page = form.redirect_target.data
         db.session.add(user)
         db.session.commit()
 
@@ -75,6 +82,9 @@ def edit_profile(username):
     form.avatar_url.data = user.avatar_url or None
     form.avatar_text.data = user.avatar_text or None
     form.time_zone.data = user.timezone
+    # print(user.landing_page)
+    form.redirect_target.data = user.landing_page
+
     try:
         file_list = [f.stat().st_size for f in scandir(file_path)]
         disk_use = sum(file_list)
@@ -95,7 +105,6 @@ def edit_signature(username):
     form.signature.data = user.signature_text
 
     if form.validate_on_submit():
-        print "Signature form fired"
         user.signature_text = form.signature.data
         db.session.add(user)
         db.session.commit()
@@ -153,7 +162,9 @@ def user_upload(username):
 
     if form.validate_on_submit():
         file_data = form.file.data
+        import pdb; pdb.set_trace()
         filename = secure_filename(file_data.filename)
+        print(filename)
         if filename.rsplit('.')[1].lower() in ALLOWED_EXTENSIONS:
             try:
                 file_data.save(os.path.join(file_path, filename))
@@ -167,6 +178,26 @@ def user_upload(username):
         return form.redirect()
 
     return render_template('profile/upload.html', username=username, form=form, user=user)
+
+
+@profile.route('/view/<username>/files/file_upload_handler', methods=['POST'])
+def file_upload_handler(username):
+    user_file = request.files['file']
+    file_path = os.path.join(current_app.config['MEDIA_ROOT'], 'users', username)
+    file_name = secure_filename(user_file.filename)
+
+    if file_name.rsplit('.')[1].lower() in ALLOWED_EXTENSIONS:
+        try:
+            user_file.save(os.path.join(file_path, file_name))
+        except IOError:
+            flash('Image data appears corrupted or failed verification')
+            return redirect(url_for('profile.manage_files', username=username))
+    else:
+        flash('Unacceptable file type submitted for upload')
+        return redirect(url_for('profile.manage_files', username=username))
+    flash(f"File {file_name} successfully uploaded")
+
+    return url_for('profile.user_upload', username=username)
 
 
 @profile.route('/view/<username>/files/transload', methods=['GET', 'POST'])

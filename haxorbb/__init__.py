@@ -11,7 +11,11 @@ from logging import Formatter
 
 
 class ReverseProxied(object):
-    """Wrap the application in this middleware and configure the
+    """
+
+    From http://flask.pocoo.org/snippets/35/
+
+    Wrap the application in this middleware and configure the
     front-end server to add these headers, to let you quietly bind
     this to a URL other than / and to an HTTP scheme that is
     different than what is used locally.
@@ -62,7 +66,7 @@ def initialize_app(config_name):
 
     logfile = os_join(app.config['LOG_DIR'], 'haxxorbb.log')
     handler = TimedRotatingFileHandler(logfile, when='d', interval=1, backupCount=3)
-    handler.setFormatter(Formatter("[%(asctime)s] - %(name)s: %(message)s"))
+    handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s %(name)s: %(message)s"))
     handler.setLevel('INFO')
     app.logger.addHandler(handler)
 
@@ -98,7 +102,8 @@ def initialize_app(config_name):
 
     @app.errorhandler(404)
     def page_not_found(e):
-        return render_template("error.html", error=e), 404
+        app.logger.warning("Request for {} from source IP {}".format(request.path, request.remote_addr))
+        return render_template("404.html", error=e), 404
 
     @app.route('/media/<path:filename>')
     def media(filename):

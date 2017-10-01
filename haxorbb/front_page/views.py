@@ -8,7 +8,6 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, g, current_app
 from flask_login import current_user, login_required
 import os
-from scandir import scandir
 
 
 def get_file_list(username):
@@ -17,7 +16,7 @@ def get_file_list(username):
         os.makedirs(file_path)
     file_list = [{'file': f.name, 'url': url_for(
         'media', filename='users/{}/{}'.format(username, f.name)
-    )} for f in scandir(file_path)]
+    )} for f in os.scandir(file_path)]
     return file_list
 
 
@@ -53,7 +52,7 @@ def new_article():
         try:
             db.session.commit()
         except Exception as e:
-            print e
+            print(e)
             db.session.rollback()
         return redirect(url_for('front_page.home_page'))
     file_list = get_file_list(current_user.username)
@@ -76,7 +75,7 @@ def edit_article(articleid):
         try:
             db.session.commit()
         except Exception as e:
-            print e
+            print(e)
             db.session.rollback()
         return redirect(url_for('front_page.home_page'))
     g.articleid = articleid
@@ -96,7 +95,7 @@ def delete_article(articleid):
     try:
         db.session.commit()
     except Exception as e:
-        print e
+        print(e)
         db.session.rollback()
     return redirect(url_for('front_page.home_page'))
 
@@ -108,6 +107,3 @@ def other_page(page):
         return redirect('http://www.sabotage2.com/index.php?page=oldnews', 301)
     else:
         return render_template("error.html")
-
-
-

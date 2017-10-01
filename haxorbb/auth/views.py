@@ -27,7 +27,7 @@ def login():
             flash("Authentication failed")
             return redirect(url_for('auth.login'))
         if user is not None and user.verify_password(form.password.data):
-            print "OK to login"
+            print("OK to login")
             login_user(user, form.remember.data)
             if current_user.otp is not None:
                 jar = request.cookies.get('2FA')
@@ -59,7 +59,7 @@ def register():
         except SQLAlchemyError as e:
             db.session.rollback()
             flash('An error occurred')
-            print form.errors, e
+            print(form.errors, e)
         return redirect(url_for('front_page.home_page'))
     return render_template('auth/register.html', form=form)
 
@@ -120,7 +120,8 @@ def before_request():
 @auth.route('/recover', methods=['GET', 'POST'])
 def recover_account():
     if not current_user.is_anonymous:
-        return redirect(url_for('front_page.home_page'))
+        current_app.logger.warning("Known user {}".format(current_user.username))
+        return redirect(current_user.landing_page)
     form = ResetPasswordRequest()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -140,7 +141,7 @@ def reset_password(token):
         return redirect(url_for('front_page.home_page'))
     form = ResetPassword()
     if form.validate_on_submit():
-        print "Validated"
+        print("Validated")
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
             return redirect(url_for('front_page.home_page'))
@@ -201,7 +202,7 @@ def qrcode():
 @auth.route('/validate', methods=['GET', 'POST'])
 def validate():
     if current_user.is_authenticated:
-        print "OK"
+        print("OK")
     if current_user is None:
         abort(404)
     user = User.query.filter_by(username=current_user.username).first()
@@ -223,6 +224,19 @@ def validate():
         else:
             flash("Invalid token")
     return render_template('auth/validate2fa.html', form=form)
+
+
+@auth.route('/generate_backup_codes')
+@login_required
+def generate_backup_codes():
+    if not current_user.is_authenticated or current_user is None:
+        abort(401)
+    user = User.query.filter_by(username=current_user.username).first()
+    if user is None:
+        abort(404, "No such user")
+
+    user.otp.generate_backup_codes()
+    return redirect(url_for('profile.edit_profile', username=current_user.username))
 
 
 @auth.route('/disable_2FA', methods=['GET'])

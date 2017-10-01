@@ -4,7 +4,7 @@ import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 if os.path.exists('.env'):
-    print "Found .env file, loading..."
+    print("Found .env file, loading...")
     with open('.env') as env:
         for line in env:
             var = line.strip().split('=')

@@ -1,3 +1,4 @@
+wtforms
 Flask>=0.10.1
 Flask-SQLAlchemy
 Flask-WTF
@@ -8,10 +9,10 @@ Flask-Mail
 Flask-Migrate
 Flask-PageDown
 markdown
-scandir
 onetimepass
 pyqrcode
 pytz
 Pillow
 bleach
 requests
+pygments

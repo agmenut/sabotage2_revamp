@@ -7,7 +7,7 @@ The .env file skeleton:
 
 FLASK_CONFIG=production  
 DATABASE_URL=database://url  
-MEDIA=&ltg;path to media files&gt;  
+MEDIA=&lt;path to media files&gt;  
 MAIL_PREFIX=[haxorbb]  
 MAIL_REPLY=do-not-reply@example.com  
 MAIL_SERVER=localhost  
