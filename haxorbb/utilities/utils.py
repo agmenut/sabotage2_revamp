@@ -51,7 +51,7 @@ def generate_thumbnail(source, dest_path, source_path=None, height=None, width=N
     try:
         exif_data = {TAGS[k]: v for k, v in im._getexif().items() if k in TAGS}
         orientation = exif_data['Orientation']
-    except AttributeError:
+    except (AttributeError, KeyError):
         orientation = None
 
     if not os.path.exists(dest_path):
