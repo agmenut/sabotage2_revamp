@@ -251,7 +251,7 @@ class OTP(db.Model):
     def generate_machine_token(self):
 
         s = Signer(self.secret)
-        machine_token = s.sign('haxxorbb')
+        machine_token = s.sign(b'haxxorbb')
         return machine_token
 
     def validate_machine_token(self, token):
